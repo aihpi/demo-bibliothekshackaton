@@ -1,39 +1,35 @@
-**Issue** : [Provide the issue URL here]
-`https://github.com/aihpi/recreategoods/issues/___`   
-   
-**Description** :    
-(For instance : why, how, take care of, debt, compromise, package added, scenario, unhappy path, type feature or bug ...     
+**Issue:** #___
 
-#### -------------- remove everything below in the final commit message --------------
+**Description:**
+(Replace this with why the change was needed and how it works. Mention anything a reviewer should watch out for: trade-offs, known debt, new packages, edge cases.)
 
-### Other infos
-(Fill this if necessary, or leave empty)
-   
-### Checklist when creating a review 
-1.  
-- [ ] The PR title is ok (see `Note & instructions` below)
-- [ ] I filled the urls in the section above  
-- [ ] I filled the `Description` section above  
-2.  
-- [ ] The code is easy to understand : self-explanatory, or commented if necessary
-- [ ] I quickly reviewed the code diff in gitHub
+---------- remove this line and everything below from the squashed commit message ----------
 
+### Other info
 
-### Checklist before squash merging 
-- [ ] Re-check that the commit message title is ok (see `Note & instructions` below)   
-_(GitHub will add the PR id in parentheses at the end, please keep it)_
-- [ ] Click on the `squash and merge` button
-- [ ] In the squashed commit message body, remove the line  `remove everything below in the final commit message` and everything below (so just keep the 2 urls, and the description) 
+(Optional. Screenshots, open questions, follow-up ideas.)
 
-    
-------
-#### Note & instructions:   
+### Before requesting review
 
-##### Commit message title and PR title rules
-- like a title (start with capital letter and imperative verb, no dot at the end)
-- prefixed with a hashtag and the _issue number_ (*not* PR number)  
-- can be a bit longer than simple commit messages if the PR had to do different things      
-  
-_example_: `#3 Move the azure class to its own bundle, and refactor the interface`    
-_note_: this title is important: it will be in the git history, will be displayed in our editor, and help to understand the code   
+- [ ] The PR title follows the rules below
+- [ ] The issue number and description above are filled in
+- [ ] The code is easy to follow: self-explanatory, or commented where it isn't
+- [ ] Tests are added, updated or removed as needed
+- [ ] `pytest` passes and `ruff check` and `ruff format --check` are clean
+- [ ] I skimmed the diff on GitHub
 
+### Before squash merging
+
+- [ ] The commit title still follows the rules below. Keep the PR number GitHub adds in parentheses at the end.
+- [ ] The commit body contains only the Issue and Description sections above. GitHub fills it with the list of commits by default, so replace that.
+- [ ] If the PR targets a feature branch, close the issue by hand after merging. Closing keywords like `Closes #12` only work for PRs into `main`.
+
+### Title rules
+
+The PR title becomes the squashed commit title, so it ends up in the git history for good.
+
+- Written like a title: capital letter, imperative verb, no full stop
+- Prefixed with `#` and the **issue** number, not the PR number
+- Can be a bit longer than a normal commit title if the PR does several things
+
+Example: `#3 Move the azure class to its own bundle and refactor the interface`
