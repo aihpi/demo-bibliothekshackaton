@@ -13,5 +13,5 @@ jobs:
       - name: Add issue to AIHPI project board
         uses: actions/add-to-project@v2.0.0
         with:
-          project-url: https://github.com/orgs/aihpi/projects/3
+          project-url: https://github.com/orgs/aihpi/projects/15
           github-token: ${{ secrets.ADD_ISSUE_TO_PROJECT }}
