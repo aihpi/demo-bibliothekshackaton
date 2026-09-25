@@ -21,7 +21,7 @@
 ### Before squash merging
 
 - [ ] The commit title still follows the rules below. Keep the PR number GitHub adds in parentheses at the end.
-- [ ] The commit body contains only the Issue and Description sections above. GitHub fills it with the list of commits by default, so replace that.
+- [ ] In the commit body, delete the separator line and everything below it, so only the Issue and Description remain
 - [ ] If the PR targets a feature branch, close the issue by hand after merging. Closing keywords like `Closes #12` only work for PRs into `main`.
 
 ### Title rules
