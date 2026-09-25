@@ -1,46 +1,57 @@
-services:
-  frontend:
-    build:
-      context: ./frontend
-    ports:
-      - "3000:3000"
-    environment:
-      - REACT_APP_API_URL=http://localhost:8000/api
-    depends_on:
-      - backend
-    volumes:
-      - ./frontend:/app 
-      - /app/node_modules 
+# Bibliothekshackathon: Langflow mit Bibliotheks-Bausteinen
+#
+#   docker compose up -d                   -> Langflow unter http://localhost:7860
+#   docker compose --profile lokal up -d   -> zusätzlich ein lokales Sprachmodell (Ollama)
+#
+# Einstellungen (Cluster-Adresse, Schlüssel, Modelle) stehen in der Datei .env.
 
-  backend:
-    build:
-      context: ./backend
+services:
+  langflow:
+    image: langflowai/langflow:1.12.3
     ports:
-      - "8000:8000"
+      - "7860:7860"
+    env_file: .env
     environment:
-      - DEVICE=cuda
-      - HOST=0.0.0.0
-      - PORT=8000
-      - DEBUG_MODE=true
-      - DEFAULT_MODEL_ID=t2i_adapter_sdxl  
-      - NUM_INFERENCE_STEPS=40  
-      - GUIDANCE_SCALE=7.5
-      - OUTPUT_IMAGE_SIZE=512
-      - FRONTEND_URL=http://localhost:3000
-      - USE_PIDINET_PREPROCESSING=true  
+      LANGFLOW_HOST: 0.0.0.0
+      LANGFLOW_PORT: 7860
+      LANGFLOW_AUTO_LOGIN: "true"
+      LANGFLOW_CONFIG_DIR: /app/langflow
+      LANGFLOW_COMPONENTS_PATH: /app/komponenten
+      LANGFLOW_LOAD_FLOWS_PATH: /app/flows
+      LANGFLOW_ALLOW_CUSTOM_COMPONENTS: "true"
+      LANGFLOW_SSRF_ALLOWED_HOSTS: host.docker.internal,ollama
+      DO_NOT_TRACK: "true"
     volumes:
-      - ./backend:/app  
-      - ./backend/uploads:/app/uploads
-      - ./backend/outputs:/app/outputs
-      - ./backend/preprocessed:/app/preprocessed  
-      - huggingface_cache:/root/.cache/huggingface
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
+      - ./komponenten:/app/komponenten:ro
+      - ./flows:/app/flows:ro
+      - ./daten:/app/daten:ro
+      - langflow-daten:/app/langflow
+    extra_hosts:
+      # macht ein auf dem Laptop installiertes Ollama auch unter Linux erreichbar
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+  # Optional: lokales Sprachmodell in Docker. Nur mit "--profile lokal" gestartet.
+  # Auf dem Mac besser Ollama direkt installieren (nutzt dann die Grafikeinheit).
+  ollama:
+    image: ollama/ollama:latest
+    profiles: [lokal]
+    environment:
+      OLLAMA_CONTEXT_LENGTH: 16384
+    volumes:
+      - ollama-modelle:/root/.ollama
+    restart: unless-stopped
+
+  # Lädt beim ersten Start das lokale Modell herunter (einmalig, einige GB).
+  ollama-modell-laden:
+    image: ollama/ollama:latest
+    profiles: [lokal]
+    depends_on: [ollama]
+    environment:
+      OLLAMA_HOST: ollama:11434
+    entrypoint: ["/bin/sh", "-c", "sleep 3 && ollama pull ${LOKAL_MODELL:-qwen3.5:4b}"]
+    restart: "no"
 
 volumes:
-  huggingface_cache:
+  langflow-daten:
+  ollama-modelle:
