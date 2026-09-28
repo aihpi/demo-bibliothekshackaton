@@ -3,7 +3,7 @@ rem Startet Langflow fuer den Bibliothekshackathon (Windows: Doppelklick)
 cd /d "%~dp0"
 chcp 65001 >nul
 
-docker info >/dev/null 2>&1
+docker info >nul 2>&1
 if errorlevel 1 (
   echo Docker laeuft nicht. Bitte zuerst Docker Desktop oeffnen und warten, bis es bereit ist.
   pause
@@ -26,7 +26,7 @@ if errorlevel 1 (
 )
 
 :warten
-curl -fs http://localhost:7860/health_check >/dev/null 2>&1
+curl -fs http://localhost:7860/health_check >nul 2>&1
 if errorlevel 1 (
   timeout /t 3 /nobreak >nul
   goto warten
