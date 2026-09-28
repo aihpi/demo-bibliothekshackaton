@@ -1,6 +1,6 @@
 <div style="background-color: #ffffff; color: #000000; padding: 10px;">
 <img src="00_aisc/img/logo_aisc_bmftr.jpg">
-<h1> Bibliothekshackathon: KI-Workflows ohne Programmieren
+<h1>Bibliothekshackathon: KI-Workflows ohne Programmieren</h1>
 </div>
 
 Eine Demo- und Arbeitsumgebung für Hackathons mit Bibliotheksbeschäftigten. Gruppen ohne Programmierkenntnisse bauen in [Langflow](https://www.langflow.org/) per Drag-and-drop KI-Workflows und KI-Agenten für echte Aufgaben wissenschaftlicher Bibliotheken: Literaturangaben prüfen, die Quellen einer Abschlussarbeit analysieren, verlagsübergreifend Literatur sammeln und Forschungslücken finden. Mitgeliefert werden fertige Beispiel-Flows, eigene Bibliotheks-Bausteine (Crossref, OpenAlex, Unpaywall, hbz-Katalog) und Anleitungen auf Deutsch.
@@ -27,14 +27,14 @@ Eine Demo- und Arbeitsumgebung für Hackathons mit Bibliotheksbeschäftigten. Gr
   | Baustein | Quelle |
   |---|---|
   | KI-Modell | Cluster (LiteLLM) oder lokal (Ollama), umschaltbar |
-  | Literaturangaben prüfen | Crossref, DataCite, Retraction Watch |
+  | Literaturangaben prüfen | Crossref (inkl. Retraction Watch), DataCite |
   | Literaturverzeichnis finden | schneidet das Verzeichnis aus langen Dokumenten aus |
   | Quellen anreichern | Crossref + OpenAlex, mit Statistik |
-  | Literatursuche | OpenAlex (Ausweichsuche über Crossref) |
+  | Literatursuche | OpenAlex (bei Bedarf mit Crossref als Suchindex) |
   | Volltexte holen | freie PDFs über OpenAlex und Unpaywall |
   | Katalogsuche | hbz-Verbundkatalog über lobid.org |
 
-  Alle Bausteine außer *Literaturverzeichnis finden* und *Volltexte holen* lassen sich auch als Werkzeuge für Agenten nutzen.
+  Alle Bausteine außer *KI-Modell*, *Literaturverzeichnis finden* und *Volltexte holen* lassen sich auch als Werkzeuge für Agenten nutzen.
 - **Cluster oder lokal**: Standardmäßig nutzen die Flows ein Modell über einen LiteLLM-Endpunkt. Wer Daten nicht aus dem Haus geben will (z. B. unveröffentlichte Abschlussarbeiten), schaltet auf ein lokales Modell mit Ollama um.
 
 ## Setup and Installation
@@ -54,7 +54,7 @@ Eine Demo- und Arbeitsumgebung für Hackathons mit Bibliotheksbeschäftigten. Gr
    cd demo-bibliothekshackaton
    ```
 
-2. Einstellungen anlegen und die Werte der Orga eintragen:
+2. Einstellungen anlegen: `.env.example` kopieren, die Kopie `.env` nennen und die Werte der Orga eintragen. Die Startdateien aus Schritt 3 legen `.env` beim ersten Start auch selbst an und öffnen sie.
 
    ```bash
    cp .env.example .env
@@ -118,7 +118,7 @@ Die Bausteine liegen in [`komponenten/bibliothek/`](komponenten/bibliothek/). La
 
 ## Issues and the project board
 
-`.github/workflows/add-issue-to-project.yml` adds every new issue to the [AIHPI project board](https://github.com/orgs/aihpi/projects/3). It needs a token in the secret `ADD_ISSUE_TO_PROJECT`, because the workflow's own `GITHUB_TOKEN` cannot write to organisation projects.
+`.github/workflows/add-issue-to-project.yml` adds every new issue to the [AIHPI project board](https://github.com/orgs/aihpi/projects/15). It needs a token in the secret `ADD_ISSUE_TO_PROJECT`, because the workflow's own `GITHUB_TOKEN` cannot write to organisation projects.
 
 - **Public repository**: nothing to do, the organisation-level secret is inherited.
 - **Private repository**: organisation secrets are not available to private repositories on the organisation's GitHub plan, so set the secret once after creating the repository. Ask an organisation admin for the token file, then run `gh secret set ADD_ISSUE_TO_PROJECT -R aihpi/<repository> < path/to/token-file`.
@@ -135,4 +135,4 @@ Until the secret exists, the workflow fails on every new issue with `Input requi
 
 <img src="00_aisc/img/logo_bmftr_de.png" alt="drawing" style="width:170px;"/>
 
-The [AI Service Centre Berlin Brandenburg](http://hpi.de/kisz) is funded by the [Federal Ministry of Research, Technology and Space](https://www.bmbf.de/) under the funding code 16IS22092.
+The [AI Service Centre Berlin Brandenburg](https://hpi.de/kisz) is funded by the [Federal Ministry of Research, Technology and Space](https://www.bmftr.bund.de/) under the funding code 16IS22092.
