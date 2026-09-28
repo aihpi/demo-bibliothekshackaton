@@ -1,129 +1,122 @@
 <div style="background-color: #ffffff; color: #000000; padding: 10px;">
 <img src="00_aisc/img/logo_aisc_bmftr.jpg">
-<h1>Bibliothekshackathon: KI-Workflows ohne Programmieren</h1>
+<h1>Library Hackathon: AI Workflows Without Coding</h1>
 </div>
 
-Eine Demo- und Arbeitsumgebung für Hackathons mit Bibliotheksbeschäftigten. Gruppen ohne Programmierkenntnisse bauen in [Langflow](https://www.langflow.org/) per Drag-and-drop KI-Workflows und KI-Agenten für echte Aufgaben wissenschaftlicher Bibliotheken: Literaturangaben prüfen, die Quellen einer Abschlussarbeit analysieren, verlagsübergreifend Literatur sammeln und Forschungslücken finden. Mitgeliefert werden fertige Beispiel-Flows, eigene Bibliotheks-Bausteine (Crossref, OpenAlex, Unpaywall, hbz-Katalog) und Anleitungen auf Deutsch.
+**English** | [Deutsch](README.de.md)
 
-*English summary: a no-code hackathon kit for library staff, built on Langflow. It ships German-language example flows and custom components for Crossref, OpenAlex, Unpaywall and the hbz union catalogue. It runs locally in Docker, with either an institutional LiteLLM endpoint or a local Ollama model.*
+A demo and working environment for hackathons with library staff. Groups with no programming experience use [Langflow](https://www.langflow.org/) to build AI workflows and AI agents by drag and drop, for real tasks in academic libraries: checking references, analysing the sources of a thesis, collecting literature across publishers and finding research gaps. The kit ships ready-made example flows, custom library components (Crossref, OpenAlex, Unpaywall, hbz union catalogue) and guides.
 
-![Der Referenz-Checker in Langflow](00_aisc/img/screenshot_app.png)
+The hackathon itself runs in German: the example flows, the components and the guides in [`anleitungen/`](anleitungen/) are all in German.
+
+![The Referenz-Checker flow in Langflow](00_aisc/img/screenshot_app.png)
 
 ## Features
 
-- **Visuell statt Code**: Flows werden in Langflow aus Bausteinen zusammengeklickt. Jeder Beispiel-Flow erklärt sich mit einer Notiz direkt auf der Arbeitsfläche.
-- **Fünf fertige Beispiel-Flows** als Ausgangspunkt für die Challenges:
+- **Visual instead of code**: flows are put together in Langflow from building blocks. Every example flow explains itself with a note directly on the canvas.
+- **Five ready-made example flows** as starting points for the challenges:
 
-  | Flow | Was er tut |
-  |---|---|
-  | `00 Erste Schritte – Hallo KI` | Der kleinste Flow: Frage, Anweisung, Antwort |
-  | `01 Referenz-Checker` | Prüft ein Literaturverzeichnis gegen Crossref: Existenz, Jahr, Erstautor:in, DOI, zurückgezogene Artikel |
-  | `02 Masterarbeit – Quellen analysieren` | Liest ein PDF, schneidet das Literaturverzeichnis aus, reichert alle Quellen über OpenAlex an und lässt die KI die Quellenbasis bewerten |
-  | `03 Literaturreview – Forschungslücken finden` | Forschungsfrage → Suchbegriffe → verlagsübergreifende Suche → freie Volltexte → Themen, Widersprüche, Forschungslücken |
-  | `04 Recherche-Agent` | Ein KI-Agent, der selbst entscheidet, ob er Artikel sucht, den Katalog befragt oder Angaben prüft |
+  | Flow | What it does |
+  | --- | --- |
+  | `00 Erste Schritte – Hallo KI` | The smallest possible flow: question, instruction, answer |
+  | `01 Referenz-Checker` | Checks a reference list against Crossref: existence, year, first author, DOI, retracted articles |
+  | `02 Masterarbeit – Quellen analysieren` | Reads a PDF, cuts out the reference list, enriches every source via OpenAlex and has the AI assess the source base |
+  | `03 Literaturreview – Forschungslücken finden` | Research question → search terms → cross-publisher search → open full texts → themes, contradictions, research gaps |
+  | `04 Recherche-Agent` | An AI agent that decides for itself whether to search for articles, query the catalogue or check references |
 
-- **Bibliotheks-Bausteine** (Kategorie *Bibliothek* in Langflow):
+- **Library components** (category *Bibliothek* in Langflow):
 
-  | Baustein | Quelle |
-  |---|---|
-  | KI-Modell | Cluster (LiteLLM) oder lokal (Ollama), umschaltbar |
-  | Literaturangaben prüfen | Crossref (inkl. Retraction Watch), DataCite |
-  | Literaturverzeichnis finden | schneidet das Verzeichnis aus langen Dokumenten aus |
-  | Quellen anreichern | Crossref + OpenAlex, mit Statistik |
-  | Literatursuche | OpenAlex (bei Bedarf mit Crossref als Suchindex) |
-  | Volltexte holen | freie PDFs über OpenAlex und Unpaywall |
-  | Katalogsuche | hbz-Verbundkatalog über lobid.org |
+  | Component | Source |
+  | --- | --- |
+  | KI-Modell (AI model) | Cluster (LiteLLM) or local (Ollama), switchable |
+  | Literaturangaben prüfen (check references) | Crossref (including Retraction Watch), DataCite |
+  | Literaturverzeichnis finden (find reference list) | Cuts the reference list out of long documents |
+  | Quellen anreichern (enrich sources) | Crossref + OpenAlex, with statistics |
+  | Literatursuche (literature search) | OpenAlex (with Crossref as a search index when needed) |
+  | Volltexte holen (fetch full texts) | Open PDFs via OpenAlex and Unpaywall |
+  | Katalogsuche (catalogue search) | hbz union catalogue via lobid.org |
 
-  Alle Bausteine außer *KI-Modell*, *Literaturverzeichnis finden* und *Volltexte holen* lassen sich auch als Werkzeuge für Agenten nutzen.
-- **Cluster oder lokal**: Standardmäßig nutzen die Flows ein Modell über einen LiteLLM-Endpunkt. Wer Daten nicht aus dem Haus geben will (z. B. unveröffentlichte Abschlussarbeiten), schaltet auf ein lokales Modell mit Ollama um.
+  All components except *KI-Modell*, *Literaturverzeichnis finden* and *Volltexte holen* can also be used as tools by agents.
+- **Cluster or local**: by default the flows use a model through a LiteLLM endpoint. Anyone who doesn't want data to leave the building (unpublished theses, for example) can switch to a local model with Ollama.
 
 ## Setup and Installation
 
 ### Prerequisites
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Windows, macOS) oder Docker mit Docker Compose (Linux)
-- Zugangsdaten zum LiteLLM-Endpunkt (von der Orga) **oder** ein lokales Modell über [Ollama](https://ollama.com/)
-- Internetzugang (für Crossref, OpenAlex, Unpaywall und lobid)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Windows, macOS) or Docker with Docker Compose (Linux)
+- Credentials for the LiteLLM endpoint (from the organisers) **or** a local model via [Ollama](https://ollama.com/)
+- Internet access (for Crossref, OpenAlex, Unpaywall and lobid)
 
 ### Quick Start
 
-1. Das Repository herunterladen (grüner Knopf *Code → Download ZIP*, dann entpacken) oder klonen:
+1. Download the repository (green *Code → Download ZIP* button, then unzip) or clone it:
 
    ```bash
    git clone https://github.com/aihpi/demo-bibliothekshackaton.git
    cd demo-bibliothekshackaton
    ```
 
-2. Einstellungen anlegen: `.env.example` kopieren, die Kopie `.env` nennen und die Werte der Orga eintragen. Die Startdateien aus Schritt 3 legen `.env` beim ersten Start auch selbst an und öffnen sie.
+2. Create the settings file: copy `.env.example`, name the copy `.env` and fill in the values from the organisers. The start scripts from step 3 also create `.env` on the first run and open it for you.
 
    ```bash
    cp .env.example .env
    ```
 
-3. Starten: per Doppelklick auf `starten.command` (macOS) bzw. `starten.bat` (Windows), oder:
+3. Start it by double-clicking `starten.command` (macOS) or `starten.bat` (Windows), or run:
 
    ```bash
    docker compose up -d
    ```
 
-   Für ein lokales Modell in Docker zusätzlich `--profile lokal` angeben (lädt beim ersten Start einige GB).
+   For a local model in Docker, add `--profile lokal` (downloads a few GB on the first start).
 
-4. Langflow öffnen: <http://localhost:7860>. Die Beispiel-Flows liegen im Projekt *Starter Project*.
+4. Open Langflow at <http://localhost:7860>. The example flows are in the project *Starter Project*.
 
 ## User Guide
 
 ### Using the Tool
 
-Die ausführliche Anleitung liegt in [`anleitungen/`](anleitungen/):
+The detailed guides are in [`anleitungen/`](anleitungen/) (German):
 
-1. [**Anleitung für Teilnehmende**](anleitungen/01_teilnehmende.md): installieren, starten, erster Flow, eigene Flows bauen, häufige Probleme.
-2. [**Challenges**](anleitungen/02_challenges.md): die Aufgaben des Hackathons, jeweils in drei Stufen.
-3. [**Leitfaden für die Orga**](anleitungen/03_orga.md): Vorbereitung, Zugangsdaten, Ablaufplan, Fehlerbehebung, Wartung.
+1. [**Guide for participants**](anleitungen/01_teilnehmende.md): installing, starting, the first flow, building your own flows, common problems.
+2. [**Challenges**](anleitungen/02_challenges.md): the hackathon tasks, each in three levels.
+3. [**Guide for organisers**](anleitungen/03_orga.md): preparation, credentials, schedule, troubleshooting, maintenance.
 
-Beispieldaten liegen in [`daten/`](daten/): eine Literaturliste mit eingebauten Fehlern und eine fiktive Masterarbeit als PDF.
+Sample data is in [`daten/`](daten/): a reference list with deliberate errors and a fictional master's thesis as a PDF.
 
 ### Recommendations
 
-- Einen kostenlosen [OpenAlex-API-Schlüssel](https://openalex.org/settings/api) in `.env` eintragen. Ohne Schlüssel bremst OpenAlex die Suche bei Last, und alle Gruppen im selben WLAN teilen sich das Limit.
-- Eine Kontakt-E-Mail (`KONTAKT_EMAIL`) eintragen: Crossref antwortet dann schneller, und Unpaywall findet zusätzliche freie Volltexte.
-- Agenten (Flow 04) brauchen Modelle, die Werkzeuge bedienen können. Mit dem Cluster funktioniert das am zuverlässigsten.
+- Add a free [OpenAlex API key](https://openalex.org/settings/api) to `.env`. Without a key, OpenAlex throttles searches under load, and all groups on the same Wi-Fi share the limit.
+- Add a contact email (`KONTAKT_EMAIL`): Crossref then answers faster, and Unpaywall finds additional open full texts.
+- Agents (flow 04) need models that can use tools. This works most reliably with the cluster.
 
 ## Limitations
 
-- **Kleine lokale Modelle** (z. B. `qwen3.5:4b`) sind langsam und machen mehr Fehler: Sie erfinden etwa Quellennummern oder ignorieren Teile der Anweisung. Das eignet sich gut, um über die Prüfung von KI-Ergebnissen zu sprechen, ist aber kein Ersatz für ein großes Modell.
-- **Abdeckung der Datenbanken**: Crossref und OpenAlex kennen vor allem Zeitschriftenartikel. Bücher, graue Literatur und Webseiten werden oft nicht gefunden. Dafür gibt es die Katalogsuche.
-- **Volltexte** gibt es nur für frei zugängliche Publikationen, und nicht jedes PDF lässt sich automatisch lesen.
-- **Die Oberfläche von Langflow ist englisch**; die Anleitung übersetzt die wichtigsten Begriffe.
+- **Small local models** (such as `qwen3.5:4b`) are slow and make more mistakes: they invent source numbers or ignore parts of the instructions. That makes for a good discussion about checking AI output, but it's no substitute for a large model.
+- **Database coverage**: Crossref and OpenAlex mostly know journal articles. Books, grey literature and websites are often missing. That's what the catalogue search is for.
+- **Full texts** are only available for open access publications, and not every PDF can be read automatically.
+- **The Langflow interface is in English**; the participant guide translates the most important terms.
 
-## Für Entwickler:innen
+## For Developers
 
-Die Flows in `flows/` werden nicht von Hand gepflegt, sondern von [`scripts/flows_bauen.py`](scripts/flows_bauen.py) über die Langflow-API erzeugt. So passen Code und Felder immer zur installierten Langflow-Version:
+The flows in `flows/` are not edited by hand. [`scripts/flows_bauen.py`](scripts/flows_bauen.py) generates them through the Langflow API, so the code and fields always match the installed Langflow version:
 
 ```bash
 docker compose up -d
-uv run --with httpx scripts/flows_bauen.py --testen   # bauen, jeden Flow einmal ausführen, exportieren
+uv run --with httpx scripts/flows_bauen.py --testen   # build, run every flow once, export
 ```
 
-Die Bausteine liegen in [`komponenten/bibliothek/`](komponenten/bibliothek/). Langflow liest sie beim Start; nach Änderungen `docker compose restart langflow` und die Flows neu bauen. Die Beispiel-Masterarbeit erzeugt `uv run --with reportlab scripts/beispieldaten_erzeugen.py`.
+The components are in [`komponenten/bibliothek/`](komponenten/bibliothek/). Langflow reads them at startup; after changing them, run `docker compose restart langflow` and rebuild the flows. The sample thesis is generated with `uv run --with reportlab scripts/beispieldaten_erzeugen.py`.
 
 ## References
 
-- [Langflow Dokumentation](https://docs.langflow.org/)
+- [Langflow documentation](https://docs.langflow.org/)
 - [Crossref REST API](https://www.crossref.org/documentation/retrieve-metadata/rest-api/), [OpenAlex API](https://docs.openalex.org/), [Unpaywall API](https://unpaywall.org/products/api), [lobid-resources](https://lobid.org/resources/api)
 - [LiteLLM](https://docs.litellm.ai/), [Ollama](https://ollama.com/)
 
 ## Author
 
-- [KI-Servicezentrum Berlin-Brandenburg](https://hpi.de/kisz)
-
-## Issues and the project board
-
-`.github/workflows/add-issue-to-project.yml` adds every new issue to the [AIHPI project board](https://github.com/orgs/aihpi/projects/15). It needs a token in the secret `ADD_ISSUE_TO_PROJECT`, because the workflow's own `GITHUB_TOKEN` cannot write to organisation projects.
-
-- **Public repository**: nothing to do, the organisation-level secret is inherited.
-- **Private repository**: organisation secrets are not available to private repositories on the organisation's GitHub plan, so set the secret once after creating the repository. Ask an organisation admin for the token file, then run `gh secret set ADD_ISSUE_TO_PROJECT -R aihpi/<repository> < path/to/token-file`.
-
-Until the secret exists, the workflow fails on every new issue with `Input required and not supplied: github-token`. Nothing else is affected.
+- [Mario Tormo Romero](https://github.com/mt0rm0)
 
 ## License
 
