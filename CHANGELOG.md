@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- Beispiel-Flow 01b: Referenz-Checker nur aus Standard-Bausteinen, zum Vergleich mit Flow 01
+
+### Changed
+
+- Literatur-APIs (Crossref, OpenAlex, Unpaywall, DataCite, lobid) in `LANGFLOW_SSRF_ALLOWED_HOSTS`, damit der
+  Baustein *API Request* sie erreicht
+
 ## [0.1.0] - 2026-09-24
 
 ### Added

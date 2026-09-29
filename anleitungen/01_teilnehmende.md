@@ -68,7 +68,7 @@ Beim ersten Start lädt Docker Langflow herunter (knapp 1 GB, einige Minuten). D
 
 ## 3. Langflow in fünf Minuten
 
-Beim Öffnen seht ihr die Übersicht. Im Projekt **Starter Project** liegen die fünf Beispiel-Flows. Ein Klick öffnet einen Flow.
+Beim Öffnen seht ihr die Übersicht. Im Projekt **Starter Project** liegen die sechs Beispiel-Flows. Ein Klick öffnet einen Flow.
 
 ![Ein Flow in Langflow](bilder/flow_referenz_checker.png)
 
