@@ -108,7 +108,7 @@ Dann den **01 Referenz-Checker** ausprobieren: Den Inhalt von `daten/literaturli
 
 ## 5. Einen Flow verändern
 
-Bevor ihr etwas verändert: **Kopie anlegen**. In der Übersicht beim Flow auf die drei Punkte → *Duplicate*. So bleibt das Original erhalten.
+Bevor ihr etwas verändert: **Kopie anlegen**. In der Übersicht beim Flow auf die drei Punkte → *Duplicate*. Das ist wichtig: Bei jedem Start ersetzt Langflow die Beispiel-Flows durch die Originale, Änderungen direkt darin gehen also verloren.
 
 **Prompt ändern:** Im Baustein *Prompt Template* in das Textfeld klicken. Ihr könnt die Anweisung frei umschreiben. Platzhalter wie `{frage}` erzeugen links am Baustein einen Eingang, an den ihr etwas anschließen könnt. Neuer Platzhalter = neuer Eingang.
 
@@ -118,7 +118,7 @@ Bevor ihr etwas verändert: **Kopie anlegen**. In der Übersicht beim Flow auf d
 
 **Verbindung löschen:** Linie anklicken, dann `Entf` bzw. `Backspace`.
 
-**Einstellungen:** Viele Felder stehen direkt am Baustein. Weitere Einstellungen gibt es über **Controls** in der kleinen Leiste über dem Baustein.
+**Einstellungen:** Viele Felder stehen direkt am Baustein. Weitere Einstellungen gibt es über **Parameters** in der kleinen Leiste über dem Baustein.
 
 **Speichern:** Langflow speichert automatisch.
 

@@ -5,7 +5,9 @@
 
 [English](README.md) | **Deutsch**
 
-Eine Demo- und Arbeitsumgebung für Hackathons mit Bibliotheksbeschäftigten. Gruppen ohne Programmierkenntnisse bauen in [Langflow](https://www.langflow.org/) per Drag-and-drop KI-Workflows und KI-Agenten für echte Aufgaben wissenschaftlicher Bibliotheken: Literaturangaben prüfen, die Quellen einer Abschlussarbeit analysieren, verlagsübergreifend Literatur sammeln und Forschungslücken finden. Mitgeliefert werden fertige Beispiel-Flows, eigene Bibliotheks-Bausteine (Crossref, OpenAlex, Unpaywall, hbz-Katalog) und Anleitungen auf Deutsch.
+Eine Demo- und Arbeitsumgebung für Hackathons mit Bibliotheksbeschäftigten. Gruppen ohne Programmierkenntnisse bauen in [Langflow](https://www.langflow.org/) per Drag-and-drop KI-Workflows und KI-Agenten für echte Aufgaben wissenschaftlicher Bibliotheken: Literaturangaben prüfen, die Quellen einer Abschlussarbeit analysieren, verlagsübergreifend Literatur sammeln und Forschungslücken finden. Mitgeliefert werden fertige Beispiel-Flows, eigene Bibliotheks-Bausteine (Crossref, OpenAlex, Unpaywall, hbz-Katalog) und Anleitungen.
+
+Der Hackathon selbst läuft auf Deutsch: Die Beispiel-Flows, die Bausteine und die Anleitungen in [`anleitungen/`](anleitungen/) sind alle auf Deutsch.
 
 ![Der Referenz-Checker in Langflow](00_aisc/img/screenshot_app.png)
 
@@ -47,6 +49,8 @@ Eine Demo- und Arbeitsumgebung für Hackathons mit Bibliotheksbeschäftigten. Gr
 
 ### Schnellstart
 
+Hier die Kurzfassung. Die ausführliche [Installationsanleitung](INSTALL.de.md) erklärt jedes Betriebssystem, lokale Modelle, das Vorbereiten vieler Laptops und die Fehlersuche.
+
 1. Das Repository herunterladen (grüner Knopf *Code → Download ZIP*, dann entpacken) oder klonen:
 
    ```bash
@@ -70,6 +74,18 @@ Eine Demo- und Arbeitsumgebung für Hackathons mit Bibliotheksbeschäftigten. Gr
 
 4. Langflow öffnen: <http://localhost:7860>. Die Beispiel-Flows liegen im Projekt *Starter Project*.
 
+### Aktualisieren
+
+Mit Git im Projektordner ausführen:
+
+```bash
+docker compose down
+git pull
+docker compose up -d
+```
+
+Ohne Git, und worauf ihr achten solltet (eigene Flows, Beispiel-Flows), steht unter [Auf die neueste Version aktualisieren](INSTALL.de.md#auf-die-neueste-version-aktualisieren) in der Installationsanleitung.
+
 ## Benutzung
 
 ### Anleitungen
@@ -79,6 +95,8 @@ Die ausführliche Anleitung liegt in [`anleitungen/`](anleitungen/):
 1. [**Anleitung für Teilnehmende**](anleitungen/01_teilnehmende.md): installieren, starten, erster Flow, eigene Flows bauen, häufige Probleme.
 2. [**Challenges**](anleitungen/02_challenges.md): die Aufgaben des Hackathons, jeweils in drei Stufen.
 3. [**Leitfaden für die Orga**](anleitungen/03_orga.md): Vorbereitung, Zugangsdaten, Ablaufplan, Fehlerbehebung, Wartung.
+
+Die [Bausteine-Anleitung](COMPONENTS.de.md) erklärt jeden Baustein in der Leiste von Langflow mit seinen Eingängen und Ausgängen, in der Reihenfolge, in der die Teilnehmenden sie finden.
 
 Beispieldaten liegen in [`daten/`](daten/): eine Literaturliste mit eingebauten Fehlern und eine fiktive Masterarbeit als PDF.
 

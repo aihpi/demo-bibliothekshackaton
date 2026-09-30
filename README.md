@@ -49,6 +49,8 @@ The hackathon itself runs in German: the example flows, the components and the g
 
 ### Quick Start
 
+The short version is below. The full [installation guide](INSTALL.md) covers each operating system, local models, preparing many laptops and troubleshooting.
+
 1. Download the repository (green *Code → Download ZIP* button, then unzip) or clone it:
 
    ```bash
@@ -72,6 +74,18 @@ The hackathon itself runs in German: the example flows, the components and the g
 
 4. Open Langflow at <http://localhost:7860>. The example flows are in the project *Starter Project*.
 
+### Updating
+
+With Git, run this in the project folder:
+
+```bash
+docker compose down
+git pull
+docker compose up -d
+```
+
+Without Git, and for what to watch out for (your own flows, the example flows), see [Update to the latest version](INSTALL.md#update-to-the-latest-version) in the installation guide.
+
 ## User Guide
 
 ### Using the Tool
@@ -81,6 +95,8 @@ The detailed guides are in [`anleitungen/`](anleitungen/) (German):
 1. [**Guide for participants**](anleitungen/01_teilnehmende.md): installing, starting, the first flow, building your own flows, common problems.
 2. [**Challenges**](anleitungen/02_challenges.md): the hackathon tasks, each in three levels.
 3. [**Guide for organisers**](anleitungen/03_orga.md): preparation, credentials, schedule, troubleshooting, maintenance.
+
+The [component guide](COMPONENTS.md) explains every component in Langflow's sidebar, with its inputs and outputs, in the order participants find them.
 
 Sample data is in [`daten/`](daten/): a reference list with deliberate errors and a fictional master's thesis as a PDF.
 
