@@ -276,10 +276,9 @@ git stash pop
 **Without Git:**
 
 1. Stop Langflow (see above).
-2. Rename the old project folder, for example to `demo-bibliothekshackaton-old`.
-3. Download and unzip the new version (step 3). Give the new folder **exactly the name the old folder had**. Docker uses the folder name to find your own flows; with a different name, Langflow starts without them.
-4. Copy `.env` from the old folder into the new one.
-5. Start Langflow (step 5). Once everything works, you can delete the old folder.
+2. Download and unzip the new version (step 3). It doesn't matter what the new folder is called.
+3. Copy `.env` from the old folder into the new one.
+4. Start Langflow from the new folder (step 5). Your own flows are still there. Once everything works, you can delete the old folder.
 
 ### Remove everything
 
@@ -307,7 +306,6 @@ Then delete the project folder, and uninstall Docker Desktop if you no longer ne
 | "401" or "Authentication" in the flow | `CLUSTER_API_KEY` is wrong. Ask the organisers. |
 | "Kein Modell gewählt" (no model selected) | Set `CLUSTER_MODELL` in `.env`, or pick a model in the *KI-Modell* block. |
 | Local model: "connection refused" | Ollama isn't running or can't be reached. See [step 7](#7-optional-a-local-ai-model), including the note for Linux. |
-| After an update, your own flows are gone | The project folder now has a different name than before. Give it the old name again and restart Langflow (see [step 9](#9-stop-update-and-remove)). |
 | Changes to `.env` have no effect | Run `docker compose up -d` again. |
 | Anything else | Look at Langflow's log with `docker compose logs -f langflow`, or ask the organisers. |
 

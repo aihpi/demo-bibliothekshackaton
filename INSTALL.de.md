@@ -276,10 +276,9 @@ git stash pop
 **Ohne Git:**
 
 1. Langflow beenden (siehe oben).
-2. Den alten Projektordner umbenennen, z. B. in `demo-bibliothekshackaton-alt`.
-3. Die neue Version herunterladen und entpacken (Schritt 3). Dem neuen Ordner **genau den Namen des alten Ordners** geben. Docker findet eure eigenen Flows über den Ordnernamen; mit einem anderen Namen startet Langflow ohne sie.
-4. Die `.env` aus dem alten Ordner in den neuen kopieren.
-5. Langflow starten (Schritt 5). Wenn alles funktioniert, könnt ihr den alten Ordner löschen.
+2. Die neue Version herunterladen und entpacken (Schritt 3). Wie der neue Ordner heißt, ist egal.
+3. Die `.env` aus dem alten Ordner in den neuen kopieren.
+4. Langflow aus dem neuen Ordner starten (Schritt 5). Eure eigenen Flows sind noch da. Wenn alles funktioniert, könnt ihr den alten Ordner löschen.
 
 ### Alles entfernen
 
@@ -307,7 +306,6 @@ Danach den Projektordner löschen und Docker Desktop deinstallieren, falls ihr e
 | „401“ oder „Authentication“ im Flow | `CLUSTER_API_KEY` stimmt nicht. Bei der Orga nachfragen. |
 | „Kein Modell gewählt“ | `CLUSTER_MODELL` in der `.env` setzen oder im Baustein *KI-Modell* ein Modell auswählen. |
 | Lokales Modell: „connection refused“ | Ollama läuft nicht oder ist nicht erreichbar. Siehe [Schritt 7](#7-optional-ein-lokales-ki-modell), auch den Hinweis zu Linux. |
-| Nach einem Update sind die eigenen Flows weg | Der Projektordner heißt jetzt anders als vorher. Ihm wieder den alten Namen geben und Langflow neu starten (siehe [Schritt 9](#9-beenden-aktualisieren-und-entfernen)). |
 | Änderungen an der `.env` wirken nicht | Noch einmal `docker compose up -d` ausführen. |
 | Alles andere | Das Protokoll von Langflow mit `docker compose logs -f langflow` ansehen oder die Orga fragen. |
 

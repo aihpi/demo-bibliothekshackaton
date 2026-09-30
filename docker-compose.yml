@@ -5,6 +5,10 @@
 #
 # Einstellungen (Cluster-Adresse, Schlüssel, Modelle) stehen in der Datei .env.
 
+# Fester Projektname: Die eigenen Flows liegen im Volume demo-bibliothekshackaton_langflow-daten,
+# egal wie der Ordner heißt (ein ZIP von GitHub entpackt sich als ...-main).
+name: demo-bibliothekshackaton
+
 services:
   langflow:
     image: langflowai/langflow:1.12.3
