@@ -8,20 +8,21 @@ Sie gilt für Langflow 1.12.3, so wie es in diesem Projekt eingerichtet ist. Die
 
 ## Inhalt
 
-- [So lest ihr diese Anleitung](#so-lest-ihr-diese-anleitung)
-- [Ein KI-Modell in Standard-Bausteinen nutzen](#ein-ki-modell-in-standard-bausteinen-nutzen)
-- [Input & Output](#input--output): Chat Input, Chat Output, Webhook
-- [Data Sources](#data-sources): API Request, Mock Data, SQL Database, URL, Web Search
-- [Models & Agents](#models--agents): A2A Agent, Agent, Embedding Model, Language Model, Message History, Prompt Template
-- [LLM Operations](#llm-operations): Batch Run, Guardrails, LLM Selector, Smart Router, Smart Transform, Structured Output
-- [Files & Knowledge](#files--knowledge): File System, Knowledge, Memory Base, Read File, Write File
-- [Processing](#processing): Data Operations, Dynamic Create Data, Parser, Split Text, Type Convert
-- [Flow Control](#flow-control): Human Input, If-Else, Listen, Loop, Notify, Run Flow
-- [Utilities](#utilities): Calculator, Current Date, Python Interpreter
-- [Bibliothek](#bibliothek): Katalogsuche, KI-Modell, Literaturangaben prüfen, Literatursuche, Literaturverzeichnis finden, Quellen anreichern, Volltexte holen
-- [Nicht in dieser Anleitung](#nicht-in-dieser-anleitung)
+1. [So lest ihr diese Anleitung](#1-so-lest-ihr-diese-anleitung)
+2. [Ein KI-Modell in Standard-Bausteinen nutzen](#2-ein-ki-modell-in-standard-bausteinen-nutzen)
+3. [Bausteine](#3-bausteine)
+   - [3.1 Input & Output](#31-input--output): Chat Input, Chat Output, Webhook
+   - [3.2 Data Sources](#32-data-sources): API Request, Mock Data, SQL Database, URL, Web Search
+   - [3.3 Models & Agents](#33-models--agents): A2A Agent, Agent, Embedding Model, Language Model, Message History, Prompt Template
+   - [3.4 LLM Operations](#34-llm-operations): Batch Run, Guardrails, LLM Selector, Smart Router, Smart Transform, Structured Output
+   - [3.5 Files & Knowledge](#35-files--knowledge): File System, Knowledge, Memory Base, Read File, Write File
+   - [3.6 Processing](#36-processing): Data Operations, Dynamic Create Data, Parser, Split Text, Type Convert
+   - [3.7 Flow Control](#37-flow-control): Human Input, If-Else, Listen, Loop, Notify, Run Flow
+   - [3.8 Utilities](#38-utilities): Calculator, Current Date, Python Interpreter
+   - [3.9 Bibliothek](#39-bibliothek): Katalogsuche, KI-Modell, Literaturangaben prüfen, Literatursuche, Literaturverzeichnis finden, Quellen anreichern, Volltexte holen
+4. [Nicht in dieser Anleitung](#4-nicht-in-dieser-anleitung)
 
-## So lest ihr diese Anleitung
+## 1. So lest ihr diese Anleitung
 
 **Eingänge und Ausgänge.** Eingänge sind am **linken** Rand eines Bausteins: Felder, die ihr ausfüllt, oder Punkte, an die ihr eine Linie anschließt. Ausgänge sind die Punkte am **rechten** Rand. Eine Linie führt immer von einem Ausgang zu einem Eingang. Viele Eingänge kann man entweder eintippen oder verbinden; sobald eine Linie angeschlossen ist, steht im Feld *Receiving input*.
 
@@ -44,7 +45,7 @@ In den Tabellen unten nennt die Typ-Spalte auch einfache Einstellungen: *Text*, 
 
 **Beispiele.** Kommt ein Baustein in einem der Beispiel-Flows im *Starter Project* vor, steht beim Eintrag, in welchem. Dort könnt ihr ihn in Aktion sehen.
 
-## Ein KI-Modell in Standard-Bausteinen nutzen
+## 2. Ein KI-Modell in Standard-Bausteinen nutzen
 
 Mehrere Standard-Bausteine brauchen ein KI-Modell: Agent, Batch Run, Guardrails, LLM Selector, Smart Router, Smart Transform und Structured Output. Sie haben ein Feld **Language Model** mit einer Liste von Anbietern wie OpenAI. Diese Anbieter sind in diesem Projekt **nicht eingerichtet**.
 
@@ -52,9 +53,13 @@ Setzt stattdessen einen Baustein **KI-Modell** (Kategorie *Bibliothek*) auf die 
 
 Der Standard-Baustein **Language Model** selbst funktioniert wie KI-Modell, braucht aber einen Anbieter; nehmt stattdessen KI-Modell.
 
-## Input & Output
+## 3. Bausteine
 
-### Chat Input
+Die Bausteine in der Reihenfolge der Leiste, mit einem Unterabschnitt pro Kategorie.
+
+### 3.1 Input & Output
+
+#### 3.1.1 Chat Input
 
 Nimmt den Text, den ihr im **Playground** eintippt, und gibt ihn in den Flow. Fast jeder Flow beginnt damit.
 
@@ -67,7 +72,7 @@ Nimmt den Text, den ihr im **Playground** eintippt, und gibt ihn in den Flow. Fa
 
 **Beispiele:** alle Beispiel-Flows.
 
-### Chat Output
+#### 3.1.2 Chat Output
 
 Zeigt ein Ergebnis im **Playground** an. Ein Flow kann mehrere Chat Outputs haben; jeder erscheint als eigene Nachricht.
 
@@ -80,7 +85,7 @@ Zeigt ein Ergebnis im **Playground** an. Ein Flow kann mehrere Chat Outputs habe
 
 **Beispiele:** alle Beispiel-Flows. Flow 01 nutzt zwei, einen für den Bericht und einen für die Tabelle.
 
-### Webhook
+#### 3.1.3 Webhook
 
 Lässt ein anderes Programm den Flow über das Internet starten, indem es Daten an eine Webadresse schickt. Für den Hackathon nicht nötig.
 
@@ -89,9 +94,9 @@ Lässt ein anderes Programm den Flow über das Internet starten, indem es Daten 
 | Ein | Endpoint | Text | Die Adresse, an die andere Programme Daten schicken (wird automatisch ausgefüllt) |
 | Aus | JSON | JSON | Die geschickten Daten |
 
-## Data Sources
+### 3.2 Data Sources
 
-### API Request
+#### 3.2.1 API Request
 
 Holt Daten von einem Webdienst (einer API), indem er dessen Adresse aufruft. So bindet ihr Datenbanken an, für die es keinen fertigen Baustein gibt.
 
@@ -106,7 +111,7 @@ Holt Daten von einem Webdienst (einer API), indem er dessen Adresse aufruft. So 
 
 **Hinweis:** Langflow sperrt Adressen, die es für intern hält. Auf manchen Rechnern trifft das fälschlich auch normale Webseiten, mit der Fehlermeldung *SSRF Protection: … resolves to blocked IP address*. Die Bibliotheks-Datenbanken (Crossref, OpenAlex, Unpaywall, DataCite, lobid) sind in diesem Projekt freigegeben. Für andere Adressen fragt die Orga.
 
-### Mock Data
+#### 3.2.2 Mock Data
 
 Erzeugt ausgedachte Beispieldaten zum Ausprobieren, z. B. um einen Parser oder eine Loop zu testen, bevor echte Daten da sind. Er hat keine Eingänge.
 
@@ -114,7 +119,7 @@ Erzeugt ausgedachte Beispieldaten zum Ausprobieren, z. B. um einen Parser oder e
 | --- | --- | --- | --- |
 | Aus | Result | Table, Message oder JSON | Beispieldaten in der gewählten Form |
 
-### SQL Database
+#### 3.2.3 SQL Database
 
 Führt eine Abfrage in einer SQL-Datenbank aus. Nur sinnvoll, wenn ihr Zugang zu einer Datenbank habt, z. B. einer Kopie eines Bibliothekssystems.
 
@@ -126,7 +131,7 @@ Führt eine Abfrage in einer SQL-Datenbank aus. Nur sinnvoll, wenn ihr Zugang zu
 
 **Tipp:** Im Tool Mode kann ein Agent die SQL-Abfragen selbst schreiben.
 
-### URL
+#### 3.2.4 URL
 
 Lädt den Inhalt einer oder mehrerer Webseiten herunter, auf Wunsch auch den der verlinkten Seiten.
 
@@ -141,7 +146,7 @@ Lädt den Inhalt einer oder mehrerer Webseiten herunter, auf Wunsch auch den der
 
 **Hinweis:** Es gilt dieselbe Adressprüfung wie bei *API Request*. Scheitert eine Seite mit *SSRF Protection*, fragt die Orga.
 
-### Web Search
+#### 3.2.5 Web Search
 
 Durchsucht das Web, Nachrichten oder einen RSS-Feed, ohne Konto oder Schlüssel.
 
@@ -155,9 +160,9 @@ Durchsucht das Web, Nachrichten oder einen RSS-Feed, ohne Konto oder Schlüssel.
 
 **Hinweis:** Es gilt dieselbe Adressprüfung wie bei *API Request*. **Tipp:** ein gutes Werkzeug für einen Agenten.
 
-## Models & Agents
+### 3.3 Models & Agents
 
-### A2A Agent
+#### 3.3.1 A2A Agent
 
 Schickt eine Nachricht an einen anderen Agenten und gibt dessen Antwort zurück: entweder an einen Agenten-Flow in diesem Projekt (*Internal*) oder an einen Agenten irgendwo im Internet (*External*). Für fortgeschrittene Versuche mit mehreren zusammenarbeitenden Agenten.
 
@@ -168,13 +173,13 @@ Schickt eine Nachricht an einen anderen Agenten und gibt dessen Antwort zurück:
 | Ein | Message | Text oder Message | Was an den Agenten geschickt wird |
 | Aus | Response | Message | Die Antwort des Agenten |
 
-### Agent
+#### 3.3.2 Agent
 
 Ein KI-Assistent, der eine Aufgabe Schritt für Schritt bearbeitet und selbst entscheidet, welche **Werkzeuge** er in welcher Reihenfolge nutzt. Die Werkzeuge sind andere Bausteine im Tool Mode, z. B. *Literatursuche* oder *Web Search*.
 
 | | Name | Typ | Was es ist |
 | --- | --- | --- | --- |
-| Ein | Language Model | Language Model | Mit welchem KI-Modell der Agent denkt. Hier den Ausgang *Language Model* von **KI-Modell** anschließen (siehe [oben](#ein-ki-modell-in-standard-bausteinen-nutzen)). |
+| Ein | Language Model | Language Model | Mit welchem KI-Modell der Agent denkt. Hier den Ausgang *Language Model* von **KI-Modell** anschließen (siehe [oben](#2-ein-ki-modell-in-standard-bausteinen-nutzen)). |
 | Ein | Agent Instructions | Text oder Message | Rolle und Regeln des Agenten, z. B. „Du bist Recherche-Assistent einer Bibliothek. Erfinde niemals Literatur.“ |
 | Ein | Tools | Tool | Die Bausteine, die der Agent nutzen darf. Mehrere lassen sich anschließen. |
 | Ein | Input | Text oder Message | Die Aufgabe, meist aus Chat Input |
@@ -187,7 +192,7 @@ Ein KI-Assistent, der eine Aufgabe Schritt für Schritt bearbeitet und selbst en
 
 **Beispiele:** Flow 04.
 
-### Embedding Model
+#### 3.3.3 Embedding Model
 
 Wandelt Texte in Zahlenreihen („Embeddings“) um, damit sich Texte mit ähnlicher Bedeutung finden lassen. Nur zusammen mit *Knowledge* nötig.
 
@@ -198,7 +203,7 @@ Wandelt Texte in Zahlenreihen („Embeddings“) um, damit sich Texte mit ähnli
 
 **Hinweis:** Dafür braucht es einen Embedding-Anbieter, der in diesem Projekt nicht eingerichtet ist, und KI-Modell kann ihn nicht ersetzen. Fragt die Orga, wenn ihr damit arbeiten wollt.
 
-### Language Model
+#### 3.3.4 Language Model
 
 Schickt einen Text an ein KI-Modell und gibt die Antwort zurück: die Standard-Version von KI-Modell.
 
@@ -214,7 +219,7 @@ Schickt einen Text an ein KI-Modell und gibt die Antwort zurück: die Standard-V
 
 **Hinweis:** Die Anbieter sind in diesem Projekt nicht eingerichtet. Nehmt stattdessen **KI-Modell**: Es hat dieselben Eingänge und Ausgänge.
 
-### Message History
+#### 3.3.5 Message History
 
 Liest frühere Chat-Nachrichten oder speichert neue. So bekommt ein Flow ein Gedächtnis für das Gespräch.
 
@@ -228,7 +233,7 @@ Liest frühere Chat-Nachrichten oder speichert neue. So bekommt ein Flow ein Ged
 
 **Tipp:** Den Ausgang in einen Prompt einsetzen, z. B. `Bisheriges Gespräch: {verlauf}`, damit das Modell sich auf frühere Fragen beziehen kann.
 
-### Prompt Template
+#### 3.3.6 Prompt Template
 
 Schreibt den Text, der an das KI-Modell geht. Teile in geschweiften Klammern wie `{frage}` sind Platzhalter: Für jeden bekommt der Baustein einen Eingang mit demselben Namen, und der angeschlossene Text wird dort eingesetzt.
 
@@ -242,9 +247,9 @@ Schreibt den Text, der an das KI-Modell geht. Teile in geschweiften Klammern wie
 
 **Tipp:** Bei vielen Daten die Daten oben und die Anweisung am Schluss schreiben. **Beispiele:** Flows 00 bis 03.
 
-## LLM Operations
+### 3.4 LLM Operations
 
-### Batch Run
+#### 3.4.1 Batch Run
 
 Lässt das KI-Modell **für jede Zeile einer Tabelle** einmal laufen und fügt die Antworten als neue Spalte an. Nützlich, um viele Quellen einzeln zusammenzufassen oder einzuordnen.
 
@@ -260,7 +265,7 @@ Lässt das KI-Modell **für jede Zeile einer Tabelle** einmal laufen und fügt d
 
 **Hinweis:** Jede Zeile ist ein eigener Aufruf des Modells. Mit einem kleinen lokalen Modell und vielen Zeilen dauert das lange.
 
-### Guardrails
+#### 3.4.2 Guardrails
 
 Prüft einen Text auf heikle oder unsichere Inhalte, bevor er weitergeht, z. B. personenbezogene Daten, Passwörter oder Versuche, die KI zu manipulieren. Der Flow geht dann bei *Pass* oder *Fail* weiter.
 
@@ -276,7 +281,7 @@ Prüft einen Text auf heikle oder unsichere Inhalte, bevor er weitergeht, z. B. 
 
 **Tipp:** ein guter Anlass, über Datenschutz zu sprechen, z. B. bevor Anfragen von Nutzer:innen an den Cluster gehen.
 
-### LLM Selector
+#### 3.4.3 LLM Selector
 
 Wählt für jede Eingabe das passendste von mehreren KI-Modellen aus, beurteilt von einem weiteren Modell. Zum Vergleichen von Modellen; im Hackathon selten nötig.
 
@@ -290,7 +295,7 @@ Wählt für jede Eingabe das passendste von mehreren KI-Modellen aus, beurteilt 
 | Aus | Selected Model Info | JSON | Welches Modell gewählt wurde |
 | Aus | Routing Decision | Message | Warum es gewählt wurde |
 
-### Smart Router
+#### 3.4.4 Smart Router
 
 Ordnet eine Eingabe mit dem KI-Modell einer von mehreren Kategorien zu, die ihr festlegt, und schickt sie auf dem passenden Weg weiter. Jede Kategorie bekommt einen eigenen Ausgang.
 
@@ -305,7 +310,7 @@ Ordnet eine Eingabe mit dem KI-Modell einer von mehreren Kategorien zu, die ihr 
 
 **Tipp:** für eine Auskunft: Fragen zur Ausleihe in einen Flow, Recherchefragen in einen anderen.
 
-### Smart Transform
+#### 3.4.5 Smart Transform
 
 Filtert oder formt Daten nach einer Anweisung in normaler Sprache um, z. B. „nur Publikationen nach 2020 behalten“. Das KI-Modell schreibt dafür ein kleines Programm, das dann auf die Daten angewendet wird.
 
@@ -318,7 +323,7 @@ Filtert oder formt Daten nach einer Anweisung in normaler Sprache um, z. B. „n
 
 **Hinweis:** Das Ergebnis hängt vom Modell ab. Prüft es, besonders bei kleinen lokalen Modellen.
 
-### Structured Output
+#### 3.4.6 Structured Output
 
 Lässt das KI-Modell in einer festen Struktur mit benannten Feldern antworten, z. B. Autor:in, Jahr und Titel. Ideal, um Angaben aus freiem Text herauszuziehen.
 
@@ -333,9 +338,9 @@ Lässt das KI-Modell in einer festen Struktur mit benannten Feldern antworten, z
 
 **Tipp:** z. B. aus jeder Angabe eines Literaturverzeichnisses Autor:in, Jahr, Titel und Zeitschrift herausziehen und eine saubere Tabelle bekommen.
 
-## Files & Knowledge
+### 3.5 Files & Knowledge
 
-### File System
+#### 3.5.1 File System
 
 Gibt einem Agenten einen eigenen Ordner, in dem er Dateien lesen, anlegen und ändern darf. Nur im Tool Mode sinnvoll, verbunden mit einem Agenten.
 
@@ -348,7 +353,7 @@ Gibt einem Agenten einen eigenen Ordner, in dem er Dateien lesen, anlegen und ä
 
 **Hinweis:** Der Ordner liegt im Speicher von Langflow in Docker, nicht im Projektordner auf eurem Laptop.
 
-### Knowledge
+#### 3.5.2 Knowledge
 
 Speichert Texte in einer **Wissensdatenbank** und durchsucht sie später nach Bedeutung. Das ist die Grundlage für „mit den eigenen Dokumenten chatten“.
 
@@ -362,7 +367,7 @@ Speichert Texte in einer **Wissensdatenbank** und durchsucht sie später nach Be
 
 **Hinweis:** Wissensdatenbanken brauchen einen Embedding-Anbieter (siehe *Embedding Model*), der in diesem Projekt nicht eingerichtet ist. Fragt die Orga, wenn ihr es ausprobieren wollt.
 
-### Memory Base
+#### 3.5.3 Memory Base
 
 Durchsucht das Langzeitgedächtnis früherer Gespräche mit diesem Flow. Ist *Filter by Session* aus, sucht er über alle Gespräche hinweg.
 
@@ -376,7 +381,7 @@ Durchsucht das Langzeitgedächtnis früherer Gespräche mit diesem Flow. Ist *Fi
 
 **Hinweis:** Eine Memory Base muss zuerst unter **Memories** in der linken Leiste angelegt werden. Außerdem braucht sie einen Embedding-Anbieter, der in diesem Projekt nicht eingerichtet ist.
 
-### Read File
+#### 3.5.4 Read File
 
 Liest eine hochgeladene Datei und gibt ihren Text aus. Funktioniert mit PDFs, Word-Dokumenten, Textdateien, Tabellen und vielen weiteren Formaten.
 
@@ -390,7 +395,7 @@ Liest eine hochgeladene Datei und gibt ihren Text aus. Funktioniert mit PDFs, Wo
 
 **Beispiele:** Flow 02 (eine Masterarbeit als PDF).
 
-### Write File
+#### 3.5.5 Write File
 
 Speichert Inhalte als Datei, z. B. einen Bericht als Text oder eine Tabelle als Excel.
 
@@ -404,9 +409,9 @@ Speichert Inhalte als Datei, z. B. einen Bericht als Text oder eine Tabelle als 
 
 **Hinweis:** Die Datei landet im Speicher von Langflow in Docker, nicht im Projektordner. Um sie in den Projektordner zu kopieren, im Terminal im Projektordner `docker compose cp langflow:<Dateipfad> .` ausführen, mit dem Pfad aus dem Ausgang. Oft ist es einfacher, das Ergebnis in einem Chat Output anzuzeigen und von dort zu kopieren.
 
-## Processing
+### 3.6 Processing
 
-### Data Operations
+#### 3.6.1 Data Operations
 
 Ein Werkzeugkasten für Text, JSON und Tabellen in einem einzigen Baustein. Zuerst wählt ihr, welche Art Daten ihr habt (*Input Type*), dann eine Operation. Die passenden Felder und der Ausgang erscheinen erst, wenn eine Operation gewählt ist.
 
@@ -426,7 +431,7 @@ Die Operationen:
 
 **Tipp:** Mit *Table → Filter* könnt ihr z. B. aus dem Ergebnis der *Literatursuche* nur die Open-Access-Publikationen behalten.
 
-### Dynamic Create Data
+#### 3.6.2 Dynamic Create Data
 
 Baut einen JSON-Datensatz aus Feldern, die ihr selbst festlegt. Jedes Feld, das ihr in der Konfiguration anlegt, wird zu einem Eingang, den ihr ausfüllen oder verbinden könnt.
 
@@ -439,7 +444,7 @@ Baut einen JSON-Datensatz aus Feldern, die ihr selbst festlegt. Jedes Feld, das 
 
 **Tipp:** z. B. um mehrere Werte (Suchbegriffe, Jahr, Trefferzahl) als Query Parameters an *API Request* zu geben.
 
-### Parser
+#### 3.6.3 Parser
 
 Macht aus JSON oder einer Tabelle Text, nach einer Vorlage. Namen in geschweiften Klammern werden durch die Werte der Felder oder Spalten mit diesem Namen ersetzt. Bei Tabellen wird die Vorlage auf jede Zeile angewendet.
 
@@ -454,7 +459,7 @@ Macht aus JSON oder einer Tabelle Text, nach einer Vorlage. Namen in geschweifte
 
 **Tipp:** der richtige Schritt zwischen einer Tabelle und einem Prompt, damit das Modell genau die Spalten bekommt, die es braucht.
 
-### Split Text
+#### 3.6.4 Split Text
 
 Zerlegt einen langen Text in kleinere Stücke (Chunks). Nötig für Texte, die für das Modell zu lang sind, oder um eine Liste Stück für Stück abzuarbeiten.
 
@@ -470,7 +475,7 @@ Zerlegt einen langen Text in kleinere Stücke (Chunks). Nötig für Texte, die f
 
 **Tipp:** Für genau ein Stück pro Zeile *Separator* auf `\n`, *Chunk Size* auf `1` und *Chunk Overlap* auf `0` setzen.
 
-### Type Convert
+#### 3.6.5 Type Convert
 
 Wandelt zwischen Message, JSON und Table um, wenn zwei Bausteine nicht zusammenpassen.
 
@@ -482,9 +487,9 @@ Wandelt zwischen Message, JSON und Table um, wenn zwei Bausteine nicht zusammenp
 
 **Versteckte Einstellungen:** *Auto Parse*: erkennt JSON oder CSV, das als Text vorliegt, und macht daraus echtes JSON oder eine Tabelle.
 
-## Flow Control
+### 3.7 Flow Control
 
-### Human Input
+#### 3.7.1 Human Input
 
 Hält den Flow an und lässt einen Menschen entscheiden, z. B. einen Entwurf freigeben oder ablehnen. Der Flow geht dann am Ausgang der gewählten Antwort weiter.
 
@@ -496,7 +501,7 @@ Hält den Flow an und lässt einen Menschen entscheiden, z. B. einen Entwurf fre
 
 **Tipp:** für „ein Mensch prüft, bevor etwas verschickt wird“, z. B. eine KI-geschriebene Antwort auf eine Anfrage von Nutzer:innen.
 
-### If-Else
+#### 3.7.2 If-Else
 
 Vergleicht einen Text mit einem Wert und schickt den Flow auf einen von zwei Wegen: *True* (wahr) oder *False* (falsch). Es ist keine KI beteiligt, das Ergebnis ist also immer gleich.
 
@@ -512,7 +517,7 @@ Vergleicht einen Text mit einem Wert und schickt den Flow auf einen von zwei Weg
 
 **Tipp:** z. B. nur dann einen ausführlichen Bericht schreiben, wenn das Prüfergebnis „Abweichung“ enthält.
 
-### Listen
+#### 3.7.3 Listen
 
 Empfängt Daten, die ein Baustein *Notify* im selben Flow unter einem Namen abgelegt hat, ohne Verbindungslinie. In Langflow als *Beta* gekennzeichnet.
 
@@ -521,7 +526,7 @@ Empfängt Daten, die ein Baustein *Notify* im selben Flow unter einem Namen abge
 | Ein | Context Key | Text oder Message | Der Name, unter dem die Daten abgelegt wurden |
 | Aus | JSON | JSON | Die abgelegten Daten |
 
-### Loop
+#### 3.7.4 Loop
 
 Geht eine Tabelle oder Liste **Eintrag für Eintrag** durch. Für jeden Eintrag laufen die an *Item* angeschlossenen Bausteine einmal. Wenn alles durch ist, kommen alle Ergebnisse zusammen bei *Done* heraus.
 
@@ -535,7 +540,7 @@ Geht eine Tabelle oder Liste **Eintrag für Eintrag** durch. Für jeden Eintrag 
 
 **Tipp:** Eine Schleife lohnt sich, wenn jeder Eintrag mehrere Schritte braucht, z. B. eine API-Abfrage pro Literaturangabe. Für einen KI-Aufruf pro Zeile ist *Batch Run* einfacher.
 
-### Notify
+#### 3.7.5 Notify
 
 Legt Daten unter einem Namen ab, damit ein Baustein *Listen* sie an anderer Stelle im selben Flow abholen kann. In Langflow als *Beta* gekennzeichnet.
 
@@ -546,7 +551,7 @@ Legt Daten unter einem Namen ab, damit ein Baustein *Listen* sie an anderer Stel
 | Ein | Append | Schalter | An die unter diesem Namen schon abgelegten Daten anhängen, statt sie zu ersetzen |
 | Aus | JSON | JSON | Die abgelegten Daten |
 
-### Run Flow
+#### 3.7.6 Run Flow
 
 Führt einen anderen Flow aus demselben Projekt als einzelnen Schritt aus. So könnt ihr kleine Flows bauen und kombinieren oder einem Agenten einen ganzen Flow als Werkzeug geben. In Langflow als *Beta* gekennzeichnet.
 
@@ -558,9 +563,9 @@ Führt einen anderen Flow aus demselben Projekt als einzelnen Schritt aus. So k�
 
 **Tipp:** z. B. Flow 01 einem Agenten als Werkzeug geben, damit er Literaturangaben als Teil einer größeren Aufgabe prüfen kann.
 
-## Utilities
+### 3.8 Utilities
 
-### Calculator
+#### 3.8.1 Calculator
 
 Berechnet einen Rechenausdruck. Vor allem als Werkzeug für einen Agenten nützlich, weil Sprachmodelle unzuverlässig rechnen.
 
@@ -571,7 +576,7 @@ Berechnet einen Rechenausdruck. Vor allem als Werkzeug für einen Agenten nützl
 
 **Hinweis:** Der Agent hat schon einen Taschenrechner eingebaut (versteckte Einstellung *Calculator*).
 
-### Current Date
+#### 3.8.2 Current Date
 
 Gibt das aktuelle Datum und die Uhrzeit aus. Nützlich in Prompts, z. B. für „Publikationen der letzten fünf Jahre“.
 
@@ -580,7 +585,7 @@ Gibt das aktuelle Datum und die Uhrzeit aus. Nützlich in Prompts, z. B. für �
 | Ein | Timezone | Auswahl | Die Zeitzone, z. B. `Europe/Berlin` (standardmäßig UTC) |
 | Aus | Current Date | Message | Datum und Uhrzeit als Text |
 
-### Python Interpreter
+#### 3.8.3 Python Interpreter
 
 Führt Python-Code aus. Für alle, die ein wenig programmieren können; für die Challenges nicht nötig.
 
@@ -590,11 +595,11 @@ Führt Python-Code aus. Für alle, die ein wenig programmieren können; für die
 | Ein | Python Code | Text oder Message | Der Code. Heraus kommt nur, was mit `print()` ausgegeben wird. |
 | Aus | Results | JSON | Die Ausgabe |
 
-## Bibliothek
+### 3.9 Bibliothek
 
 Diese Bausteine wurden für den Hackathon gebaut. Sie verbinden Langflow mit Bibliotheks-Datenbanken und kümmern sich um Einzelheiten wie das Zerlegen von Literaturverzeichnissen oder das Warten, wenn eine Datenbank ausgelastet ist.
 
-### Katalogsuche (hbz / lobid)
+#### 3.9.1 Katalogsuche (hbz / lobid)
 
 Sucht Bücher und andere Medien im hbz-Verbundkatalog (über lobid.org). Gut für Literatur ohne DOI, die deshalb in Crossref und OpenAlex fehlt.
 
@@ -607,7 +612,7 @@ Sucht Bücher und andere Medien im hbz-Verbundkatalog (über lobid.org). Gut fü
 
 **Tipp:** ein gutes Werkzeug für einen Agenten. **Beispiele:** Flow 04.
 
-### KI-Modell
+#### 3.9.2 KI-Modell
 
 Das KI-Modell dieses Projekts. Es nutzt entweder den Cluster (LiteLLM) oder Ollama auf eurem Laptop, mit Adresse, Schlüssel und Modell aus der `.env`, sodass im Flow nichts eingetragen werden muss.
 
@@ -619,13 +624,13 @@ Das KI-Modell dieses Projekts. Es nutzt entweder den Cluster (LiteLLM) oder Olla
 | Ein | Modell | Auswahl | Leer lassen für das Standardmodell. Der kleine Pfeil-Knopf lädt die Liste der verfügbaren Modelle. |
 | Ein | Kreativität (Temperatur) | Schieberegler | 0 = sachlich und wiederholbar, 1 = kreativ und abwechslungsreich (standardmäßig 0,1) |
 | Aus | Model Response | Message | Die Antwort des Modells |
-| Aus | Language Model | Language Model | Das Modell selbst, für Agent, Batch Run, Structured Output usw. (siehe [oben](#ein-ki-modell-in-standard-bausteinen-nutzen)) |
+| Aus | Language Model | Language Model | Das Modell selbst, für Agent, Batch Run, Structured Output usw. (siehe [oben](#2-ein-ki-modell-in-standard-bausteinen-nutzen)) |
 
 **Versteckte Einstellungen:** *Nachdenken erlauben* („Reasoning“-Modelle vor der Antwort nachdenken lassen: genauer, aber deutlich langsamer), *Maximale Antwortlänge*, *Zeitlimit* (in Sekunden, standardmäßig 600), *Adresse* und *API-Schlüssel* (Adresse und Schlüssel aus der `.env` überschreiben).
 
 **Beispiele:** alle Beispiel-Flows.
 
-### Literaturangaben prüfen (Crossref)
+#### 3.9.3 Literaturangaben prüfen (Crossref)
 
 Prüft, ob die Publikationen eines Literaturverzeichnisses existieren und korrekt angegeben sind. Jede Angabe wird bei Crossref nachgeschlagen (per DOI oder als Freitext) und nach Titel, Jahr und Erstautor:in verglichen. Zurückgezogene Artikel werden markiert.
 
@@ -639,7 +644,7 @@ Prüft, ob die Publikationen eines Literaturverzeichnisses existieren und korrek
 
 **Hinweis:** ❓ heißt nicht immer „erfunden“: Bücher und Webseiten haben oft keine DOI. Prüft sie mit der *Katalogsuche*. **Beispiele:** Flows 01 und 04.
 
-### Literatursuche (OpenAlex)
+#### 3.9.4 Literatursuche (OpenAlex)
 
 Sucht wissenschaftliche Publikationen aller Verlage in OpenAlex, mit Abstracts und Links zu freien Volltexten.
 
@@ -657,7 +662,7 @@ Sucht wissenschaftliche Publikationen aller Verlage in OpenAlex, mit Abstracts u
 
 **Hinweis:** Ohne OpenAlex-Schlüssel in der `.env` bremst OpenAlex, wenn viele suchen; der Baustein sucht dann ersatzweise über Crossref. **Beispiele:** Flows 03 und 04.
 
-### Literaturverzeichnis finden
+#### 3.9.5 Literaturverzeichnis finden
 
 Schneidet das Literaturverzeichnis aus einem langen Dokument aus, z. B. aus einer Abschlussarbeit, sodass nur die Angaben weitergegeben werden.
 
@@ -668,7 +673,7 @@ Schneidet das Literaturverzeichnis aus einem langen Dokument aus, z. B. aus eine
 
 **Beispiele:** Flow 02.
 
-### Quellen anreichern (OpenAlex)
+#### 3.9.6 Quellen anreichern (OpenAlex)
 
 Ergänzt jede Angabe eines Literaturverzeichnisses um Informationen aus OpenAlex: Abstract, Thema, Zahl der Zitationen und Open-Access-Status. Dazu berechnet er eine Statistik für das ganze Verzeichnis, z. B. den Anteil der Open-Access-Quellen und den Zeitraum.
 
@@ -681,7 +686,7 @@ Ergänzt jede Angabe eines Literaturverzeichnisses um Informationen aus OpenAlex
 
 **Beispiele:** Flow 02.
 
-### Volltexte holen (Open Access)
+#### 3.9.7 Volltexte holen (Open Access)
 
 Lädt die freien Volltexte (PDFs) von Publikationen herunter und liest ihren Text aus. Gibt es keinen freien Volltext, wird stattdessen das Abstract genommen.
 
@@ -695,7 +700,7 @@ Lädt die freien Volltexte (PDFs) von Publikationen herunter und liest ihren Tex
 
 **Beispiele:** Flow 03.
 
-## Nicht in dieser Anleitung
+## 4. Nicht in dieser Anleitung
 
 - **Legacy-Bausteine:** Langflow blendet alte Bausteine aus, die durch neuere ersetzt wurden. Über das Einstellungssymbol oben in der Leiste lassen sie sich einblenden, sie werden aber nicht gebraucht.
 - **Discover more components / Bundles:** weitere Bausteine anderer Anbieter, z. B. OpenAI, Google oder Vektordatenbanken. Die meisten brauchen ein Konto oder einen Schlüssel und sind in diesem Projekt nicht eingerichtet.

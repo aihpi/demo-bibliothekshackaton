@@ -8,20 +8,21 @@ It covers Langflow 1.12.3 as it is set up in this kit. The blocks in the *Biblio
 
 ## Contents
 
-- [How to read this guide](#how-to-read-this-guide)
-- [Using an AI model in standard components](#using-an-ai-model-in-standard-components)
-- [Input & Output](#input--output): Chat Input, Chat Output, Webhook
-- [Data Sources](#data-sources): API Request, Mock Data, SQL Database, URL, Web Search
-- [Models & Agents](#models--agents): A2A Agent, Agent, Embedding Model, Language Model, Message History, Prompt Template
-- [LLM Operations](#llm-operations): Batch Run, Guardrails, LLM Selector, Smart Router, Smart Transform, Structured Output
-- [Files & Knowledge](#files--knowledge): File System, Knowledge, Memory Base, Read File, Write File
-- [Processing](#processing): Data Operations, Dynamic Create Data, Parser, Split Text, Type Convert
-- [Flow Control](#flow-control): Human Input, If-Else, Listen, Loop, Notify, Run Flow
-- [Utilities](#utilities): Calculator, Current Date, Python Interpreter
-- [Bibliothek](#bibliothek): Katalogsuche, KI-Modell, Literaturangaben prüfen, Literatursuche, Literaturverzeichnis finden, Quellen anreichern, Volltexte holen
-- [Not covered here](#not-covered-here)
+1. [How to read this guide](#1-how-to-read-this-guide)
+2. [Using an AI model in standard components](#2-using-an-ai-model-in-standard-components)
+3. [Components](#3-components)
+   - [3.1 Input & Output](#31-input--output): Chat Input, Chat Output, Webhook
+   - [3.2 Data Sources](#32-data-sources): API Request, Mock Data, SQL Database, URL, Web Search
+   - [3.3 Models & Agents](#33-models--agents): A2A Agent, Agent, Embedding Model, Language Model, Message History, Prompt Template
+   - [3.4 LLM Operations](#34-llm-operations): Batch Run, Guardrails, LLM Selector, Smart Router, Smart Transform, Structured Output
+   - [3.5 Files & Knowledge](#35-files--knowledge): File System, Knowledge, Memory Base, Read File, Write File
+   - [3.6 Processing](#36-processing): Data Operations, Dynamic Create Data, Parser, Split Text, Type Convert
+   - [3.7 Flow Control](#37-flow-control): Human Input, If-Else, Listen, Loop, Notify, Run Flow
+   - [3.8 Utilities](#38-utilities): Calculator, Current Date, Python Interpreter
+   - [3.9 Bibliothek](#39-bibliothek): Katalogsuche, KI-Modell, Literaturangaben prüfen, Literatursuche, Literaturverzeichnis finden, Quellen anreichern, Volltexte holen
+4. [Not covered here](#4-not-covered-here)
 
-## How to read this guide
+## 1. How to read this guide
 
 **Inputs and outputs.** Inputs are on the **left** edge of a block: fields you fill in, or dots you connect a line to. Outputs are the dots on the **right** edge. A line always runs from an output to an input. Many inputs can be either typed in or connected; once a line is connected, the field shows *Receiving input*.
 
@@ -44,7 +45,7 @@ In the tables below, the type column also names plain settings: *text*, *number*
 
 **Examples.** Where a component is used in one of the example flows in *Starter Project*, the entry says which one, so you can look at it in action.
 
-## Using an AI model in standard components
+## 2. Using an AI model in standard components
 
 Several standard components need an AI model: Agent, Batch Run, Guardrails, LLM Selector, Smart Router, Smart Transform and Structured Output. They have a **Language Model** field with a list of providers such as OpenAI. Those providers are **not set up** in this kit.
 
@@ -52,9 +53,13 @@ Instead, place a **KI-Modell** block (category *Bibliothek*) and connect its **L
 
 The standard **Language Model** block itself works the same way as KI-Modell but needs a provider; use KI-Modell instead.
 
-## Input & Output
+## 3. Components
 
-### Chat Input
+The components in the order of the sidebar, with one subsection per category.
+
+### 3.1 Input & Output
+
+#### 3.1.1 Chat Input
 
 Takes the text you type in the **Playground** and passes it into the flow. Almost every flow starts with it.
 
@@ -67,7 +72,7 @@ Takes the text you type in the **Playground** and passes it into the flow. Almos
 
 **Examples:** all example flows.
 
-### Chat Output
+#### 3.1.2 Chat Output
 
 Shows a result in the **Playground**. A flow can have several Chat Outputs; each one appears as its own message.
 
@@ -80,7 +85,7 @@ Shows a result in the **Playground**. A flow can have several Chat Outputs; each
 
 **Examples:** all example flows. Flow 01 uses two, one for the report and one for the table.
 
-### Webhook
+#### 3.1.3 Webhook
 
 Lets another program start the flow over the internet by sending data to a web address. Not needed during the hackathon.
 
@@ -89,9 +94,9 @@ Lets another program start the flow over the internet by sending data to a web a
 | In | Endpoint | text | The address other programs send data to (filled in automatically) |
 | Out | JSON | JSON | The data that was sent |
 
-## Data Sources
+### 3.2 Data Sources
 
-### API Request
+#### 3.2.1 API Request
 
 Fetches data from a web service (an API) by calling its address. This is how you connect databases that have no ready-made block.
 
@@ -106,7 +111,7 @@ Fetches data from a web service (an API) by calling its address. This is how you
 
 **Note:** Langflow blocks addresses it considers internal. On some computers this wrongly hits ordinary websites too, with the error *SSRF Protection: … resolves to blocked IP address*. The library databases (Crossref, OpenAlex, Unpaywall, DataCite, lobid) are allowed in this kit. For other addresses, ask the organisers.
 
-### Mock Data
+#### 3.2.2 Mock Data
 
 Creates made-up sample data for trying things out, for example to test a Parser or a Loop before real data is available. It has no inputs.
 
@@ -114,7 +119,7 @@ Creates made-up sample data for trying things out, for example to test a Parser 
 | --- | --- | --- | --- |
 | Out | Result | Table, Message or JSON | Sample data in the chosen form |
 
-### SQL Database
+#### 3.2.3 SQL Database
 
 Runs a query against an SQL database. Only useful if you have access to a database, for example a copy of a library system.
 
@@ -126,7 +131,7 @@ Runs a query against an SQL database. Only useful if you have access to a databa
 
 **Tip:** in Tool Mode, an Agent can write the SQL queries itself.
 
-### URL
+#### 3.2.4 URL
 
 Downloads the content of one or more web pages, and optionally of the pages they link to.
 
@@ -141,7 +146,7 @@ Downloads the content of one or more web pages, and optionally of the pages they
 
 **Note:** the same address check as for *API Request* applies. If a page fails with *SSRF Protection*, ask the organisers.
 
-### Web Search
+#### 3.2.5 Web Search
 
 Searches the web, news or an RSS feed, without an account or key.
 
@@ -155,9 +160,9 @@ Searches the web, news or an RSS feed, without an account or key.
 
 **Note:** the same address check as for *API Request* applies. **Tip:** a good tool for an Agent.
 
-## Models & Agents
+### 3.3 Models & Agents
 
-### A2A Agent
+#### 3.3.1 A2A Agent
 
 Sends a message to another agent and returns its answer: either an agent flow in this project (*Internal*) or an agent elsewhere on the internet (*External*). For advanced experiments with several agents working together.
 
@@ -168,13 +173,13 @@ Sends a message to another agent and returns its answer: either an agent flow in
 | In | Message | text or Message | What to send to the agent |
 | Out | Response | Message | The agent's answer |
 
-### Agent
+#### 3.3.2 Agent
 
 An AI assistant that works on a task step by step and decides by itself which **tools** to use and in which order. The tools are other blocks in Tool Mode, for example *Literatursuche* or *Web Search*.
 
 | | Name | Type | What it is |
 | --- | --- | --- | --- |
-| In | Language Model | Language Model | Which AI model the agent thinks with. Connect the *Language Model* output of **KI-Modell** here (see [above](#using-an-ai-model-in-standard-components)). |
+| In | Language Model | Language Model | Which AI model the agent thinks with. Connect the *Language Model* output of **KI-Modell** here (see [above](#2-using-an-ai-model-in-standard-components)). |
 | In | Agent Instructions | text or Message | The agent's role and rules, e.g. "You are a research assistant in a library. Never invent literature." |
 | In | Tools | Tool | The blocks the agent may use. Several can be connected. |
 | In | Input | text or Message | The task, usually from Chat Input |
@@ -187,7 +192,7 @@ An AI assistant that works on a task step by step and decides by itself which **
 
 **Examples:** flow 04.
 
-### Embedding Model
+#### 3.3.3 Embedding Model
 
 Turns text into lists of numbers ("embeddings") so that texts with similar meaning can be found. Only needed together with *Knowledge*.
 
@@ -198,7 +203,7 @@ Turns text into lists of numbers ("embeddings") so that texts with similar meani
 
 **Note:** this needs an embedding provider, which is not set up in this kit, and KI-Modell can't replace it. Ask the organisers if you want to work with it.
 
-### Language Model
+#### 3.3.4 Language Model
 
 Sends a text to an AI model and returns the answer: the standard version of KI-Modell.
 
@@ -214,7 +219,7 @@ Sends a text to an AI model and returns the answer: the standard version of KI-M
 
 **Note:** the providers are not set up in this kit. Use **KI-Modell** instead: it has the same inputs and outputs.
 
-### Message History
+#### 3.3.5 Message History
 
 Reads earlier chat messages, or stores new ones. This gives a flow a memory of the conversation.
 
@@ -228,7 +233,7 @@ Reads earlier chat messages, or stores new ones. This gives a flow a memory of t
 
 **Tip:** put the output into a prompt, e.g. `Conversation so far: {verlauf}`, so the model can refer to earlier questions.
 
-### Prompt Template
+#### 3.3.6 Prompt Template
 
 Writes the text that goes to the AI model. Parts in curly braces, like `{frage}`, are placeholders: for each one the block gets an input of the same name, and the connected text is inserted there.
 
@@ -242,9 +247,9 @@ Writes the text that goes to the AI model. Parts in curly braces, like `{frage}`
 
 **Tip:** with a lot of data, put the data at the top and the instructions at the end. **Examples:** flows 00 to 03.
 
-## LLM Operations
+### 3.4 LLM Operations
 
-### Batch Run
+#### 3.4.1 Batch Run
 
 Runs the AI model once for **every row of a table** and adds the answers as a new column. Useful for summarising or classifying many sources one by one.
 
@@ -260,7 +265,7 @@ Runs the AI model once for **every row of a table** and adds the answers as a ne
 
 **Note:** each row is one model call. With a small local model and many rows this takes a long time.
 
-### Guardrails
+#### 3.4.2 Guardrails
 
 Checks a text for sensitive or unsafe content before it goes on, for example personal data, passwords or attempts to manipulate the AI. The flow then continues on *Pass* or *Fail*.
 
@@ -276,7 +281,7 @@ Checks a text for sensitive or unsafe content before it goes on, for example per
 
 **Tip:** a good way to discuss data protection, e.g. before user enquiries are sent to the cluster.
 
-### LLM Selector
+#### 3.4.3 LLM Selector
 
 Chooses the most suitable of several AI models for each input, judged by another model. For comparing models; rarely needed in the hackathon.
 
@@ -290,7 +295,7 @@ Chooses the most suitable of several AI models for each input, judged by another
 | Out | Selected Model Info | JSON | Which model was chosen |
 | Out | Routing Decision | Message | Why it was chosen |
 
-### Smart Router
+#### 3.4.4 Smart Router
 
 Sorts an input into one of several categories that you define, using the AI model, and sends it on along the matching path. Each category gets its own output.
 
@@ -305,7 +310,7 @@ Sorts an input into one of several categories that you define, using the AI mode
 
 **Tip:** for an enquiry service: route loan questions to one flow and research questions to another.
 
-### Smart Transform
+#### 3.4.5 Smart Transform
 
 Filters or reshapes data according to an instruction in plain language, e.g. "keep only publications after 2020". The AI model writes a small program for this, which is then applied to the data.
 
@@ -318,7 +323,7 @@ Filters or reshapes data according to an instruction in plain language, e.g. "ke
 
 **Note:** the result depends on the model. Check it, especially with small local models.
 
-### Structured Output
+#### 3.4.6 Structured Output
 
 Makes the AI model answer in a fixed structure with named fields, e.g. author, year and title. Ideal for pulling information out of free text.
 
@@ -333,9 +338,9 @@ Makes the AI model answer in a fixed structure with named fields, e.g. author, y
 
 **Tip:** e.g. extract author, year, title and journal from each reference in a list, and get a clean table.
 
-## Files & Knowledge
+### 3.5 Files & Knowledge
 
-### File System
+#### 3.5.1 File System
 
 Gives an Agent its own folder in which it may read, create and change files. Only useful in Tool Mode, connected to an Agent.
 
@@ -348,7 +353,7 @@ Gives an Agent its own folder in which it may read, create and change files. Onl
 
 **Note:** the folder is inside Langflow's storage in Docker, not in the project folder on your laptop.
 
-### Knowledge
+#### 3.5.2 Knowledge
 
 Stores texts in a **knowledge base** and searches it later by meaning. This is the basis for "chat with your own documents".
 
@@ -362,7 +367,7 @@ Stores texts in a **knowledge base** and searches it later by meaning. This is t
 
 **Note:** knowledge bases need an embedding provider (see *Embedding Model*), which is not set up in this kit. Ask the organisers if you want to try it.
 
-### Memory Base
+#### 3.5.3 Memory Base
 
 Searches the long-term memory of past conversations with this flow. When *Filter by Session* is off, it searches across all conversations.
 
@@ -376,7 +381,7 @@ Searches the long-term memory of past conversations with this flow. When *Filter
 
 **Note:** a Memory Base first has to be created under **Memories** in the left bar. It also needs an embedding provider, which is not set up in this kit.
 
-### Read File
+#### 3.5.4 Read File
 
 Reads an uploaded file and returns its text. Works with PDFs, Word documents, text files, tables and many other formats.
 
@@ -390,7 +395,7 @@ Reads an uploaded file and returns its text. Works with PDFs, Word documents, te
 
 **Examples:** flow 02 (a master's thesis as a PDF).
 
-### Write File
+#### 3.5.5 Write File
 
 Saves content as a file, e.g. a report as text or a table as Excel.
 
@@ -404,9 +409,9 @@ Saves content as a file, e.g. a report as text or a table as Excel.
 
 **Note:** the file is saved inside Langflow's storage in Docker, not in the project folder. To copy it to the project folder, run `docker compose cp langflow:<file path> .` in a terminal in the project folder, using the path from the output. Often it is easier to show the result in a Chat Output and copy it from there.
 
-## Processing
+### 3.6 Processing
 
-### Data Operations
+#### 3.6.1 Data Operations
 
 A toolbox for text, JSON and tables in a single block. First choose what kind of data you have (*Input Type*), then one operation. The matching fields and the output only appear once an operation is chosen.
 
@@ -426,7 +431,7 @@ The operations:
 
 **Tip:** with *Table → Filter* you can e.g. keep only open-access publications from the result of *Literatursuche*.
 
-### Dynamic Create Data
+#### 3.6.2 Dynamic Create Data
 
 Builds a JSON record from fields you define yourself. Each field you add in the configuration becomes an input that you can fill in or connect.
 
@@ -439,7 +444,7 @@ Builds a JSON record from fields you define yourself. Each field you add in the 
 
 **Tip:** e.g. to pass several values (search words, year, number of hits) to *API Request* as query parameters.
 
-### Parser
+#### 3.6.3 Parser
 
 Turns JSON or a table into text using a template. Names in curly braces are replaced by the values of the fields or columns with that name. For tables, the template is applied to each row.
 
@@ -454,7 +459,7 @@ Turns JSON or a table into text using a template. Names in curly braces are repl
 
 **Tip:** the right step between a table and a prompt, so the model gets exactly the columns it needs.
 
-### Split Text
+#### 3.6.4 Split Text
 
 Splits a long text into smaller pieces (chunks). Needed for texts that are too long for the model, or to go through a list piece by piece.
 
@@ -470,7 +475,7 @@ Splits a long text into smaller pieces (chunks). Needed for texts that are too l
 
 **Tip:** to get exactly one piece per line, set *Separator* to `\n`, *Chunk Size* to `1` and *Chunk Overlap* to `0`.
 
-### Type Convert
+#### 3.6.5 Type Convert
 
 Converts between Message, JSON and Table, for when two blocks don't fit together.
 
@@ -482,9 +487,9 @@ Converts between Message, JSON and Table, for when two blocks don't fit together
 
 **Hidden settings:** *Auto Parse*: recognises JSON or CSV written as text and turns it into real JSON or a table.
 
-## Flow Control
+### 3.7 Flow Control
 
-### Human Input
+#### 3.7.1 Human Input
 
 Pauses the flow and asks a person to decide, e.g. to approve or reject a draft. The flow then continues on the output of the chosen answer.
 
@@ -496,7 +501,7 @@ Pauses the flow and asks a person to decide, e.g. to approve or reject a draft. 
 
 **Tip:** for "a human checks before anything is sent", e.g. an AI-written reply to a user enquiry.
 
-### If-Else
+#### 3.7.2 If-Else
 
 Compares a text with a value and sends the flow on one of two paths: *True* or *False*. No AI is involved, so the result is always the same.
 
@@ -512,7 +517,7 @@ Compares a text with a value and sends the flow on one of two paths: *True* or *
 
 **Tip:** e.g. only write a detailed report if the check result contains "Abweichung".
 
-### Listen
+#### 3.7.3 Listen
 
 Receives data that a *Notify* block in the same flow has stored under a name, without a connecting line. Marked *Beta* in Langflow.
 
@@ -521,7 +526,7 @@ Receives data that a *Notify* block in the same flow has stored under a name, wi
 | In | Context Key | text or Message | The name the data was stored under |
 | Out | JSON | JSON | The stored data |
 
-### Loop
+#### 3.7.4 Loop
 
 Goes through a table or list **item by item**. For each item, the blocks connected to *Item* run once. When everything is done, all results come out together at *Done*.
 
@@ -535,7 +540,7 @@ Goes through a table or list **item by item**. For each item, the blocks connect
 
 **Tip:** use a loop when each item needs several steps, e.g. an API request per reference. For one AI call per row, *Batch Run* is simpler.
 
-### Notify
+#### 3.7.5 Notify
 
 Stores data under a name so that a *Listen* block can pick it up elsewhere in the same flow. Marked *Beta* in Langflow.
 
@@ -546,7 +551,7 @@ Stores data under a name so that a *Listen* block can pick it up elsewhere in th
 | In | Append | switch | Add to data already stored under this name instead of replacing it |
 | Out | JSON | JSON | The stored data |
 
-### Run Flow
+#### 3.7.6 Run Flow
 
 Runs another flow from the same project as a single step. This lets you build small flows and combine them, or give a whole flow to an Agent as a tool. Marked *Beta* in Langflow.
 
@@ -558,9 +563,9 @@ Runs another flow from the same project as a single step. This lets you build sm
 
 **Tip:** e.g. give flow 01 to an Agent as a tool, so it can check references as part of a larger task.
 
-## Utilities
+### 3.8 Utilities
 
-### Calculator
+#### 3.8.1 Calculator
 
 Calculates an arithmetic expression. Mostly useful as a tool for an Agent, because language models are unreliable at arithmetic.
 
@@ -571,7 +576,7 @@ Calculates an arithmetic expression. Mostly useful as a tool for an Agent, becau
 
 **Note:** the Agent has a calculator built in already (hidden setting *Calculator*).
 
-### Current Date
+#### 3.8.2 Current Date
 
 Returns the current date and time. Useful in prompts, e.g. for "publications from the last five years".
 
@@ -580,7 +585,7 @@ Returns the current date and time. Useful in prompts, e.g. for "publications fro
 | In | Timezone | choice | The time zone, e.g. `Europe/Berlin` (UTC by default) |
 | Out | Current Date | Message | Date and time as text |
 
-### Python Interpreter
+#### 3.8.3 Python Interpreter
 
 Runs Python code. For anyone who can program a little; not needed for the challenges.
 
@@ -590,11 +595,11 @@ Runs Python code. For anyone who can program a little; not needed for the challe
 | In | Python Code | text or Message | The code. Only what is printed with `print()` comes out. |
 | Out | Results | JSON | The printed output |
 
-## Bibliothek
+### 3.9 Bibliothek
 
 These components were built for the hackathon. They connect Langflow to library databases and take care of details like splitting reference lists or waiting when a database is busy.
 
-### Katalogsuche (hbz / lobid)
+#### 3.9.1 Katalogsuche (hbz / lobid)
 
 Searches for books and other media in the hbz union catalogue (via lobid.org). Good for literature that has no DOI and is therefore missing from Crossref and OpenAlex.
 
@@ -607,7 +612,7 @@ Searches for books and other media in the hbz union catalogue (via lobid.org). G
 
 **Tip:** a good tool for an Agent. **Examples:** flow 04.
 
-### KI-Modell
+#### 3.9.2 KI-Modell
 
 The AI model of the kit. It uses either the cluster (LiteLLM) or Ollama on your laptop, with the address, key and model from `.env`, so nothing has to be entered in the flow.
 
@@ -619,13 +624,13 @@ The AI model of the kit. It uses either the cluster (LiteLLM) or Ollama on your 
 | In | Modell (model) | choice | Leave empty for the default model. The small arrow button loads the list of available models. |
 | In | Kreativität (Temperatur) (creativity) | slider | 0 = factual and repeatable, 1 = creative and varied (0.1 by default) |
 | Out | Model Response | Message | The model's answer |
-| Out | Language Model | Language Model | The model itself, for Agent, Batch Run, Structured Output etc. (see [above](#using-an-ai-model-in-standard-components)) |
+| Out | Language Model | Language Model | The model itself, for Agent, Batch Run, Structured Output etc. (see [above](#2-using-an-ai-model-in-standard-components)) |
 
 **Hidden settings:** *Nachdenken erlauben* (let "reasoning" models think before answering: more accurate but much slower), *Maximale Antwortlänge* (maximum answer length), *Zeitlimit* (time limit in seconds, 600 by default), *Adresse* and *API-Schlüssel* (override address and key from `.env`).
 
 **Examples:** all example flows.
 
-### Literaturangaben prüfen (Crossref)
+#### 3.9.3 Literaturangaben prüfen (Crossref)
 
 Checks whether the publications in a reference list exist and are cited correctly. Each reference is looked up in Crossref (by DOI or as free text) and compared by title, year and first author. Retracted articles are marked.
 
@@ -639,7 +644,7 @@ Checks whether the publications in a reference list exist and are cited correctl
 
 **Note:** ❓ does not always mean "made up": books and websites often have no DOI. Check those with *Katalogsuche*. **Examples:** flows 01 and 04.
 
-### Literatursuche (OpenAlex)
+#### 3.9.4 Literatursuche (OpenAlex)
 
 Searches for academic publications from all publishers in OpenAlex, with abstracts and links to open-access full texts.
 
@@ -657,7 +662,7 @@ Searches for academic publications from all publishers in OpenAlex, with abstrac
 
 **Note:** without an OpenAlex key in `.env`, OpenAlex slows down when many people search; the block then falls back to Crossref for the search. **Examples:** flows 03 and 04.
 
-### Literaturverzeichnis finden
+#### 3.9.5 Literaturverzeichnis finden
 
 Cuts the reference list out of a long document, e.g. a thesis, so that only the references are passed on.
 
@@ -668,7 +673,7 @@ Cuts the reference list out of a long document, e.g. a thesis, so that only the 
 
 **Examples:** flow 02.
 
-### Quellen anreichern (OpenAlex)
+#### 3.9.6 Quellen anreichern (OpenAlex)
 
 Adds information from OpenAlex to each reference in a list: abstract, topic, number of citations and open-access status. It also calculates statistics for the whole list, e.g. the share of open-access sources and the range of years.
 
@@ -681,7 +686,7 @@ Adds information from OpenAlex to each reference in a list: abstract, topic, num
 
 **Examples:** flow 02.
 
-### Volltexte holen (Open Access)
+#### 3.9.7 Volltexte holen (Open Access)
 
 Downloads the free full texts (PDFs) of publications and extracts their text. If there is no free full text, the abstract is used instead.
 
@@ -695,7 +700,7 @@ Downloads the free full texts (PDFs) of publications and extracts their text. If
 
 **Examples:** flow 03.
 
-## Not covered here
+## 4. Not covered here
 
 - **Legacy components:** Langflow hides old components that have been replaced by newer ones. They can be shown via the settings icon at the top of the sidebar, but aren't needed.
 - **Discover more components / Bundles:** more components from other providers, e.g. OpenAI, Google or vector databases. Most need an account or key and aren't set up in this kit.
