@@ -19,7 +19,9 @@ services:
       LANGFLOW_COMPONENTS_PATH: /app/komponenten
       LANGFLOW_LOAD_FLOWS_PATH: /app/flows
       LANGFLOW_ALLOW_CUSTOM_COMPONENTS: "true"
-      LANGFLOW_SSRF_ALLOWED_HOSTS: host.docker.internal,ollama
+      # Die Literatur-APIs stehen hier, weil der Schutz sie sonst je nach Netzwerk als intern einstuft
+      # und der Baustein API Request sie blockiert (z. B. Flow 01b).
+      LANGFLOW_SSRF_ALLOWED_HOSTS: host.docker.internal,ollama,api.crossref.org,api.openalex.org,api.unpaywall.org,api.datacite.org,lobid.org
       DO_NOT_TRACK: "true"
     volumes:
       - ./komponenten:/app/komponenten:ro

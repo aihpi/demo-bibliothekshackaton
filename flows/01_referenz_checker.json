@@ -27,7 +27,7 @@
           "id": "note-0",
           "type": "note",
           "node": {
-            "description": "# 🔎 Referenz-Checker\n\n**Problem:** KI-Tools erfinden Literaturangaben, und auch echte Verzeichnisse enthalten Fehler.\n\n**So arbeitet der Flow:**\n1. Ihr fügt im Playground ein Literaturverzeichnis ein.\n2. **Literaturangaben prüfen** gleicht jede Angabe mit **Crossref** ab (Titel, Jahr, Erstautor:in, DOI) und fragt nach **zurückgezogenen** Artikeln.\n3. Die **KI** schreibt daraus einen verständlichen Prüfbericht.\n\n**Testdaten:** `daten/literaturliste_zum_pruefen.txt` – mit eingebauten Fehlern.\n\n## 💡 Ideen zum Weiterbauen\n- Statt Chat: PDF hochladen (**Read File** + **Literaturverzeichnis finden** davor)\n- Nicht gefundene Bücher in der **Katalogsuche** nachschlagen\n- Den Bericht als Datei speichern (**Save File**)",
+            "description": "# 🔎 Referenz-Checker\n\n**Problem:** KI-Tools erfinden Literaturangaben, und auch echte Verzeichnisse enthalten Fehler.\n\n**So arbeitet der Flow:**\n1. Ihr fügt im Playground ein Literaturverzeichnis ein.\n2. **Literaturangaben prüfen** gleicht jede Angabe mit **Crossref** ab (Titel, Jahr, Erstautor:in, DOI) und fragt nach **zurückgezogenen** Artikeln.\n3. Die **KI** schreibt daraus einen verständlichen Prüfbericht.\n\n**Testdaten:** `daten/literaturliste_zum_pruefen.txt` – mit eingebauten Fehlern.\n\n## 💡 Ideen zum Weiterbauen\n- Statt Chat: PDF hochladen (**Read File** + **Literaturverzeichnis finden** davor)\n- Nicht gefundene Bücher in der **Katalogsuche** nachschlagen\n- Den Bericht als Datei speichern (**Write File**)",
             "display_name": "",
             "documentation": "",
             "template": {

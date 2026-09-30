@@ -48,6 +48,16 @@ class Langflow:
         antwort.raise_for_status()
         return antwort.json()["frontend_node"]
 
+    def feld_aendern(self, knoten: dict, feld: str, wert) -> dict:
+        """Wie eine Auswahl im Editor: Der Baustein blendet danach die passenden Felder ein."""
+        antwort = self.http.post("/api/v1/custom_component/update", json={
+            "code": knoten["template"]["code"]["value"], "template": knoten["template"],
+            "field": feld, "field_value": wert})
+        antwort.raise_for_status()
+        neu = antwort.json()
+        neu["template"][feld]["value"] = wert
+        return neu
+
     def werkzeug_modus(self, knoten: dict) -> dict:
         antwort = self.http.post("/api/v1/custom_component/update", json={
             "code": knoten["template"]["code"]["value"], "template": knoten["template"],
@@ -66,8 +76,10 @@ class Flow:
         self.kanten: list[dict] = []
 
     def baustein(self, typ: str, x: float, y: float, kurz: str, werte: dict | None = None,
-                 titel: str | None = None, werkzeug: bool = False) -> str:
+                 titel: str | None = None, werkzeug: bool = False, auswahl: dict | None = None) -> str:
         knoten = copy.deepcopy(self.lf.bausteine[typ])
+        for feld, wert in (auswahl or {}).items():
+            knoten = self.lf.feld_aendern(knoten, feld, wert)
         for feld, wert in (werte or {}).items():
             knoten["template"][feld]["value"] = wert
         if titel:
@@ -109,10 +121,25 @@ class Flow:
         q["selected_output"] = ausgang
         ausgabe = next(o for o in q["node"]["outputs"] if o["name"] == ausgang)
         eingang = z["node"]["template"][feld]
+        # Der Editor löscht beim Öffnen Verbindungen zu ausgeblendeten Feldern (z. B. Query Parameters)
+        eingang["advanced"] = False
         griff_q = {"dataType": q["type"], "id": quelle, "name": ausgang, "output_types": ausgabe["types"]}
         griff_z = {"fieldName": feld, "id": ziel, "inputTypes": eingang.get("input_types") or [],
                    "type": eingang["type"]}
+        self._kante(quelle, griff_q, ziel, griff_z)
 
+    def schleife_schliessen(self, quelle: str, ausgang: str, schleife: str) -> None:
+        """Das Ergebnis eines Durchlaufs zurück in die Loop: Die Kante endet am Ausgang "Item", nicht an einem Feld."""
+        q, s = self._knoten(quelle), self._knoten(schleife)
+        q["selected_output"] = ausgang
+        ausgabe = next(o for o in q["node"]["outputs"] if o["name"] == ausgang)
+        item = next(o for o in s["node"]["outputs"] if o["name"] == "item")
+        griff_q = {"dataType": q["type"], "id": quelle, "name": ausgang, "output_types": ausgabe["types"]}
+        griff_s = {"dataType": s["type"], "id": schleife, "name": "item",
+                   "output_types": item["types"] + (item.get("loop_types") or [])}
+        self._kante(quelle, griff_q, schleife, griff_s)
+
+    def _kante(self, quelle: str, griff_q: dict, ziel: str, griff_z: dict) -> None:
         def text(griff: dict) -> str:
             return json.dumps(griff, ensure_ascii=False).replace('"', "œ")
 
@@ -202,6 +229,110 @@ def flow_referenzen(lf: Langflow) -> Flow:
     f.verbinden(eingabe, "message", pruefen, "literaturangaben")
     f.verbinden(pruefen, "bericht", prompt, "pruefergebnis")
     f.verbinden(pruefen, "tabelle", tabelle, "input_value")
+    f.verbinden(prompt, "prompt", modell, "input_value")
+    f.verbinden(modell, "text_output", ausgabe, "input_value")
+    return f
+
+
+# JQ-Ausdrücke für Flow 01b: Suchanfrage an Crossref bauen und die Treffer als lesbare Zeilen ausgeben.
+JQ_SUCHANFRAGE = ('{"query.bibliographic": .text, "rows": 3, '
+                  '"select": "DOI,title,author,issued,container-title,type,updated-by"}')
+JQ_TREFFER = (
+    '.result.message.items | if length == 0 then "(keine Treffer)" else map('
+    '"- " + (.author[0].family // .author[0].name // "?")'
+    ' + " (" + ((.issued["date-parts"][0][0] // "?") | tostring) + "): "'
+    ' + (.title[0] // "?") + ". " + (."container-title"[0] // "") + ". DOI " + .DOI'
+    ' + (if ([."updated-by"[]? | select(.type == "retraction")] | length) > 0 then " – ZURÜCKGEZOGEN" else "" end)'
+    ') | join("\\n") end')
+
+
+def flow_referenzen_standard(lf: Langflow) -> Flow:
+    f = Flow(lf, "01b_referenz_checker_standard", "01b Referenz-Checker – nur Standard-Bausteine",
+             "Dieselbe Aufgabe wie Flow 01, aber nur mit Standard-Bausteinen von Langflow gebaut: "
+             "Schleife, API-Abfrage bei Crossref, und die KI entscheidet, ob ein Treffer passt.", "ListTree")
+    f.notiz(
+        "# 🧩 Referenz-Checker aus Standard-Bausteinen\n\n"
+        "Dieselbe Aufgabe wie **Flow 01**, aber ohne den Baustein *Literaturangaben prüfen*. "
+        "Alles hier gibt es in jedem Langflow (einzige Ausnahme: **KI-Modell**, damit die Einstellungen "
+        "aus der `.env` gelten).\n\n"
+        "**So arbeitet der Flow:**\n"
+        "1. **Split Text** zerlegt das Verzeichnis in Zeilen: eine Zeile = eine Angabe.\n"
+        "2. **Loop** nimmt die Angaben nacheinander (oberer Bereich, die Schleife):\n"
+        "   - **Data Operations** baut daraus mit einem JQ-Ausdruck die Suchanfrage,\n"
+        "   - **API Request** fragt Crossref nach den 3 ähnlichsten Treffern,\n"
+        "   - ein zweites **Data Operations** macht aus der Antwort lesbare Zeilen,\n"
+        "   - **Prompt Template** legt Angabe und Treffer zusammen und gibt sie an die Loop zurück.\n"
+        "3. Wenn alle Angaben durch sind, gibt **Done** alles weiter. Die **KI** entscheidet für jede Angabe, "
+        "ob ein Treffer passt, und schreibt den Prüfbericht.\n\n"
+        "## ⚖️ Unterschiede zu Flow 01\n"
+        "- **Wer entscheidet?** In 01 vergleicht Programmcode Titel, Jahr und Autor:in. Hier urteilt die KI "
+        "und kann sich dabei irren.\n"
+        "- **Mehr Bausteine:** 14 statt 6, dafür sieht man jeden Schritt.\n"
+        "- **Suche statt Nachschlagen:** Crossref listet oft Arbeiten *über* eine Publikation zuerst. "
+        "Flow 01 schlägt vorhandene DOIs direkt nach und wählt aus 10 Treffern, hier gibt es nur die ersten 3.\n"
+        "- **Nur eine Angabe pro Zeile:** Umbrochene Angaben (z. B. aus PDFs) werden falsch zerlegt.\n"
+        "- **Keine DOI-Prüfung:** Ob eine DOI existiert, prüft niemand, DataCite fehlt.\n"
+        "- **Kein zweiter Versuch:** Ist Crossref überlastet, bricht der Flow ab.\n\n"
+        "**Testdaten:** `daten/literaturliste_zum_pruefen.txt` – vergleicht das Ergebnis mit Flow 01!",
+        -160, -900, breite=520)
+    eingabe = f.baustein("ChatInput", 440, 120, "verzeichnis", titel="Literaturverzeichnis (Chat)")
+    zerlegen = f.baustein("SplitText", 840, 60, "angaben",
+                          {"separator": "\n", "chunk_size": 1, "chunk_overlap": 0, "clean_output": True},
+                          titel="Angaben trennen")
+    schleife = f.baustein("LoopComponent", 1240, 120, "angaben", titel="Jede Angabe einzeln")
+    f.notiz(
+        "## 🔁 Die Schleife\n"
+        "Alles in diesem Bereich läuft **einmal pro Literaturangabe**. Die Linie ganz rechts führt "
+        "zurück in die Loop: Dann kommt die nächste Angabe dran.",
+        1660, -900, breite=2120, farbe="amber")
+    jq_modus = {"input_type": "JSON", "operation": [{"name": "JQ Expression", "icon": "terminal"}]}
+    angabe = f.baustein("ParserComponent", 1680, -720, "angabe", {"pattern": "{text}"}, titel="Angabe als Text")
+    anfrage = f.baustein("Operations", 1680, -380, "anfrage", {"query": JQ_SUCHANFRAGE},
+                         titel="Suchanfrage bauen", auswahl=jq_modus)
+    crossref = f.baustein("APIRequest", 2100, -420, "crossref", {
+        "url_input": "https://api.crossref.org/works",
+        "headers": [{"key": "User-Agent", "value": "Bibliothekshackathon-Demo (Langflow)"}],
+    }, titel="Crossref fragen")
+    treffer = f.baustein("Operations", 2520, -380, "treffer", {"query": JQ_TREFFER},
+                         titel="Treffer auslesen", auswahl=jq_modus)
+    treffer_text = f.baustein("ParserComponent", 2940, -380, "treffer", {"pattern": "{result}"},
+                              titel="Treffer als Text")
+    zusammen = f.baustein("Prompt Template", 3360, -620, "zusammen", {
+        "template": "ANGABE: {angabe}\nCROSSREF-TREFFER:\n{treffer}\n"}, titel="Angabe + Treffer")
+    alle = f.baustein("ParserComponent", 1680, 520, "alle", {"pattern": "{text}"}, titel="Alle Ergebnisse als Text")
+    prompt = f.baustein("Prompt Template", 2100, 460, "bericht", {"template": (
+        "ERGEBNISSE DER CROSSREF-SUCHE:\n{ergebnisse}\n\n---\n"
+        "Du unterstützt eine Bibliothek beim Prüfen von Literaturverzeichnissen.\n"
+        "Oben steht zu jeder Literaturangabe (ANGABE) die Liste der ähnlichsten Treffer in der Datenbank Crossref.\n"
+        "Entscheide für jede Angabe, ob einer der Treffer dieselbe Publikation ist. Vergleiche Titel, "
+        "Jahr (±1) und Erstautor:in, und falls die Angabe eine DOI enthält, auch die DOI.\n"
+        "- ✅ bestätigt: Titel, Jahr und Erstautor:in passen\n"
+        "- ⚠️ Abweichung: dieselbe Publikation, aber Jahr, Erstautor:in oder DOI weichen ab\n"
+        "- ❓ nicht gefunden: kein Treffer ist dieselbe Publikation (vielleicht erfunden – oder ein Buch/eine "
+        "Webseite ohne DOI)\n"
+        "- 🚫 zurückgezogen: der passende Treffer ist als ZURÜCKGEZOGEN markiert\n\n"
+        "Schreibe einen kurzen Prüfbericht auf Deutsch:\n"
+        "1. Tabelle: Nr. | Status | Begründung in wenigen Worten\n"
+        "2. Gesamteinschätzung in zwei Sätzen.\n"
+        "3. Alle Angaben mit Problemen: Problem und konkreter Korrekturvorschlag.\n"
+        "4. Welche Angaben sollte jemand von Hand im Bibliothekskatalog prüfen?\n"
+        "Verwende nur Informationen aus der Suche. Erfinde keine Daten.")}, titel="Prompt: Prüfbericht")
+    modell = f.baustein(KI_MODELL, 2520, 400, "modell")
+    ausgabe = f.baustein("ChatOutput", 2940, 500, "bericht", titel="Prüfbericht")
+    tabelle = f.baustein("ChatOutput", 1680, 900, "tabelle", titel="Suchergebnisse")
+    f.verbinden(eingabe, "message", zerlegen, "data_inputs")
+    f.verbinden(zerlegen, "dataframe", schleife, "data")
+    f.verbinden(schleife, "item", angabe, "input_data")
+    f.verbinden(schleife, "item", anfrage, "data")
+    f.verbinden(anfrage, "data_output", crossref, "query_params")
+    f.verbinden(crossref, "data", treffer, "data")
+    f.verbinden(treffer, "data_output", treffer_text, "input_data")
+    f.verbinden(angabe, "parsed_text", zusammen, "angabe")
+    f.verbinden(treffer_text, "parsed_text", zusammen, "treffer")
+    f.schleife_schliessen(zusammen, "prompt", schleife)
+    f.verbinden(schleife, "done", alle, "input_data")
+    f.verbinden(schleife, "done", tabelle, "input_value")
+    f.verbinden(alle, "parsed_text", prompt, "ergebnisse")
     f.verbinden(prompt, "prompt", modell, "input_value")
     f.verbinden(modell, "text_output", ausgabe, "input_value")
     return f
@@ -371,6 +502,7 @@ def flow_agent(lf: Langflow) -> Flow:
 TESTS = {
     "00 Erste Schritte – Hallo KI": {"eingabe": "Wie lange darf ich ein Buch normalerweise ausleihen?"},
     "01 Referenz-Checker": {"eingabe_datei": "daten/literaturliste_zum_pruefen.txt"},
+    "01b Referenz-Checker – nur Standard-Bausteine": {"eingabe_datei": "daten/literaturliste_zum_pruefen.txt"},
     "02 Masterarbeit – Quellen analysieren": {"eingabe": "Bitte analysiere die Quellen dieser Masterarbeit.",
                                                 "pdf": "daten/beispiel_masterarbeit.pdf"},
     "03 Literaturreview – Forschungslücken finden": {
@@ -424,7 +556,7 @@ def main() -> None:
 
     lf = Langflow(args.url)
     ZIEL.mkdir(exist_ok=True)
-    for baue in (flow_hallo, flow_referenzen, flow_masterarbeit, flow_review, flow_agent):
+    for baue in (flow_hallo, flow_referenzen, flow_referenzen_standard, flow_masterarbeit, flow_review, flow_agent):
         flow = baue(lf)
         if args.nur and args.nur not in flow.name:
             continue  # gebaut wird trotzdem alles, damit Fehler in jedem Flow auffallen

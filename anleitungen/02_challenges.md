@@ -38,6 +38,7 @@ Sprachmodelle erfinden Literaturangaben, die täuschend echt aussehen. Auch in e
 
 7. **Nur wenn nötig:** Mit *If-Else* oder *Smart Router* nur dann einen ausführlichen Bericht schreiben, wenn es Probleme gibt, sonst eine kurze Bestätigung.
 8. **Bericht speichern:** Den Prüfbericht mit *Write File* als Datei ablegen.
+9. **Ohne eigenen Baustein:** Flow `01b Referenz-Checker – nur Standard-Bausteine` macht dasselbe wie 01, aber mit Schleife, API-Abfrage und KI-Urteil statt Programmcode. Beide Flows mit den Testdaten laufen lassen und die Ergebnisse vergleichen: Wo irrt sich die KI? Lässt sich 01b mit einem besseren Prompt oder mehr Treffern (`rows` in *Suchanfrage bauen*) verbessern?
 9. **Bewertung:** Wie zuverlässig ist der Checker? Erfindet selbst mit einem Chatbot zehn Literaturangaben und lasst sie prüfen. Wie viele werden erkannt?
 
 ### Zum Diskutieren
