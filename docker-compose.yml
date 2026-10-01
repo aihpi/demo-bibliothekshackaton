@@ -20,6 +20,9 @@ services:
       LANGFLOW_PORT: 7860
       LANGFLOW_AUTO_LOGIN: "true"
       LANGFLOW_CONFIG_DIR: /app/langflow
+      # Die Datenbank (eigene Flows, Variablen) gehört ins Volume. Sonst liegt sie im Container und ist
+      # nach "docker compose down" oder einem Update weg.
+      LANGFLOW_SAVE_DB_IN_CONFIG_DIR: "true"
       LANGFLOW_COMPONENTS_PATH: /app/komponenten
       LANGFLOW_LOAD_FLOWS_PATH: /app/flows
       LANGFLOW_ALLOW_CUSTOM_COMPONENTS: "true"
