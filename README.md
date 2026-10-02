@@ -5,7 +5,7 @@
 
 **English** | [Deutsch](README.de.md)
 
-A demo and working environment for hackathons with library staff. Groups with no programming experience use [Langflow](https://www.langflow.org/) to build AI workflows and AI agents by drag and drop, for real tasks in academic libraries: checking references, analysing the sources of a thesis, collecting literature across publishers and finding research gaps. The kit ships ready-made example flows, custom library components (Crossref, OpenAlex, Unpaywall, hbz union catalogue) and guides.
+A demo and working environment for hackathons with information professionals from academic libraries. Groups build AI workflows and AI agents in [Langflow](https://www.langflow.org/) by drag and drop, without writing code, for real tasks in academic libraries: checking references, analysing the sources of a thesis, collecting literature across publishers and finding research gaps. The kit ships ready-made example flows, custom library components (Crossref, OpenAlex, Unpaywall, hbz union catalogue) and guides.
 
 The hackathon itself runs in German: the example flows, the components and the guides in [`anleitungen/`](anleitungen/) are all in German.
 

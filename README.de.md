@@ -5,7 +5,7 @@
 
 [English](README.md) | **Deutsch**
 
-Eine Demo- und Arbeitsumgebung für Hackathons mit Bibliotheksbeschäftigten. Gruppen ohne Programmierkenntnisse bauen in [Langflow](https://www.langflow.org/) per Drag-and-drop KI-Workflows und KI-Agenten für echte Aufgaben wissenschaftlicher Bibliotheken: Literaturangaben prüfen, die Quellen einer Abschlussarbeit analysieren, verlagsübergreifend Literatur sammeln und Forschungslücken finden. Mitgeliefert werden fertige Beispiel-Flows, eigene Bibliotheks-Bausteine (Crossref, OpenAlex, Unpaywall, hbz-Katalog) und Anleitungen.
+Eine Demo- und Arbeitsumgebung für Hackathons mit Fachleuten aus wissenschaftlichen Bibliotheken. Die Gruppen bauen in [Langflow](https://www.langflow.org/) per Drag-and-drop und ohne Code KI-Workflows und KI-Agenten für echte Aufgaben wissenschaftlicher Bibliotheken: Literaturangaben prüfen, die Quellen einer Abschlussarbeit analysieren, verlagsübergreifend Literatur sammeln und Forschungslücken finden. Mitgeliefert werden fertige Beispiel-Flows, eigene Bibliotheks-Bausteine (Crossref, OpenAlex, Unpaywall, hbz-Katalog) und Anleitungen.
 
 Der Hackathon selbst läuft auf Deutsch: Die Beispiel-Flows, die Bausteine und die Anleitungen in [`anleitungen/`](anleitungen/) sind alle auf Deutsch.
 

@@ -4,7 +4,7 @@ Jede Gruppe wählt eine Challenge. Jede Challenge hat einen fertigen **Start-Flo
 
 - 🟢 **Einstieg**: den Flow verstehen und anpassen, ohne neue Bausteine
 - 🟡 **Ausbau**: neue Bausteine hinzufügen und verbinden
-- 🔴 **Profi**: etwas Neues bauen, das es so noch nicht gibt
+- 🔴 **Vertiefung**: etwas Neues bauen, das es so noch nicht gibt
 
 Ihr müsst nicht alle Stufen schaffen. Ein gut durchdachter Flow der Stufe 🟢 mit einer klugen Diskussion ist mehr wert als ein halbfertiger 🔴-Flow.
 
@@ -34,7 +34,7 @@ Sprachmodelle erfinden Literaturangaben, die täuschend echt aussehen. Auch in e
 5. **Zitierstil prüfen:** Ein zweiter KI-Schritt prüft, ob alle Angaben einheitlich einem Stil folgen (z. B. APA 7) und schlägt die korrigierte Fassung vor.
 6. **Bücher nachschlagen:** Für Angaben mit ❓ die *Katalogsuche* nutzen. Tipp: Das geht am einfachsten mit einem *Agent*, der *Literaturangaben prüfen* und *Katalogsuche* als Werkzeuge bekommt (siehe Flow 04).
 
-### 🔴 Profi
+### 🔴 Vertiefung
 
 7. **Nur wenn nötig:** Mit *If-Else* oder *Smart Router* nur dann einen ausführlichen Bericht schreiben, wenn es Probleme gibt, sonst eine kurze Bestätigung.
 8. **Bericht speichern:** Den Prüfbericht mit *Write File* als Datei ablegen.
@@ -69,7 +69,7 @@ Wer Abschlussarbeiten betreut, begutachtet oder in der Schreibberatung sitzt, wi
 5. **Volltexte:** *Volltexte holen* an die Tabelle hängen und die KI prüfen lassen, worum es in den frei verfügbaren Quellen wirklich geht.
 6. **Prüfung einbauen:** Zusätzlich *Literaturangaben prüfen* anschließen, damit fehlerhafte Angaben auffallen.
 
-### 🔴 Profi
+### 🔴 Vertiefung
 
 7. **Literatur empfehlen:** Aus dem Überblick die Hauptthemen der Arbeit ableiten (KI-Schritt), daraus Suchbegriffe machen und mit *Literatursuche (OpenAlex)* aktuelle Literatur finden, die in der Arbeit fehlt.
 8. **Erwerbungsvorschläge:** Nicht frei zugängliche Quellen, die häufig vorkommen, als Liste für die Erwerbung ausgeben.
@@ -104,7 +104,7 @@ Für einen systematischen Literaturüberblick muss man Publikationen vieler Verl
 5. **Ein- und Ausschluss:** Die KI entscheidet für jede Publikation mit Begründung, ob sie zur Frage passt, ähnlich wie bei PRISMA.
 6. **Mehrere Suchen:** Die KI mehrere Suchanfragen mit Synonymen erzeugen lassen und die Ergebnisse zusammenführen.
 
-### 🔴 Profi
+### 🔴 Vertiefung
 
 7. **Review als Datei:** Den fertigen Überblick als Markdown-Datei mit Literaturliste speichern (*Write File*).
 8. **Qualität vergleichen:** Denselben Flow mit dem lokalen Modell und dem Cluster-Modell laufen lassen. Was ändert sich?

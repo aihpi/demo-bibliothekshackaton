@@ -1,6 +1,6 @@
 # Anleitung für Teilnehmende
 
-Diese Anleitung führt euch vom leeren Laptop bis zum eigenen KI-Workflow. Programmierkenntnisse braucht ihr nicht.
+Diese Anleitung führt euch vom leeren Laptop bis zum eigenen KI-Workflow. Die Flows entstehen in einer grafischen Oberfläche, ohne Code; was sie leisten, bestimmt euer Wissen über Literatur, Metadaten und Bibliotheksdienste.
 
 ## Inhalt
 
@@ -13,13 +13,13 @@ Diese Anleitung führt euch vom leeren Laptop bis zum eigenen KI-Workflow. Progr
 7. [Cluster oder lokales Modell?](#7-cluster-oder-lokales-modell)
 8. [Tipps für gute Prompts](#8-tipps-für-gute-prompts)
 9. [Wenn etwas nicht klappt](#9-wenn-etwas-nicht-klappt)
-10. [Kleines Wörterbuch](#10-kleines-wörterbuch)
+10. [Begriffe](#10-begriffe)
 
 ---
 
 ## 1. Was ihr heute baut
 
-Ihr baut **Flows**: Ketten aus Bausteinen, die Daten Schritt für Schritt verarbeiten. Ein Baustein holt zum Beispiel Metadaten aus einer Literaturdatenbank, ein anderer lässt ein Sprachmodell (eine „KI“) einen Bericht schreiben.
+Ihr baut **Flows**: Ketten aus Bausteinen, die Daten Schritt für Schritt verarbeiten. Ein Baustein holt zum Beispiel Metadaten aus einer Literaturdatenbank, ein anderer lässt ein Sprachmodell einen Bericht schreiben.
 
 Für jede Challenge gibt es einen fertigen Beispiel-Flow. Ihr müsst also nicht bei null anfangen, sondern könnt ausprobieren, verändern und erweitern. Die Aufgaben stehen in den [Challenges](02_challenges.md).
 
@@ -29,7 +29,7 @@ Für jede Challenge gibt es einen fertigen Beispiel-Flow. Ihr müsst also nicht 
 
 ### 2.1 Docker Desktop installieren
 
-Langflow läuft in **Docker**, einer Art „Kiste“, in der Programme fertig eingerichtet mitkommen.
+Langflow läuft in **Docker**. Docker stellt Langflow mit allem bereit, was es braucht, sodass auf dem Laptop sonst nichts installiert werden muss.
 
 1. [Docker Desktop](https://www.docker.com/products/docker-desktop/) herunterladen und installieren.
 2. Docker Desktop öffnen und warten, bis unten links **„Engine running“** steht.
@@ -91,7 +91,7 @@ Die Oberfläche ist englisch. Die wichtigsten Begriffe:
 | Agent | KI, die selbst entscheidet, welche Werkzeuge sie nutzt |
 | Toolset / Tool Mode | ein Baustein wird zum Werkzeug für einen Agenten |
 | Run / ▶ | Baustein oder Flow ausführen |
-| Controls | weitere Einstellungen eines Bausteins |
+| Parameters | weitere Einstellungen eines Bausteins |
 
 ## 4. Den ersten Flow ausführen
 
@@ -175,7 +175,7 @@ Im Baustein **KI-Modell** wählt ihr die **Quelle**:
 - **Zielgruppe nennen:** „Für Studierende im ersten Semester, in einfacher Sprache.“
 - **Lange Daten zuerst, Anweisung am Schluss:** Bei viel Text die Daten oben und die Aufgabe unten in den Prompt schreiben.
 - **Mit Beispiel zeigen:** Ein Beispiel für eine gute Antwort wirkt oft besser als eine lange Beschreibung.
-- **Ergebnisse prüfen:** Sprachmodelle klingen immer überzeugt, auch wenn sie falsch liegen. Stichprobenartig nachprüfen!
+- **Ergebnisse prüfen:** Sprachmodelle klingen immer überzeugt, auch wenn sie falsch liegen. Stichproben gegen die Quellen prüfen.
 
 ## 9. Wenn etwas nicht klappt
 
@@ -194,25 +194,19 @@ Im Baustein **KI-Modell** wählt ihr die **Quelle**:
 | Die KI erinnert sich an alte Antworten | Im Playground links eine neue Sitzung starten (**+**). |
 | Etwas ist kaputt | Den Flow aus `flows/` neu importieren (*Upload*) oder die Orga fragen. |
 
-## 10. Kleines Wörterbuch
+## 10. Begriffe
+
+Begriffe rund um Langflow und Sprachmodelle, wie sie in diesen Anleitungen verwendet werden.
 
 | Begriff | Bedeutung |
 |---|---|
 | **Flow / Workflow** | Eine Kette von Bausteinen, die gemeinsam eine Aufgabe erledigen |
-| **Baustein / Komponente** | Ein Kästchen auf der Arbeitsfläche, das eine Sache tut |
-| **Sprachmodell / LLM** | Die „KI“, die Texte liest und schreibt (Large Language Model) |
+| **Baustein / Komponente** | Ein Verarbeitungsschritt auf der Arbeitsfläche, mit Eingängen und Ausgängen |
+| **Sprachmodell / LLM** | Ein Modell, das Text verarbeitet und erzeugt (Large Language Model) |
 | **Prompt** | Die Anweisung an das Sprachmodell |
 | **Token** | Die Einheit, in der Sprachmodelle Text zählen, etwa ¾ Wort |
 | **Kontext** | Wie viel Text ein Modell auf einmal lesen kann |
 | **Agent** | Ein Sprachmodell, das selbst Werkzeuge auswählt und benutzt |
 | **Halluzination** | Eine erfundene, aber überzeugend klingende Antwort |
-| **DOI** | Dauerhafte Kennung einer Publikation, z. B. `10.1038/sdata.2016.18` |
-| **Crossref** | Registrierungsstelle für DOIs mit Metadaten zu über 170 Mio. Publikationen |
-| **DataCite** | Registrierungsstelle für DOIs von Forschungsdaten, Software und Berichten |
-| **OpenAlex** | Freier Katalog der Wissenschaft mit Abstracts, Themen und Zitationen |
-| **Unpaywall** | Dienst, der frei zugängliche Versionen von Artikeln findet |
-| **Open Access (OA)** | Frei und kostenlos zugängliche Publikationen |
-| **Retraction Watch** | Datenbank zurückgezogener Artikel, in Crossref integriert |
-| **lobid** | Offene Schnittstelle zum hbz-Verbundkatalog |
 | **LiteLLM** | Vermittlungsdienst, über den der Cluster viele Modelle anbietet |
 | **Ollama** | Programm, das Sprachmodelle auf dem eigenen Rechner ausführt |

@@ -2,7 +2,7 @@
 
 [English](INSTALL.md) | **Deutsch**
 
-Diese Anleitung erklärt, wie ihr den Bibliothekshackathon auf einem Laptop einrichtet: von der Installation von Docker bis zum ersten Flow. Sie richtet sich an Teilnehmende, die ihren eigenen Laptop einrichten, und an die Orga, die mehrere Laptops vorbereitet. Programmierkenntnisse braucht ihr nicht.
+Diese Anleitung erklärt, wie ihr den Bibliothekshackathon auf einem Laptop einrichtet: von der Installation von Docker bis zum ersten Flow. Sie richtet sich an Teilnehmende, die ihren eigenen Laptop einrichten, und an die Orga, die mehrere Laptops vorbereitet. Programmiert wird dabei nicht.
 
 Das Einrichten dauert etwa 20 bis 30 Minuten, das meiste davon ist Warten auf Downloads. Hat die Orga euren Laptop schon vorbereitet, geht direkt zu [Schritt 5](#5-langflow-starten).
 

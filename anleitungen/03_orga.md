@@ -175,7 +175,7 @@ Ein Vorschlag für einen Tag:
 | 16:30 | Diskussion: Was davon würden wir im Alltag nutzen? Was nicht, und warum? |
 | 17:00 | Abschluss |
 
-**Betreuung:** eine technisch versierte Person pro drei bis vier Gruppen. Hilfreich ist eine Person aus der Bibliothekspraxis, die fachliche Fragen beantwortet.
+**Betreuung:** eine technisch versierte Person pro drei bis vier Gruppen. Die fachliche Expertise bringen die Teilnehmenden selbst mit; die Betreuung hilft vor allem bei Langflow, den Modellen und der Technik.
 
 **Einführung live zeigen, nicht erklären.** Am wirkungsvollsten ist der Referenz-Checker: erst eine erfundene Angabe von einem Chatbot erzeugen lassen, dann zeigen, wie der Flow sie findet.
 

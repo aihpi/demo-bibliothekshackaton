@@ -2,7 +2,7 @@
 
 **English** | [Deutsch](INSTALL.de.md)
 
-This guide explains how to set up the Library Hackathon kit on a laptop, from installing Docker to running the first flow. It is written for participants setting up their own laptop and for organisers preparing several laptops. You don't need any programming experience.
+This guide explains how to set up the Library Hackathon kit on a laptop, from installing Docker to running the first flow. It is written for participants setting up their own laptop and for organisers preparing several laptops. No programming is involved.
 
 Setting up takes about 20 to 30 minutes, most of it waiting for downloads. If the organisers have already prepared your laptop, go straight to [step 5](#5-start-langflow).
 
