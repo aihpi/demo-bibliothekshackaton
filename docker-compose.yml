@@ -36,6 +36,11 @@ services:
     extra_hosts:
       # macht ein auf dem Laptop installiertes Ollama auch unter Linux erreichbar
       - "host.docker.internal:host-gateway"
+    dns_opt:
+      # Docker Desktop liefert zu IPv4-Adressen zusätzlich IPv6-Einträge der Form ::ffff:1.2.3.4. Langflows
+      # Schutz vor internen Adressen sperrt diese Form, und damit fast jede Website in URL, Web Search und
+      # API Request. Ohne IPv6-Anfragen bleiben nur die echten IPv4-Adressen, der Schutz bleibt aktiv.
+      - no-aaaa
     restart: unless-stopped
 
   # Optional: lokales Sprachmodell in Docker. Nur mit "--profile lokal" gestartet.

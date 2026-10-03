@@ -109,7 +109,7 @@ Fetches data from a web service (an API) by calling its address. This is how you
 
 **Hidden settings:** *Query Parameters* (the search parameters, as a JSON input you can connect), *Headers*, *Body* (for POST), *Timeout* (seconds, 30 by default).
 
-**Note:** Langflow blocks addresses it considers internal. On some computers this wrongly hits ordinary websites too, with the error *SSRF Protection: … resolves to blocked IP address*. The library databases (Crossref, OpenAlex, Unpaywall, DataCite, lobid) are allowed in this kit. For other addresses, ask the organisers.
+**Note:** Langflow blocks addresses inside the laptop or the local network, such as `localhost`, with the error *SSRF Protection: … resolves to blocked IP address*. Public websites and the library databases work.
 
 #### 3.2.2 Mock Data
 
@@ -142,9 +142,9 @@ Downloads the content of one or more web pages, and optionally of the pages they
 | Out | Extracted Pages | Table | One row per page, with address and text |
 | Out | Raw Content | Message | The text of all pages together, ready for a prompt |
 
-**Hidden settings:** *Output Format* (*Text*, *Markdown* or *HTML*), *Prevent Outside* (stay on the same website, on by default), *Timeout*.
+**Hidden settings:** *Output Format* (*Text*, *Markdown* or *HTML*), *Prevent Outside* (stay on the same website, on by default), *Headers*, *Timeout*.
 
-**Note:** the same address check as for *API Request* applies. If a page fails with *SSRF Protection*, ask the organisers.
+**Note:** the same address check as for *API Request* applies. Some websites, such as Wikipedia, refuse requests without a sender name. Then enter one under *Headers* in the row *User-Agent*, e.g. `Bibliothekshackathon (Langflow)`.
 
 #### 3.2.5 Web Search
 

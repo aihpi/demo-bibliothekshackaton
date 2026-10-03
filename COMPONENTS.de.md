@@ -109,7 +109,7 @@ Holt Daten von einem Webdienst (einer API), indem er dessen Adresse aufruft. So 
 
 **Versteckte Einstellungen:** *Query Parameters* (die Suchparameter, als JSON-Eingang zum Verbinden), *Headers*, *Body* (für POST), *Timeout* (Sekunden, standardmäßig 30).
 
-**Hinweis:** Langflow sperrt Adressen, die es für intern hält. Auf manchen Rechnern trifft das fälschlich auch normale Webseiten, mit der Fehlermeldung *SSRF Protection: … resolves to blocked IP address*. Die Bibliotheks-Datenbanken (Crossref, OpenAlex, Unpaywall, DataCite, lobid) sind in diesem Projekt freigegeben. Für andere Adressen fragt die Orga.
+**Hinweis:** Langflow sperrt Adressen auf dem Laptop oder im lokalen Netz, z. B. `localhost`, mit der Fehlermeldung *SSRF Protection: … resolves to blocked IP address*. Öffentliche Webseiten und die Bibliotheks-Datenbanken funktionieren.
 
 #### 3.2.2 Mock Data
 
@@ -142,9 +142,9 @@ Lädt den Inhalt einer oder mehrerer Webseiten herunter, auf Wunsch auch den der
 | Aus | Extracted Pages | Table | Eine Zeile pro Seite, mit Adresse und Text |
 | Aus | Raw Content | Message | Der Text aller Seiten zusammen, fertig für einen Prompt |
 
-**Versteckte Einstellungen:** *Output Format* (*Text*, *Markdown* oder *HTML*), *Prevent Outside* (auf derselben Website bleiben, standardmäßig an), *Timeout*.
+**Versteckte Einstellungen:** *Output Format* (*Text*, *Markdown* oder *HTML*), *Prevent Outside* (auf derselben Website bleiben, standardmäßig an), *Headers*, *Timeout*.
 
-**Hinweis:** Es gilt dieselbe Adressprüfung wie bei *API Request*. Scheitert eine Seite mit *SSRF Protection*, fragt die Orga.
+**Hinweis:** Es gilt dieselbe Adressprüfung wie bei *API Request*. Manche Webseiten, z. B. Wikipedia, lehnen Anfragen ohne Absenderkennung ab. Dann unter *Headers* in der Zeile *User-Agent* eine eintragen, z. B. `Bibliothekshackathon (Langflow)`.
 
 #### 3.2.5 Web Search
 
