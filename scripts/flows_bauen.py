@@ -366,6 +366,131 @@ def flow_agent(lf: Langflow) -> Flow:
     return f
 
 
+# Kopf und Schluss der Tabelle aus daten/schulungsplanung/lernplattform_tabelle_vorlage.html, Links als Platzhalter
+TD = 'style="padding: 8px; border: 1px solid rgb(204, 204, 204); width: {breite};"'
+LERNPLATTFORM_ZEILE = (
+    "    <tr>\n"
+    f"      <td {TD.format(breite='15.6716%')}>{{wochentag}}, {{datum}}</td>\n"
+    f"      <td {TD.format(breite='10.6343%')}>{{uhrzeit}} Uhr</td>\n"
+    f"      <td {TD.format(breite='73.694%')}><a href=\"LINK_ZUM_ZOOM_MEETING\" target=\"_blank\" "
+    "rel=\"noopener noreferrer\">{veranstaltung}</a></td>\n"
+    "    </tr>")
+TH = 'style="text-align: left; padding: 8px; border: 1px solid rgb(204, 204, 204); width: {breite};" scope="col"'
+LERNPLATTFORM_SEITE = (
+    "Quellcode für die Lernplattform (in den HTML-Editor einfügen, Links ersetzen):\n\n```html\n"
+    '<h4 id="aktuell" style="text-align: left;"><strong>Aktuelle Termine</strong></h4>\n'
+    "<p><strong>Dauer:</strong> bitte Beschreibung beachten; ansonsten jeweils 1 Stunde; Sprechstunden 30 Min.</p>\n"
+    '<table style="width: 100%; border-collapse: collapse;">\n'
+    "  <thead>\n"
+    '    <tr style="background-color: #e9ecef;">\n'
+    f"      <th {TH.format(breite='15.6716%')}>Datum</th>\n"
+    f"      <th {TH.format(breite='10.6343%')}>Uhrzeit</th>\n"
+    f"      <th {TH.format(breite='73.694%')}>Veranstaltung</th>\n"
+    "    </tr>\n"
+    "  </thead>\n"
+    "  <tbody>\n{zeilen}\n  </tbody>\n</table>\n"
+    "<p>Der Zoom-Link ist direkt im jeweiligen Thema verlinkt – einfach zum Termin draufklicken und Du wirst "
+    "zum Meetingraum weitergeleitet.</p>\n"
+    '<p>Verpasst? In unserer <strong><a href="LINK_ZUR_VIDEOGALERIE">Videogalerie</a></strong> findest Du '
+    "Aufzeichnungen der meisten Schulungsthemen.</p>\n```")
+
+
+def flow_schulungsplanung(lf: Langflow) -> Flow:
+    f = Flow(lf, "05_schulungsplanung", "05 Schulungsplanung",
+             "Plant Schulungstermine nach Turnus und Urlaubstagen, erzeugt die HTML-Tabelle für die Lernplattform "
+             "und einen Entwurf der Werbe-Mail. Use Case einer Hochschulbibliothek.", "CalendarDays")
+    f.notiz(
+        "# 📅 Schulungsplanung\n\n"
+        "**Use Case** einer Hochschulbibliothek, deren Studierende überwiegend im Fernstudium sind, beschrieben "
+        "in `daten/schulungsplanung/`.\n\n"
+        "**So arbeitet der Flow:**\n"
+        "1. **Read File:** die Schulungsliste (Schulung, Turnus, Schulungspersonal) und die Urlaubstage "
+        "hochladen, als Excel oder CSV.\n"
+        "2. Im Playground den **Zeitraum** angeben, z. B. *Plane November und Dezember 2026*.\n"
+        "3. Die **KI** plant die Termine als CSV-Tabelle: Turnus einhalten, Wochentage und Uhrzeiten "
+        "abwechseln, Urlaub auslassen. **Type Convert** macht daraus eine echte Tabelle.\n"
+        "4. **Parser** macht aus jeder Zeile eine Tabellenzeile im Format der Lernplattform, ohne KI.\n"
+        "5. Die **KI** schreibt aus den Terminen die Werbe-Mail.\n\n"
+        "**Vor dem ersten Lauf:** Im Baustein *Prompt: Werbe-Mail* die Vorlage der Bibliothek einfügen.\n\n"
+        "⚠️ Die KI plant, der Flow prüft nicht nach. Kontrolliert Wochentage, Turnus und Urlaub im Ergebnis. "
+        "Kleine lokale Modelle verrechnen sich dabei deutlich; nehmt für diesen Flow den Cluster.\n\n"
+        "## 💡 Ideen zum Weiterbauen\n"
+        "- Den Plan prüfen lassen, z. B. einen zweiten KI-Schritt, der Urlaub und Turnus kontrolliert\n"
+        "- Zeitfenster anpassen: Im Prompt stehen die Zeiten aus dem bisherigen Plan der Lernplattform\n"
+        "- Die Links zu Zoom und zur Anmeldung automatisch einsetzen\n"
+        "- Den Plan als Excel speichern (**Write File**)",
+        -120, -360, breite=520)
+    auftrag = f.baustein("ChatInput", 480, -300, "zeitraum", titel="Zeitraum (Chat)")
+    schulungen = f.baustein("File", 480, 60, "schulungen", titel="Schulungsliste (Excel/CSV)")
+    urlaub = f.baustein("File", 480, 440, "urlaub", titel="Urlaubstage (Excel/CSV)")
+    heute = f.baustein("CurrentDate", 480, 820, "heute", titel="Heutiges Datum")
+    planung = f.baustein("Prompt Template", 920, 0, "planung", {"template": (
+        "HEUTE: {heute}\n"
+        "AUFTRAG: {zeitraum}\n\n"
+        "SCHULUNGEN (Schulung, Turnus, Schulungspersonal):\n{schulungen}\n\n"
+        "URLAUBSTAGE DES SCHULUNGSPERSONALS:\n{urlaub}\n\n---\n"
+        "Du planst die Schulungstermine einer Hochschulbibliothek. Die meisten Studierenden sind im Fernstudium "
+        "und haben zu unterschiedlichen Zeiten Kapazitäten für eine Schulung.\n\n"
+        "Gehe so vor:\n"
+        "1. Bestimme den Zeitraum aus dem AUFTRAG. Plane nur Termine in diesem Zeitraum.\n"
+        "2. Bestimme für jede Schulung die Zahl der Termine im Zeitraum: monatlich = ein Termin in jedem Monat, "
+        "alle zwei Monate = ein Termin je zwei Monate, alle drei Monate = ein Termin je drei Monate. "
+        "Mehr Termine sind falsch.\n"
+        "3. Jeder Termin findet einmal statt und bekommt genau eine Person aus dem Schulungspersonal dieser "
+        "Schulung. Wechsle die Personen ab.\n"
+        "4. Wähle für jeden Termin einen Tag, an dem diese Person keinen Urlaub hat.\n"
+        "5. Wechsle Wochentage und Uhrzeiten ab: Termine derselben Schulung liegen an verschiedenen Wochentagen "
+        "und zu verschiedenen Uhrzeiten. Nutze die Zeitfenster des bisherigen Plans: montags bis samstags, "
+        "zwischen 09:00 und 18:00 Uhr.\n"
+        "6. Prüfe zu jedem Datum den richtigen Wochentag. Kein Termin an einem Sonntag.\n"
+        "7. Übernimm die Namen der Schulungen und Personen Zeichen für Zeichen aus der Liste. Erfinde nichts.\n\n"
+        "Antworte nur mit einer CSV-Tabelle, nach Datum sortiert, ohne Erklärung und ohne ```. "
+        "Trennzeichen ist das Komma; Werte mit Komma stehen in Anführungszeichen.\n"
+        "Die erste Zeile ist genau diese Kopfzeile:\n"
+        "datum,wochentag,uhrzeit,veranstaltung,person\n"
+        "Jede weitere Zeile ist ein Termin: datum (TT.MM.JJJJ), wochentag (Mo, Di, Mi, Do, Fr oder Sa), "
+        "uhrzeit (HH:MM), veranstaltung, person.")},
+        titel="Prompt: Planung")
+    # max_tokens bremst kleine Modelle, die sonst endlos weitere Termine erzeugen
+    modell = f.baustein(KI_MODELL, 1360, -520, "planung", {"temperature": 0.2, "max_tokens": 2000},
+                        titel="KI-Modell (Planung)")
+    # CSV-Text statt Structured Output: kleine lokale Modelle scheitern an dessen erzwungenem Tool-Aufruf
+    plan = f.baustein("TypeConverterComponent", 1360, 0, "plan", {"output_type": "Table", "auto_parse": True},
+                      titel="Plan als Tabelle")
+    tabelle = f.baustein("ChatOutput", 1800, -420, "plan", titel="Schulungsplan")
+    zeilen = f.baustein("ParserComponent", 1800, 0, "zeilen", {"pattern": LERNPLATTFORM_ZEILE},
+                        titel="Tabellenzeilen für die Lernplattform")
+    seite = f.baustein("Prompt Template", 2240, 0, "lernplattform", {"template": LERNPLATTFORM_SEITE}, titel="HTML für die Lernplattform")
+    html = f.baustein("ChatOutput", 2680, 60, "html", titel="Quellcode Lernplattform")
+    termine = f.baustein("ParserComponent", 1800, 480, "termine",
+                         {"pattern": "- {wochentag}, {datum}, {uhrzeit} Uhr: {veranstaltung}"}, titel="Terminliste")
+    mail_prompt = f.baustein("Prompt Template", 2240, 440, "mail", {"template": (
+        "TERMINE:\n{termine}\n\n---\n"
+        "Schreibe mit den Terminen oben eine Mail an eine Abteilung der Hochschule, die für die Schulungen der "
+        "Bibliothek wirbt. Halte dich genau an die Vorlage unten und setze nur die Termine ein. Verwende nur die "
+        "Termine oben und erfinde nichts dazu.\n\n"
+        "VORLAGE DER WERBE-MAIL:\n"
+        "(Hier die Vorlage der Bibliothek einfügen. Ohne Vorlage schreibt die KI einen eigenen Entwurf.)")},
+        titel="Prompt: Werbe-Mail")
+    mail_modell = f.baustein(KI_MODELL, 2680, 400, "mail", titel="KI-Modell (Mail)")
+    mail = f.baustein("ChatOutput", 3120, 480, "mail", titel="Werbe-Mail")
+    f.verbinden(auftrag, "message", planung, "zeitraum")
+    f.verbinden(schulungen, "message", planung, "schulungen")
+    f.verbinden(urlaub, "message", planung, "urlaub")
+    f.verbinden(heute, "current_date", planung, "heute")
+    f.verbinden(planung, "prompt", modell, "input_value")
+    f.verbinden(modell, "text_output", plan, "input_data")
+    f.verbinden(plan, "dataframe_output", tabelle, "input_value")
+    f.verbinden(plan, "dataframe_output", zeilen, "input_data")
+    f.verbinden(zeilen, "parsed_text", seite, "zeilen")
+    f.verbinden(seite, "prompt", html, "input_value")
+    f.verbinden(plan, "dataframe_output", termine, "input_data")
+    f.verbinden(termine, "parsed_text", mail_prompt, "termine")
+    f.verbinden(mail_prompt, "prompt", mail_modell, "input_value")
+    f.verbinden(mail_modell, "text_output", mail, "input_value")
+    return f
+
+
 # ---------------------------------------------------------------------------------------------
 
 TESTS = {
@@ -392,6 +517,9 @@ def speichern(lf: Langflow, flow: Flow) -> None:
 
 
 def testen(lf: Langflow, flow: Flow) -> None:
+    if flow.name not in TESTS:
+        print("  (keine Testdaten, nicht ausgeführt)")
+        return
     test = TESTS[flow.name]
     eingabe = test.get("eingabe") or (WURZEL / test["eingabe_datei"]).read_text(encoding="utf-8")
     tweaks = {}
@@ -424,7 +552,7 @@ def main() -> None:
 
     lf = Langflow(args.url)
     ZIEL.mkdir(exist_ok=True)
-    for baue in (flow_hallo, flow_referenzen, flow_masterarbeit, flow_review, flow_agent):
+    for baue in (flow_hallo, flow_referenzen, flow_masterarbeit, flow_review, flow_agent, flow_schulungsplanung):
         flow = baue(lf)
         if args.nur and args.nur not in flow.name:
             continue  # gebaut wird trotzdem alles, damit Fehler in jedem Flow auffallen

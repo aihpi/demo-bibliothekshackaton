@@ -14,7 +14,7 @@ The hackathon itself runs in German: the example flows, the components and the g
 ## Features
 
 - **Visual instead of code**: flows are put together in Langflow from building blocks. Every example flow explains itself with a note directly on the canvas.
-- **Five ready-made example flows** as starting points for the challenges:
+- **Six ready-made example flows** as starting points for the challenges and use cases:
 
   | Flow | What it does |
   | --- | --- |
@@ -23,6 +23,7 @@ The hackathon itself runs in German: the example flows, the components and the g
   | `02 Masterarbeit – Quellen analysieren` | Reads a PDF, cuts out the reference list, enriches every source via OpenAlex and has the AI assess the source base |
   | `03 Literaturreview – Forschungslücken finden` | Research question → search terms → cross-publisher search → open full texts → themes, contradictions, research gaps |
   | `04 Recherche-Agent` | An AI agent that decides for itself whether to search for articles, query the catalogue or check references |
+  | `05 Schulungsplanung` | Plans training dates from a training list and holidays, builds the HTML table for the learning platform without AI and drafts the promotional email. Use case of a university library |
 
 - **Library components** (category *Bibliothek* in Langflow):
 

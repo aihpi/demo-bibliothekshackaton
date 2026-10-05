@@ -157,6 +157,7 @@ Beim Probelauf auf Folgendes achten:
 - Flow 01 findet in der Testliste: 4 × bestätigt, 3 × Abweichung, 2 × nicht gefunden, 1 × zurückgezogen.
 - Flow 02 findet 17 von 17 Quellen.
 - Flow 04 benutzt Werkzeuge. Antwortet der Agent, ohne zu suchen, beherrscht das Modell keine Werkzeugaufrufe.
+- Flow 05 hat keine Testdaten. Zum Ausprobieren eine eigene Schulungsliste und Urlaubstage als Excel oder CSV hochladen. In den Probeläufen mit `qwen3.5:4b` und `qwen3.5:9b` waren die Wochentage durchgehend falsch, und es entstanden deutlich zu viele Termine. Mit dem Cluster ist der Flow noch nicht erprobt.
 
 ## 6. Ablauf des Tages
 
