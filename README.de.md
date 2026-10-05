@@ -99,7 +99,7 @@ Die ausführliche Anleitung liegt in [`anleitungen/`](anleitungen/):
 
 Die [Bausteine-Anleitung](COMPONENTS.de.md) erklärt jeden Baustein in der Leiste von Langflow mit seinen Eingängen und Ausgängen, in der Reihenfolge, in der die Teilnehmenden sie finden.
 
-Beispieldaten liegen in [`daten/`](daten/): eine Literaturliste mit eingebauten Fehlern und eine fiktive Masterarbeit als PDF.
+Beispieldaten liegen in [`daten/`](daten/), ein Ordner pro Use Case mit Beschreibung und Daten: eine Literaturliste mit eingebauten Fehlern, eine fiktive Masterarbeit als PDF und der Use Case Schulungsplanung.
 
 ### Empfehlungen
 

@@ -213,7 +213,7 @@ Die häufigsten Probleme der Teilnehmenden stehen in der [Anleitung für Teilneh
 | `.env.example` | Vorlage für die Einstellungen |
 | `komponenten/bibliothek/` | die Bibliotheks-Bausteine (Python), eine Datei pro Baustein |
 | `flows/` | die Beispiel-Flows (JSON), werden beim Start automatisch geladen |
-| `daten/` | Testdaten für die Challenges |
+| `daten/` | Daten zu den Use Cases, ein Ordner pro Use Case mit Beschreibung und Testdaten |
 | `scripts/flows_bauen.py` | erzeugt `flows/` über die Langflow-API und testet die Flows |
 | `scripts/beispieldaten_erzeugen.py` | erzeugt die Beispiel-Masterarbeit |
 | `anleitungen/` | diese Anleitungen |

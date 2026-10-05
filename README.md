@@ -99,7 +99,7 @@ The detailed guides are in [`anleitungen/`](anleitungen/) (German):
 
 The [component guide](COMPONENTS.md) explains every component in Langflow's sidebar, with its inputs and outputs, in the order participants find them.
 
-Sample data is in [`daten/`](daten/): a reference list with deliberate errors and a fictional master's thesis as a PDF.
+Sample data is in [`daten/`](daten/), one folder per use case with a description and its data: a reference list with deliberate errors, a fictional master's thesis as a PDF, and the training-scheduling use case.
 
 ### Recommendations
 

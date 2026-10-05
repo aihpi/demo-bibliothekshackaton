@@ -100,7 +100,7 @@ Die Oberfläche ist englisch. Die wichtigsten Begriffe:
 3. Eine Frage eintippen, z. B. *Was ist eine DOI?*, und mit Enter abschicken.
 4. Nach ein paar Sekunden erscheint die Antwort.
 
-Dann den **01 Referenz-Checker** ausprobieren: Den Inhalt von `daten/literaturliste_zum_pruefen.txt` in den Playground kopieren und abschicken. Nach etwa einer Minute kommt ein Prüfbericht. Findet ihr alle eingebauten Fehler?
+Dann den **01 Referenz-Checker** ausprobieren: Den Inhalt von `daten/referenz_checker/literaturliste_zum_pruefen.txt` in den Playground kopieren und abschicken. Nach etwa einer Minute kommt ein Prüfbericht. Findet ihr alle eingebauten Fehler?
 
 ![Der Prüfbericht im Playground](bilder/playground_referenz_checker.png)
 

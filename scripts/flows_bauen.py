@@ -177,7 +177,7 @@ def flow_referenzen(lf: Langflow) -> Flow:
         "2. **Literaturangaben prüfen** gleicht jede Angabe mit **Crossref** ab (Titel, Jahr, "
         "Erstautor:in, DOI) und fragt nach **zurückgezogenen** Artikeln.\n"
         "3. Die **KI** schreibt daraus einen verständlichen Prüfbericht.\n\n"
-        "**Testdaten:** `daten/literaturliste_zum_pruefen.txt` – mit eingebauten Fehlern.\n\n"
+        "**Testdaten:** `daten/referenz_checker/literaturliste_zum_pruefen.txt` – mit eingebauten Fehlern.\n\n"
         "## 💡 Ideen zum Weiterbauen\n"
         "- Statt Chat: PDF hochladen (**Read File** + **Literaturverzeichnis finden** davor)\n"
         "- Nicht gefundene Bücher in der **Katalogsuche** nachschlagen\n"
@@ -216,7 +216,7 @@ def flow_masterarbeit(lf: Langflow) -> Flow:
         "**Problem:** Wer eine Arbeit berät oder begutachtet, will schnell sehen: Auf welche Literatur "
         "stützt sie sich? Ist sie aktuell, vielfältig, frei zugänglich?\n\n"
         "**So arbeitet der Flow:**\n"
-        "1. **Read File:** PDF hochladen (Beispiel: `daten/beispiel_masterarbeit.pdf`)\n"
+        "1. **Read File:** PDF hochladen (Beispiel: `daten/masterarbeit_quellenanalyse/beispiel_masterarbeit.pdf`)\n"
         "2. **Literaturverzeichnis finden** schneidet das Verzeichnis aus.\n"
         "3. **Quellen anreichern** holt für jede Angabe Abstract, Thema, Zitationen und "
         "Open-Access-Status aus **OpenAlex** und rechnet eine Statistik.\n"
@@ -495,9 +495,9 @@ def flow_schulungsplanung(lf: Langflow) -> Flow:
 
 TESTS = {
     "00 Erste Schritte – Hallo KI": {"eingabe": "Wie lange darf ich ein Buch normalerweise ausleihen?"},
-    "01 Referenz-Checker": {"eingabe_datei": "daten/literaturliste_zum_pruefen.txt"},
+    "01 Referenz-Checker": {"eingabe_datei": "daten/referenz_checker/literaturliste_zum_pruefen.txt"},
     "02 Masterarbeit – Quellen analysieren": {"eingabe": "Bitte analysiere die Quellen dieser Masterarbeit.",
-                                                "pdf": "daten/beispiel_masterarbeit.pdf"},
+                                                "pdf": "daten/masterarbeit_quellenanalyse/beispiel_masterarbeit.pdf"},
     "03 Literaturreview – Forschungslücken finden": {
         "eingabe": "Wie verändern Sprachmodelle die Auskunft in wissenschaftlichen Bibliotheken?"},
     "04 Recherche-Agent": {"eingabe": "Gibt es ein Buch von Umberto Eco darüber, wie man eine Abschlussarbeit "
