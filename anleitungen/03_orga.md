@@ -96,7 +96,7 @@ OpenAlex bremst Suchanfragen ohne Schlüssel bei hoher Last oder sperrt sie ganz
 
 ### Kontakt-E-Mail
 
-Crossref und Unpaywall bitten um eine Kontaktadresse (`KONTAKT_EMAIL`). Mit Adresse erlaubt Crossref drei parallele Anfragen statt einer, und der Baustein *Volltexte holen* nutzt zusätzlich Unpaywall. Am besten eine Funktionsadresse der Einrichtung nehmen.
+Crossref und Unpaywall bitten um eine Kontaktadresse (`KONTAKT_EMAIL`). Mit Adresse erlaubt Crossref drei parallele Anfragen statt einer, und der Baustein *Volltexte holen* nutzt zusätzlich Unpaywall. Am besten eine Funktionsadresse der Einrichtung nehmen. Die Gruppen können auch selbst eine Adresse eintragen, als globale Variable `KONTAKT_EMAIL` in Langflow (siehe [Bausteine](../COMPONENTS.de.md#39-bibliothek)); sie gilt dann statt der aus der `.env`.
 
 ### Die `.env` einer Gruppe
 

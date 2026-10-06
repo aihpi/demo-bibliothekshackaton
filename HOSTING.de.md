@@ -62,7 +62,6 @@ Die beteiligten Dateien:
 - **Einen Schlüssel für den AI Hub.** Am besten einen eigenen für den Hackathon, mit Budget und Ablaufdatum, denn alle Gruppen verbrauchen davon.
 - **Ein Modell auf dem AI Hub, das Werkzeuge aufrufen kann**, für den Agenten in Flow 04. Voreingestellt ist `gpt-oss-120b`. Auch `gemma-4-31b` und `qwen3-8-27b` können Werkzeuge aufrufen; `llama-3-3-70b` nicht, weil der AI Hub es ohne Werkzeugunterstützung betreibt.
 - **Einen kostenlosen [OpenAlex-API-Schlüssel](https://openalex.org/settings/api).** Dringend empfohlen: Alle Gruppen erreichen OpenAlex über die eine Adresse des Clusters und teilen sich sonst ein kleines Limit.
-- **Eine Kontakt-E-Mail-Adresse** für Crossref und Unpaywall, am besten eine Funktionsadresse eurer Einrichtung.
 - **Einen Hostnamen in Caddy**, z. B. `bibliothekshackathon.aisc.hpi.de`.
 
 ## 3. Zugangsdaten
@@ -108,7 +107,7 @@ Alles, was nicht geheim ist, steht in `k8s/langflow/configmap.yaml`:
 | Einstellung | Bedeutung |
 | --- | --- |
 | `CLUSTER_MODELL` | das Standardmodell des Bausteins KI-Modell. Die Gruppen können im Baustein ein anderes wählen. |
-| `KONTAKT_EMAIL` | Kontaktadresse für Crossref und Unpaywall. **Bitte eintragen.** |
+| `KONTAKT_EMAIL` | Kontaktadresse für Crossref und Unpaywall. Bleibt leer: Jede Gruppe trägt ihre eigene in Langflow ein (siehe [Abschnitt 9](#9-was-die-teilnehmenden-wissen-müssen)). Eine Adresse hier gilt nur für Gruppen, die das nicht getan haben. |
 | `LANGFLOW_SUPERUSER` | Name des Admin-Kontos (`orga`) |
 | `LANGFLOW_RATE_LIMIT_PER_MINUTE` | wie viele Anmeldeversuche pro Minute Langflow von einer Adresse annimmt (60). Alle im WLAN des Veranstaltungsorts teilen sich meist eine Adresse. |
 
@@ -210,6 +209,7 @@ Danach kann sich niemand mehr mit dem Konto anmelden.
 
 - **Die Adresse**, den **Gruppennamen** und das **Passwort**. Installiert werden muss nichts.
 - **An einem Flow arbeitet immer nur eine Person.** Mehrere Personen einer Gruppe können gleichzeitig angemeldet sein. Bearbeiten aber zwei von ihnen *denselben* Flow gleichzeitig, gewinnt die letzte Speicherung, und die Änderungen der anderen Person sind weg. Wer etwas ausprobieren will, legt vorher eine Kopie an (drei Punkte → *Duplicate*).
+- **Eine Kontakt-E-Mail eintragen**, einmal pro Gruppe: Menü oben rechts → *Settings* → *Global Variables* → *Add New*, Name `KONTAKT_EMAIL`, die E-Mail-Adresse als Wert. Crossref antwortet dann schneller, und der Baustein *Volltexte holen* findet zusätzlich Volltexte über Unpaywall. Jede Gruppe hat ihre eigene Adresse, so teilen sich die Gruppen nicht das Limit von Crossref.
 - **Im Baustein KI-Modell *Standard* oder *Cluster* wählen.** *Lokal* funktioniert auf der gehosteten Instanz nicht.
 - **Die Testdaten** (`daten/`) liegen auf GitHub; die Gruppen laden sie herunter und in Langflow hoch.
 - In der Anleitung für Teilnehmende kann alles zu Installation, `.env` und Docker übersprungen werden.
@@ -245,7 +245,7 @@ Danach neue Werte in `secret.yaml` (neue Passwörter, neuer Secret Key), versieg
 
 - **Ein Langflow-Pod.** Er ist für etwa 20 bis 30 gleichzeitig arbeitende Personen ausgelegt (bis zu 4 CPU-Kerne, 8 GB Arbeitsspeicher). Die schwere Arbeit macht der AI Hub; der Pod liest vor allem PDFs und wartet auf Antworten. Mehr Pods würden nicht helfen: Langflow hält laufende Flows im eigenen Arbeitsspeicher.
 - **Derselbe Flow in zwei Browsern:** siehe [Abschnitt 9](#9-was-die-teilnehmenden-wissen-müssen). Langflow kennt keine gemeinsame Bearbeitung in Echtzeit.
-- **Gemeinsame Limits der externen Dienste.** Alle Anfragen an Crossref, OpenAlex und Unpaywall kommen von der einen Adresse des Clusters. Ohne OpenAlex-Schlüssel und Kontakt-E-Mail werden Suchen spürbar langsamer, wenn viele Gruppen gleichzeitig arbeiten.
+- **Gemeinsame Limits der externen Dienste.** Alle Anfragen an Crossref, OpenAlex und Unpaywall kommen von der einen Adresse des Clusters. Ohne OpenAlex-Schlüssel, und bei Gruppen ohne Kontakt-E-Mail, werden Suchen spürbar langsamer, wenn viele Gruppen gleichzeitig arbeiten.
 - **Admin-Konto:** `orga` kann über die API alle Konten anlegen, ändern und löschen. Das Passwort bleibt bei der Orga.
 
 ## 12. Wenn etwas nicht klappt

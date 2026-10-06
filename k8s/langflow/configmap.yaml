@@ -43,6 +43,7 @@ data:
   # requires --enable-auto-tool-choice"); gpt-oss-120b, gemma-4-31b and qwen3-8-27b can.
   CLUSTER_MODELL: "gpt-oss-120b"
 
-  # All groups reach Crossref, Unpaywall and OpenAlex from the cluster's one IP address. Without a
-  # contact address Crossref allows one request at a time and Unpaywall is skipped.
+  # Left empty on purpose: each group enters its own address in Langflow, as the global variable
+  # KONTAKT_EMAIL (Settings → Global Variables). The blocks only fall back to this one when a group
+  # has not. Crossref's limits apply per address, so groups with their own do not share one.
   KONTAKT_EMAIL: ""

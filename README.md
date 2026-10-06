@@ -107,7 +107,7 @@ Sample data is in [`daten/`](daten/): a reference list with deliberate errors an
 ### Recommendations
 
 - Add a free [OpenAlex API key](https://openalex.org/settings/api) to `.env`. Without a key, OpenAlex throttles searches under load, and all groups on the same Wi-Fi share the limit.
-- Add a contact email (`KONTAKT_EMAIL`): Crossref then answers faster, and Unpaywall finds additional open full texts.
+- Add a contact email (`KONTAKT_EMAIL`), in `.env` or as a global variable in Langflow: Crossref then answers faster, and Unpaywall finds additional open full texts.
 - Agents (flow 04) need models that can use tools. This works most reliably with the cluster.
 
 ## Limitations

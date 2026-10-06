@@ -107,7 +107,7 @@ Beispieldaten liegen in [`daten/`](daten/): eine Literaturliste mit eingebauten 
 ### Empfehlungen
 
 - Einen kostenlosen [OpenAlex-API-Schlüssel](https://openalex.org/settings/api) in `.env` eintragen. Ohne Schlüssel bremst OpenAlex die Suche bei Last, und alle Gruppen im selben WLAN teilen sich das Limit.
-- Eine Kontakt-E-Mail (`KONTAKT_EMAIL`) eintragen: Crossref antwortet dann schneller, und Unpaywall findet zusätzliche freie Volltexte.
+- Eine Kontakt-E-Mail (`KONTAKT_EMAIL`) eintragen, in der `.env` oder als globale Variable in Langflow: Crossref antwortet dann schneller, und Unpaywall findet zusätzliche freie Volltexte.
 - Agenten (Flow 04) brauchen Modelle, die Werkzeuge bedienen können. Mit dem Cluster funktioniert das am zuverlässigsten.
 
 ## Grenzen

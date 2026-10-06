@@ -148,6 +148,14 @@ Nützliche Standard-Bausteine von Langflow:
 - **URL**: den Text einer Webseite holen
 - **If-Else / Smart Router**: je nach Ergebnis unterschiedlich weitermachen
 
+**Kontakt-E-Mail eintragen (empfohlen):** *Literaturangaben prüfen*, *Literatursuche*, *Quellen anreichern* und *Volltexte holen* arbeiten schneller und finden mehr freie Volltexte, wenn sie eine E-Mail-Adresse mitschicken können. Tragt sie einmal ein, dann gilt sie für alle Bausteine:
+
+1. Oben rechts das Menü öffnen → *Settings* → *Global Variables* → *Add New*.
+2. *Type* auf *Credential* lassen, *Name*: `KONTAKT_EMAIL`, *Value*: eure E-Mail-Adresse.
+3. Auf *Save Variable* klicken.
+
+Habt ihr die Adresse schon in der `.env` eingetragen, ist das nicht nötig.
+
 **Werkzeug-Modus:** Ein Baustein wird zum Werkzeug für einen Agenten, wenn ihr in seiner Leiste den Schalter **Tool Mode** aktiviert und den Ausgang *Toolset* mit dem Eingang *Tools* des Agenten verbindet.
 
 ## 7. Cluster oder lokales Modell?

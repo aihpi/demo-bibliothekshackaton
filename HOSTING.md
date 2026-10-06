@@ -62,7 +62,6 @@ The files involved:
 - **A key for the AI Hub.** Best a key of its own for the hackathon, with a budget and an expiry date, because all groups spend from it.
 - **A model on the AI Hub that can call tools**, for the agent in flow 04. The default is `gpt-oss-120b`. `gemma-4-31b` and `qwen3-8-27b` can call tools too; `llama-3-3-70b` cannot, because the AI Hub runs it without tool support.
 - **A free [OpenAlex API key](https://openalex.org/settings/api).** Strongly recommended: all groups reach OpenAlex from the cluster's single address and would otherwise share one small limit.
-- **A contact email address** for Crossref and Unpaywall, ideally a functional address of your institution.
 - **A hostname in Caddy**, e.g. `bibliothekshackathon.aisc.hpi.de`.
 
 ## 3. Credentials
@@ -108,7 +107,7 @@ Everything that is not secret is in `k8s/langflow/configmap.yaml`:
 | Setting | Meaning |
 | --- | --- |
 | `CLUSTER_MODELL` | the standard model of the KI-Modell block. Groups can pick another one in the block. |
-| `KONTAKT_EMAIL` | contact address for Crossref and Unpaywall. **Please fill in.** |
+| `KONTAKT_EMAIL` | contact address for Crossref and Unpaywall. Stays empty: every group enters its own in Langflow (see [section 9](#9-what-to-tell-participants)). An address here only applies to groups that have not. |
 | `LANGFLOW_SUPERUSER` | name of the admin account (`orga`) |
 | `LANGFLOW_RATE_LIMIT_PER_MINUTE` | how many login attempts per minute Langflow accepts from one address (60). Everybody on the venue's WiFi usually shares one address. |
 
@@ -210,6 +209,7 @@ After that, nobody can log in with the account any more.
 
 - **The address**, the **group name** and the **password**. Nothing needs to be installed.
 - **One person edits a flow at a time.** Several people from one group can be logged in at once. But if two of them edit *the same* flow at the same time, the last save wins and the other person's changes are gone. Whoever wants to try something makes a copy first (three dots → *Duplicate*).
+- **Enter a contact email**, once per group: menu at the top right → *Settings* → *Global Variables* → *Add New*, name `KONTAKT_EMAIL`, the email address as the value. Crossref then answers faster, and the *Volltexte holen* block also finds full texts through Unpaywall. Each group has its own address, so groups don't share Crossref's limit.
 - **In the KI-Modell block, choose *Standard* or *Cluster*.** *Lokal* does not work on the hosted instance.
 - **Test data** (`daten/`) is on GitHub; groups download it and upload it in Langflow.
 - In the participant guide, everything about installing, `.env` and Docker can be skipped.
@@ -245,7 +245,7 @@ Then new values in `secret.yaml` (new passwords, new secret key), seal, commit, 
 
 - **One Langflow pod.** It is sized for about 20 to 30 people working at once (up to 4 CPU cores, 8 GB of memory). The AI Hub does the heavy lifting; the pod mainly reads PDFs and waits for answers. More pods would not help: Langflow keeps running flows in its own memory.
 - **Same flow, two browsers:** see [section 9](#9-what-to-tell-participants). Langflow has no live collaboration.
-- **Shared limits of the outside services.** All requests to Crossref, OpenAlex and Unpaywall come from the cluster's one address. Without an OpenAlex key and a contact email, searches slow down noticeably when many groups are busy.
+- **Shared limits of the outside services.** All requests to Crossref, OpenAlex and Unpaywall come from the cluster's one address. Without an OpenAlex key, and for groups without a contact email, searches slow down noticeably when many groups are busy.
 - **Admin account:** `orga` can create, change and delete all accounts through the API. Keep its password among the organisers.
 
 ## 12. Troubleshooting

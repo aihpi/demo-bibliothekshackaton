@@ -11,9 +11,10 @@ import unicodedata
 
 import httpx
 from lfx.custom.custom_component.component import Component
-from lfx.io import BoolInput, IntInput, MultilineInput, Output
+from lfx.io import BoolInput, IntInput, MultilineInput, Output, SecretStrInput
 from lfx.schema.dataframe import DataFrame
 from lfx.schema.message import Message
+from lfx.utils.secrets import secret_value_to_str
 from rapidfuzz import fuzz
 
 CROSSREF = "https://api.crossref.org"
@@ -159,6 +160,17 @@ class ReferenzenPruefenComponent(Component):
             info="Fragt bei Crossref / Retraction Watch nach, ob ein Artikel zurückgezogen wurde.",
             value=True,
         ),
+        SecretStrInput(
+            name="kontakt_email",
+            display_name="Kontakt-E-Mail",
+            info="Für Crossref, OpenAlex und Unpaywall: schnellere Antworten und mehr freie Volltexte. Am einfachsten "
+            "einmal als globale Variable KONTAKT_EMAIL anlegen (Settings → Global Variables), dann gilt sie für alle "
+            "Bausteine.",
+            value="KONTAKT_EMAIL",
+            load_from_db=True,
+            advanced=True,
+            required=False,
+        ),
     ]
 
     outputs = [
@@ -168,8 +180,14 @@ class ReferenzenPruefenComponent(Component):
 
     _zwischenspeicher: tuple | None = None
 
+    def _kontakt(self) -> str:
+        """Kontakt-E-Mail aus der globalen Variable KONTAKT_EMAIL der Gruppe, sonst aus der Umgebung (.env)."""
+        wert = secret_value_to_str(self.kontakt_email) if getattr(self, "kontakt_email", None) else ""
+        wert = (wert or os.getenv("KONTAKT_EMAIL", "")).strip()
+        return wert if "@" in wert else ""
+
     def _kopfzeilen(self) -> dict:
-        kontakt = os.getenv("KONTAKT_EMAIL", "")
+        kontakt = self._kontakt()
         agent = "Bibliothekshackathon-Demo (Langflow)" + (f"; mailto:{kontakt}" if kontakt else "")
         return {"User-Agent": agent}
 
@@ -293,7 +311,7 @@ class ReferenzenPruefenComponent(Component):
             return self._zwischenspeicher[1]
         angaben = literaturangaben_zerlegen(self.literaturangaben or "")[: self.max_angaben]
         # Crossref erlaubt ohne Kontakt-E-Mail nur eine Anfrage gleichzeitig, mit E-Mail drei
-        begrenzung = asyncio.Semaphore(3 if os.getenv("KONTAKT_EMAIL") else 1)
+        begrenzung = asyncio.Semaphore(3 if self._kontakt() else 1)
 
         async with httpx.AsyncClient(headers=self._kopfzeilen(), timeout=30, follow_redirects=True) as client:
 
