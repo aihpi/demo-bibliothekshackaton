@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: langflow-config
+data:
+  # Multi-user mode. Every group logs in with its own account (created by k8s/konten/) and only
+  # sees its own flows, files and Playground sessions. Nobody can sign up on their own.
+  LANGFLOW_AUTO_LOGIN: "false"
+  LANGFLOW_SUPERUSER: "orga"
+  LANGFLOW_ENABLE_SIGNUP: "false"
+  LANGFLOW_NEW_USER_IS_ACTIVE: "true"
+
+  # Nobody runs their own Python on the server. Without this a group could change a block's code
+  # or use the Python Interpreter block and read the AI Hub key from the environment. The library
+  # blocks still run, because LANGFLOW_COMPONENTS_PATH (set in the image) is an allowlist for
+  # exactly this case. The first setting already blocks the built-in Python blocks; the second
+  # says so explicitly, so it still holds if somebody switches custom components back on.
+  LANGFLOW_ALLOW_CUSTOM_COMPONENTS: "false"
+  LANGFLOW_BLOCK_CODE_INTERPRETER_COMPONENTS: "true"
+
+  LANGFLOW_HOST: "0.0.0.0"
+  LANGFLOW_PORT: "7860"
+  # Uploaded files and logs. The database is Postgres, see LANGFLOW_DATABASE_URL in the secret.
+  LANGFLOW_CONFIG_DIR: "/app/langflow"
+  # One worker: Langflow keeps running builds and their event streams in process memory.
+  LANGFLOW_WORKERS: "1"
+  # Caddy serves the instance over HTTPS, so the login cookies may require it.
+  LANGFLOW_ACCESS_SECURE: "true"
+  LANGFLOW_REFRESH_SECURE: "true"
+
+  # Models from the AISC AI Hub. The KI-Modell block reads these; groups can still pick another
+  # model in the block. Ollama does not run in the cluster, so "Lokal" is not an option here.
+  KI_STANDARD: "cluster"
+  CLUSTER_BASE_URL: "https://api.aisc.hpi.de/v1"
+  CLUSTER_MODELL: "llama-3-3-70b"
+
+  # All groups reach Crossref, Unpaywall and OpenAlex from the cluster's one IP address. Without a
+  # contact address Crossref allows one request at a time and Unpaywall is skipped.
+  KONTAKT_EMAIL: ""

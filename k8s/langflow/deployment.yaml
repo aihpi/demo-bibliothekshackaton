@@ -1,0 +1,103 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: langflow
+  labels:
+    app: langflow
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  # One replica on purpose. Langflow keeps running builds in memory, so a second replica would
+  # answer a Playground's polling without knowing about the build the first one started.
+  replicas: 1
+  # langflow-files is ReadWriteOnce, see the note in k8s/postgres/deployment.yaml.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: langflow
+  template:
+    metadata:
+      labels:
+        app: langflow
+    spec:
+      securityContext:
+        # The image runs as uid 1000. Without fsGroup the fresh volume belongs to root and
+        # Langflow cannot write its config dir.
+        fsGroup: 1000
+      containers:
+        - name: langflow
+          image: ghcr.io/aihpi/demo-bibliothekshackaton/langflow:latest
+          ports:
+            - containerPort: 7860
+          envFrom:
+            - configMapRef:
+                name: langflow-config
+          env:
+            - name: LANGFLOW_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: bibliothekshackathon-secret
+                  key: LANGFLOW_DATABASE_URL
+            - name: LANGFLOW_SUPERUSER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bibliothekshackathon-secret
+                  key: LANGFLOW_SUPERUSER_PASSWORD
+            # Fixed rather than generated, because Langflow encrypts stored variables and API keys
+            # with it. A new key on a restart would make them unreadable and log everybody out.
+            - name: LANGFLOW_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: bibliothekshackathon-secret
+                  key: LANGFLOW_SECRET_KEY
+            # Not optional. Without it Langflow starts and every flow fails at the model with a
+            # 401, which looks like a broken flow. This way the pod names the missing key.
+            - name: CLUSTER_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: bibliothekshackathon-secret
+                  key: AI_HUB_API_KEY
+            # Optional: without it, search falls back to Crossref (see openalex_suche.py).
+            - name: OPENALEX_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: bibliothekshackathon-secret
+                  key: OPENALEX_API_KEY
+                  optional: true
+          volumeMounts:
+            - name: files
+              mountPath: /app/langflow
+          # The first start runs the database migrations and loads every block, which takes a
+          # minute or two.
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 7860
+            periodSeconds: 5
+            failureThreshold: 60
+          readinessProbe:
+            httpGet:
+              path: /health_check
+              port: 7860
+            periodSeconds: 10
+            timeoutSeconds: 5
+          # /health and not /health_check: a database hiccup should take the pod out of the
+          # service, not restart it in the middle of everybody's running flows.
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 7860
+            periodSeconds: 30
+            timeoutSeconds: 10
+          resources:
+            limits:
+              cpu: "4"
+              memory: "8Gi"
+            requests:
+              cpu: "1"
+              memory: "2Gi"
+      volumes:
+        - name: files
+          persistentVolumeClaim:
+            claimName: langflow-files
