@@ -13,3 +13,4 @@ resources:
   - langflow/pvc.yaml
   - langflow/deployment.yaml
   - langflow/service.yaml
+  - konten/job.yaml

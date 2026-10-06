@@ -18,6 +18,8 @@ package = false
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# The scripts are not a package; tests import them by file name.
+pythonpath = ["scripts"]
 
 [tool.ruff]
 line-length = 120

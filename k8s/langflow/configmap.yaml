@@ -18,6 +18,13 @@ data:
   LANGFLOW_ALLOW_CUSTOM_COMPONENTS: "false"
   LANGFLOW_BLOCK_CODE_INTERPRETER_COMPONENTS: "true"
 
+  # Langflow allows 5 logins a minute per IP address. Behind Caddy every request comes from Caddy's
+  # address unless Langflow reads X-Forwarded-For, and even then everybody on the venue's WiFi
+  # usually shares one public address. With the defaults, the whole room gets 5 logins a minute.
+  # The group passwords are random, so 60 attempts a minute do not help anybody guess one.
+  LANGFLOW_RATE_LIMIT_TRUST_PROXY: "true"
+  LANGFLOW_RATE_LIMIT_PER_MINUTE: "60"
+
   LANGFLOW_HOST: "0.0.0.0"
   LANGFLOW_PORT: "7860"
   # Uploaded files and logs. The database is Postgres, see LANGFLOW_DATABASE_URL in the secret.

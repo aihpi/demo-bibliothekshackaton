@@ -5,6 +5,7 @@ FROM langflowai/langflow:1.12.3
 COPY --chown=1000:0 komponenten /app/komponenten
 COPY --chown=1000:0 flows /app/flows
 COPY --chown=1000:0 daten /app/daten
+COPY --chown=1000:0 scripts/konten_anlegen.py /app/scripts/konten_anlegen.py
 
 ENV LANGFLOW_COMPONENTS_PATH=/app/komponenten \
     LANGFLOW_LOAD_FLOWS_PATH=/app/flows \
