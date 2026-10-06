@@ -61,3 +61,13 @@ def test_langflow_runs_in_multi_user_mode_without_user_code():
     assert daten["LANGFLOW_ENABLE_SIGNUP"] == "false"
     assert daten["LANGFLOW_ALLOW_CUSTOM_COMPONENTS"] == "false"
     assert daten["LANGFLOW_BLOCK_CODE_INTERPRETER_COMPONENTS"] == "true"
+
+
+def test_database_address_is_built_from_the_password_defined_before_it():
+    """Kubernetes only expands $(DB_PASSWORD) if DB_PASSWORD comes earlier in the same env list."""
+    deployment = next(d for d in _dokumente() if d["kind"] == "Deployment" and d["metadata"]["name"] == "langflow")
+    env = deployment["spec"]["template"]["spec"]["containers"][0]["env"]
+    namen = [e["name"] for e in env]
+    url = next(e for e in env if e["name"] == "LANGFLOW_DATABASE_URL")
+    assert "$(DB_PASSWORD)" in url["value"]
+    assert namen.index("DB_PASSWORD") < namen.index("LANGFLOW_DATABASE_URL")

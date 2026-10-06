@@ -74,18 +74,17 @@ The plaintext is in `k8s/secrets/secret.yaml`. That file is in `.gitignore` and 
 | --- | --- |
 | `AI_HUB_API_KEY` | the AI Hub key. **Required:** without it the Langflow pod does not start and names the missing key. |
 | `OPENALEX_API_KEY` | the OpenAlex key, can be empty |
-| `DB_PASSWORD` | Postgres password |
-| `LANGFLOW_DATABASE_URL` | the same password inside the database address: `postgresql://langflow:<DB_PASSWORD>@langflow-db:5432/langflow` |
+| `DB_PASSWORD` | Postgres password. Langflow builds its database address from it. |
 | `LANGFLOW_SUPERUSER_PASSWORD` | password of the admin account `orga` |
 | `LANGFLOW_SECRET_KEY` | Langflow encrypts stored variables and keys with it |
 | `GRUPPEN_KONTEN` | the group accounts, one line each: `name:password` (see [section 8](#8-group-accounts)) |
 
-**First time:** start from the example and fill in the values. Random values for the passwords and the secret key:
+**First time:** start from the example and fill in the values. Random values for the passwords and the secret key (hex, because the database password ends up in an address where `/` or `+` would break it):
 
 ```bash
 cd k8s/secrets
 cp example-secret.yaml secret.yaml
-openssl rand -base64 24   # once per password and for the secret key
+openssl rand -hex 24      # once per password and for the secret key
 ```
 
 **Seal and commit:**

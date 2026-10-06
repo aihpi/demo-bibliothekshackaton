@@ -27,7 +27,7 @@ data:
 
   LANGFLOW_HOST: "0.0.0.0"
   LANGFLOW_PORT: "7860"
-  # Uploaded files and logs. The database is Postgres, see LANGFLOW_DATABASE_URL in the secret.
+  # Uploaded files and logs. The database is Postgres, see LANGFLOW_DATABASE_URL in deployment.yaml.
   LANGFLOW_CONFIG_DIR: "/app/langflow"
   # One worker: Langflow keeps running builds and their event streams in process memory.
   LANGFLOW_WORKERS: "1"

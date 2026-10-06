@@ -34,11 +34,15 @@ spec:
             - configMapRef:
                 name: langflow-config
           env:
-            - name: LANGFLOW_DATABASE_URL
+            # The database address is built here from the password Postgres was set up with, so the two
+            # cannot drift apart. $(DB_PASSWORD) only works because DB_PASSWORD comes first in this list.
+            - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: bibliothekshackathon-secret
-                  key: LANGFLOW_DATABASE_URL
+                  key: DB_PASSWORD
+            - name: LANGFLOW_DATABASE_URL
+              value: postgresql://langflow:$(DB_PASSWORD)@langflow-db:5432/langflow
             - name: LANGFLOW_SUPERUSER_PASSWORD
               valueFrom:
                 secretKeyRef:
