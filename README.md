@@ -86,6 +86,10 @@ docker compose up -d
 
 Without Git, and for what to watch out for (your own flows, the example flows), see [Update to the latest version](INSTALL.md#update-to-the-latest-version) in the installation guide.
 
+### Hosted instance
+
+Instead of one Langflow per laptop, the kit can also run as one shared instance on the AISC Kubernetes cluster, deployed by ArgoCD. Each group logs in with its own account and gets its own copy of the example flows; nothing needs to be installed. How to set it up and run it: [hosting guide](HOSTING.md).
+
 ## User Guide
 
 ### Using the Tool
@@ -123,6 +127,8 @@ uv run --with httpx scripts/flows_bauen.py --testen   # build, run every flow on
 ```
 
 The components are in [`komponenten/bibliothek/`](komponenten/bibliothek/). Langflow reads them at startup; after changing them, run `docker compose restart langflow` and rebuild the flows. The sample thesis is generated with `uv run --with reportlab scripts/beispieldaten_erzeugen.py`.
+
+The tests cover the hosted instance (the account script and the manifests under `k8s/`): `uv run pytest`.
 
 ## References
 

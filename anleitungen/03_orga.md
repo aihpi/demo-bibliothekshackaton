@@ -35,6 +35,8 @@ Dieser Leitfaden ist für alle, die den Hackathon vorbereiten, technisch betreue
 - Die Bibliotheks-Bausteine brauchen **Internet**, aber keine Zugangsdaten. Ausnahmen: Ein OpenAlex-Schlüssel wird dringend empfohlen, und eine Kontakt-E-Mail beschleunigt Crossref und schaltet Unpaywall frei.
 - Alle Einstellungen stehen in der Datei `.env` im Projektordner.
 
+Können die Teilnehmenden kein Docker installieren, gibt es eine Alternative: eine gemeinsame Instanz im Cluster, in der jede Gruppe ein eigenes Konto hat. Siehe [Gehostete Instanz](../HOSTING.de.md).
+
 ## 2. Checkliste Vorbereitung
 
 **Zwei bis vier Wochen vorher**

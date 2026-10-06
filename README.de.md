@@ -86,6 +86,10 @@ docker compose up -d
 
 Ohne Git, und worauf ihr achten solltet (eigene Flows, Beispiel-Flows), steht unter [Auf die neueste Version aktualisieren](INSTALL.de.md#auf-die-neueste-version-aktualisieren) in der Installationsanleitung.
 
+### Gehostete Instanz
+
+Statt eines Langflow pro Laptop kann der Bibliothekshackathon auch als eine gemeinsame Instanz im Kubernetes-Cluster des AISC laufen, ausgerollt von ArgoCD. Jede Gruppe meldet sich mit einem eigenen Konto an und bekommt eine eigene Kopie der Beispiel-Flows; installiert werden muss nichts. Einrichtung und Betrieb: [Anleitung für die gehostete Instanz](HOSTING.de.md).
+
 ## Benutzung
 
 ### Anleitungen
@@ -123,6 +127,8 @@ uv run --with httpx scripts/flows_bauen.py --testen   # bauen, jeden Flow einmal
 ```
 
 Die Bausteine liegen in [`komponenten/bibliothek/`](komponenten/bibliothek/). Langflow liest sie beim Start; nach Änderungen `docker compose restart langflow` und die Flows neu bauen. Die Beispiel-Masterarbeit erzeugt `uv run --with reportlab scripts/beispieldaten_erzeugen.py`.
+
+Die Tests decken die gehostete Instanz ab (das Konten-Skript und die Manifeste unter `k8s/`): `uv run pytest`.
 
 ## Quellen
 
