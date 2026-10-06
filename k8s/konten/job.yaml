@@ -29,7 +29,7 @@ spec:
       containers:
         - name: konten-anlegen
           # Same build as the Langflow deployment; the CI rewrites both tags together.
-          image: ghcr.io/aihpi/demo-bibliothekshackaton/langflow:latest
+          image: ghcr.io/aihpi/demo-bibliothekshackaton/langflow:sha-70f4c58
           command: ["python", "/app/scripts/konten_anlegen.py"]
           env:
             - name: LANGFLOW_URL

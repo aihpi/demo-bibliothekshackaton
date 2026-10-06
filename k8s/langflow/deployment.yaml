@@ -27,7 +27,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: langflow
-          image: ghcr.io/aihpi/demo-bibliothekshackaton/langflow:latest
+          image: ghcr.io/aihpi/demo-bibliothekshackaton/langflow:sha-70f4c58
           ports:
             - containerPort: 7860
           envFrom:
