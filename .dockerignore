@@ -1,0 +1,7 @@
+# Only what the Dockerfile copies goes into the build context.
+*
+!komponenten/
+!flows/
+!daten/
+!scripts/
+**/__pycache__

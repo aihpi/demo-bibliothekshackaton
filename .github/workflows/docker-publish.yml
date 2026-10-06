@@ -1,0 +1,99 @@
+name: Build and Publish Docker Image
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+    # Only what ends up in the image. A docs change would otherwise build an identical image
+    # and bump every tag under k8s/, which shows the ArgoCD app OutOfSync for nothing.
+    paths:
+      - Dockerfile
+      - .dockerignore
+      - komponenten/**
+      - flows/**
+      - daten/**
+      - scripts/konten_anlegen.py
+      - .github/workflows/docker-publish.yml
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE: ghcr.io/${{ github.repository }}/langflow
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE }}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=sha
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Every manifest that runs the image gets the new tag: the Langflow deployment and the job
+      # that creates the group accounts. A job from an older build could upload older flows.
+      - name: Update K8s manifests with the new image tag
+        run: |
+          SHA_TAG="sha-$(echo ${{ github.sha }} | cut -c1-7)"
+          echo "Updating K8s manifests to tag: ${SHA_TAG}"
+          grep -rl "image: ${IMAGE}:" k8s | xargs --no-run-if-empty sed -i "s|image: ${IMAGE}:.*|image: ${IMAGE}:${SHA_TAG}|"
+
+      - name: Commit and push manifest changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git diff --exit-code k8s/; then
+            echo "No changes to K8s manifests."
+          else
+            git add k8s/
+            git commit -m "Update k8s image tags to $(echo ${{ github.sha }} | cut -c1-7) [skip ci]"
+            git push
+          fi

@@ -192,3 +192,8 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+# Incoming material (emails, attachments) for use cases: never commit
+temp/
+
+# Plaintext credentials of the hosted instance, only k8s/secrets/sealed-secret.yaml is committed
+k8s/secrets/secret.yaml

@@ -1,0 +1,25 @@
+[project]
+name = "demo-bibliothekshackaton"
+version = "0.1.0"
+description = "Hackathon environment for library staff, built on Langflow"
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28",
+    "pytest>=8",
+    "pyyaml>=6",
+    "ruff>=0.13",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# The scripts are not a package; tests import them by file name.
+pythonpath = ["scripts"]
+
+[tool.ruff]
+line-length = 120

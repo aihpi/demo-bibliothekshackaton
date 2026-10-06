@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: langflow-db
+  labels:
+    app: langflow-db
+  annotations:
+    # Database first, Langflow in wave 1. Langflow runs its migrations on start and gives up
+    # if the database is not there yet.
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  replicas: 1
+  # One Postgres on one ReadWriteOnce volume: RollingUpdate would start the new pod before the
+  # old one released the disk and hang on the multi-attach (sentra #197).
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: langflow-db
+  template:
+    metadata:
+      labels:
+        app: langflow-db
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:17.6-alpine
+          ports:
+            - containerPort: 5432
+              name: postgres
+          env:
+            - name: POSTGRES_USER
+              value: langflow
+            - name: POSTGRES_DB
+              value: langflow
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bibliothekshackathon-secret
+                  key: DB_PASSWORD
+            # A fresh PVC contains lost+found, and initdb refuses a data directory that is not empty.
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          volumeMounts:
+            - name: storage
+              mountPath: /var/lib/postgresql/data
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "langflow", "-d", "langflow"]
+            periodSeconds: 5
+            timeoutSeconds: 3
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "langflow", "-d", "langflow"]
+            periodSeconds: 15
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: langflow-db-storage

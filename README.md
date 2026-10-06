@@ -1,83 +1,153 @@
 <div style="background-color: #ffffff; color: #000000; padding: 10px;">
 <img src="00_aisc/img/logo_aisc_bmftr.jpg">
-<h1> Your title.
+<h1>Library Hackathon: AI Workflows Without Coding</h1>
 </div>
 
-Your project description in two or three sentences: what it does, for whom, and what makes it worth a look.
+**English** | [Deutsch](README.de.md)
 
-![Screenshot of the application](00_aisc/img/screenshot_app.png)
+A demo and working environment for hackathons with information professionals from academic libraries. Groups build AI workflows and AI agents in [Langflow](https://www.langflow.org/) by drag and drop, without writing code, for real tasks in academic libraries: checking references, analysing the sources of a thesis, collecting literature across publishers and finding research gaps. The kit ships ready-made example flows, custom library components (Crossref, OpenAlex, Unpaywall, hbz union catalogue) and guides.
 
-Replace `00_aisc/img/screenshot_app.png` with a screenshot of your application. Keep the image under the description so it is the first thing a visitor sees after the title; a 1280 by 720 PNG renders well on GitHub.
+The hackathon itself runs in German: the example flows, the components and the guides in [`anleitungen/`](anleitungen/) are all in German.
+
+![The Referenz-Checker flow in Langflow](00_aisc/img/screenshot_app.png)
 
 ## Features
 
-- **Key Feature 1**: A description of the Key features
-- **Key Feature 2**: A description of the Key features
+- **Visual instead of code**: flows are put together in Langflow from building blocks. Every example flow explains itself with a note directly on the canvas.
+- **Five ready-made example flows** as starting points for the challenges:
+
+  | Flow | What it does |
+  | --- | --- |
+  | `00 Erste Schritte – Hallo KI` | The smallest possible flow: question, instruction, answer |
+  | `01 Referenz-Checker` | Checks a reference list against Crossref: existence, year, first author, DOI, retracted articles |
+  | `02 Masterarbeit – Quellen analysieren` | Reads a PDF, cuts out the reference list, enriches every source via OpenAlex and has the AI assess the source base |
+  | `03 Literaturreview – Forschungslücken finden` | Research question → search terms → cross-publisher search → open full texts → themes, contradictions, research gaps |
+  | `04 Recherche-Agent` | An AI agent that decides for itself whether to search for articles, query the catalogue or check references |
+
+- **Library components** (category *Bibliothek* in Langflow):
+
+  | Component | Source |
+  | --- | --- |
+  | KI-Modell (AI model) | Cluster (LiteLLM) or local (Ollama), switchable |
+  | Literaturangaben prüfen (check references) | Crossref (including Retraction Watch), DataCite |
+  | Literaturverzeichnis finden (find reference list) | Cuts the reference list out of long documents |
+  | Quellen anreichern (enrich sources) | Crossref + OpenAlex, with statistics |
+  | Literatursuche (literature search) | OpenAlex (with Crossref as a search index when needed) |
+  | Volltexte holen (fetch full texts) | Open PDFs via OpenAlex and Unpaywall |
+  | Katalogsuche (catalogue search) | hbz union catalogue via lobid.org |
+
+  All components except *KI-Modell*, *Literaturverzeichnis finden* and *Volltexte holen* can also be used as tools by agents.
+- **Cluster or local**: by default the flows use a model through a LiteLLM endpoint. Anyone who doesn't want data to leave the building (unpublished theses, for example) can switch to a local model with Ollama.
 
 ## Setup and Installation
 
 ### Prerequisites
 
-- Docker and Docker Compose
-- NVIDIA GPU with CUDA support (optional, but recommended for faster performance)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Windows, macOS) or Docker with Docker Compose (Linux)
+- Credentials for the LiteLLM endpoint (from the organisers) **or** a local model via [Ollama](https://ollama.com/)
+- Internet access (for Crossref, OpenAlex, Unpaywall and lobid)
 
 ### Quick Start
 
-1. Clone the repository:
+The short version is below. The full [installation guide](INSTALL.md) covers each operating system, local models, preparing many laptops and troubleshooting.
+
+1. Download the repository (green *Code → Download ZIP* button, then unzip) or clone it:
+
    ```bash
-   git clone ...
-   cd ...
+   git clone https://github.com/aihpi/demo-bibliothekshackaton.git
+   cd demo-bibliothekshackaton
    ```
 
-2. Run the setup or install dependencies:
+2. Create the settings file: copy `.env.example`, name the copy `.env` and fill in the values from the organisers. The start scripts from step 3 also create `.env` on the first run and open it for you.
+
    ```bash
-   chmod +x setup.sh
-   ./setup.sh
+   cp .env.example .env
    ```
 
-3. Access the application:
-   - Frontend: ...
-   - Backend API: ...
+3. Start it by double-clicking `starten.command` (macOS) or `starten.bat` (Windows), or run:
+
+   ```bash
+   docker compose up -d
+   ```
+
+   For a local model in Docker, add `--profile lokal` (downloads a few GB on the first start).
+
+4. Open Langflow at <http://localhost:7860>. The example flows are in the project *Starter Project*.
+
+### Updating
+
+With Git, run this in the project folder:
+
+```bash
+docker compose down
+git pull
+docker compose up -d
+```
+
+Without Git, and for what to watch out for (your own flows, the example flows), see [Update to the latest version](INSTALL.md#update-to-the-latest-version) in the installation guide.
+
+### Hosted instance
+
+Instead of one Langflow per laptop, the kit can also run as one shared instance on the AISC Kubernetes cluster, deployed by ArgoCD. Each group logs in with its own account and gets its own copy of the example flows; nothing needs to be installed. How to set it up and run it: [hosting guide](HOSTING.md).
 
 ## User Guide
 
 ### Using the Tool
-1. A brief description of using the tool.
-2. Be clear and simple.
+
+The detailed guides are in [`anleitungen/`](anleitungen/) (German):
+
+1. [**Guide for participants**](anleitungen/01_teilnehmende.md): installing, starting, the first flow, building your own flows, common problems.
+2. [**Challenges**](anleitungen/02_challenges.md): the hackathon tasks, each in three levels.
+3. [**Guide for organisers**](anleitungen/03_orga.md): preparation, credentials, schedule, troubleshooting, maintenance.
+
+The [component guide](COMPONENTS.md) explains every component in Langflow's sidebar, with its inputs and outputs, in the order participants find them.
+
+Sample data is in [`daten/`](daten/): a reference list with deliberate errors and a fictional master's thesis as a PDF.
 
 ### Recommendations
-Any additional hints for using the tool.
 
+- Add a free [OpenAlex API key](https://openalex.org/settings/api) to `.env`. Without a key, OpenAlex throttles searches under load, and all groups on the same Wi-Fi share the limit.
+- Add a contact email (`KONTAKT_EMAIL`), in `.env` or as a global variable in Langflow: Crossref then answers faster, and Unpaywall finds additional open full texts.
+- Agents (flow 04) need models that can use tools. This works most reliably with the cluster.
 
 ## Limitations
 
-- **Limitation 1**: List of Limitations
-- **Limitation 2**: List of Limitations
+- **Small local models** (such as `qwen3.5:4b`) are slow and make more mistakes: they invent source numbers or ignore parts of the instructions. That makes for a good discussion about checking AI output, but it's no substitute for a large model.
+- **Database coverage**: Crossref and OpenAlex mostly know journal articles. Books, grey literature and websites are often missing. That's what the catalogue search is for.
+- **Full texts** are only available for open access publications, and not every PDF can be read automatically.
+- **The Langflow interface is in English**; the participant guide translates the most important terms.
 
+## For Developers
+
+The flows in `flows/` are not edited by hand. [`scripts/flows_bauen.py`](scripts/flows_bauen.py) generates them through the Langflow API, so the code and fields always match the installed Langflow version:
+
+```bash
+docker compose up -d
+uv run --with httpx scripts/flows_bauen.py --testen   # build, run every flow once, export
+```
+
+The components are in [`komponenten/bibliothek/`](komponenten/bibliothek/). Langflow reads them at startup; after changing them, run `docker compose restart langflow` and rebuild the flows. The sample thesis is generated with `uv run --with reportlab scripts/beispieldaten_erzeugen.py`.
+
+The tests cover the hosted instance (the account script and the manifests under `k8s/`): `uv run pytest`.
 
 ## References
 
-- [Reference 1](https://hpi.de/kisz)
-- [Reference 2](https://hpi.de/kisz)
+- [Langflow documentation](https://docs.langflow.org/)
+- [Crossref REST API](https://www.crossref.org/documentation/retrieve-metadata/rest-api/), [OpenAlex API](https://docs.openalex.org/), [Unpaywall API](https://unpaywall.org/products/api), [lobid-resources](https://lobid.org/resources/api)
+- [LiteLLM](https://docs.litellm.ai/), [Ollama](https://ollama.com/)
 
 ## Author
-- [Your Name](https://hpi.de/kisz)
 
-## Issues and the project board
-
-`.github/workflows/add-issue-to-project.yml` adds every new issue to the [AIHPI project board](https://github.com/orgs/aihpi/projects/3). It needs a token in the secret `ADD_ISSUE_TO_PROJECT`, because the workflow's own `GITHUB_TOKEN` cannot write to organisation projects.
-
-- **Public repository**: nothing to do, the organisation-level secret is inherited.
-- **Private repository**: organisation secrets are not available to private repositories on the organisation's GitHub plan, so set the secret once after creating the repository. Ask an organisation admin for the token file, then run `gh secret set ADD_ISSUE_TO_PROJECT -R aihpi/<repository> < path/to/token-file`.
-
-Until the secret exists, the workflow fails on every new issue with `Input required and not supplied: github-token`. Nothing else is affected.
+- [Mario Tormo Romero](https://github.com/mt0rm0)
 
 ## License
 
+[MIT](LICENSE)
 
 ---
 
 ## Acknowledgements
+
 <img src="00_aisc/img/logo_bmftr_de.png" alt="drawing" style="width:170px;"/>
 
-The [AI Service Centre Berlin Brandenburg](http://hpi.de/kisz) is funded by the [Federal Ministry of Research, Technology and Space](https://www.bmbf.de/) under the funding code 16IS22092.
+The [AI Service Centre Berlin Brandenburg](https://hpi.de/kisz) is funded by the [Federal Ministry of Research, Technology and Space](https://www.bmftr.bund.de/) under the funding code 16IS22092.
