@@ -39,7 +39,9 @@ data:
   # model in the block. Ollama does not run in the cluster, so "Lokal" is not an option here.
   KI_STANDARD: "cluster"
   CLUSTER_BASE_URL: "https://api.aisc.hpi.de/v1"
-  CLUSTER_MODELL: "llama-3-3-70b"
+  # Has to call tools, for the agent in flow 04. llama-3-3-70b on the AI Hub cannot ("auto tool choice
+  # requires --enable-auto-tool-choice"); gpt-oss-120b, gemma-4-31b and qwen3-8-27b can.
+  CLUSTER_MODELL: "gpt-oss-120b"
 
   # All groups reach Crossref, Unpaywall and OpenAlex from the cluster's one IP address. Without a
   # contact address Crossref allows one request at a time and Unpaywall is skipped.

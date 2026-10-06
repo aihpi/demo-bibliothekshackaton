@@ -60,7 +60,7 @@ Die beteiligten Dateien:
 
 - **Zugriff auf den Cluster** mit `kubectl` und [`kubeseal`](https://github.com/bitnami-labs/sealed-secrets), um die Zugangsdaten zu versiegeln. Das braucht nur eine Person.
 - **Einen Schlüssel für den AI Hub.** Am besten einen eigenen für den Hackathon, mit Budget und Ablaufdatum, denn alle Gruppen verbrauchen davon.
-- **Ein Modell auf dem AI Hub, das Werkzeuge aufrufen kann**, für den Agenten in Flow 04. Voreingestellt ist `llama-3-3-70b`.
+- **Ein Modell auf dem AI Hub, das Werkzeuge aufrufen kann**, für den Agenten in Flow 04. Voreingestellt ist `gpt-oss-120b`. Auch `gemma-4-31b` und `qwen3-8-27b` können Werkzeuge aufrufen; `llama-3-3-70b` nicht, weil der AI Hub es ohne Werkzeugunterstützung betreibt.
 - **Einen kostenlosen [OpenAlex-API-Schlüssel](https://openalex.org/settings/api).** Dringend empfohlen: Alle Gruppen erreichen OpenAlex über die eine Adresse des Clusters und teilen sich sonst ein kleines Limit.
 - **Eine Kontakt-E-Mail-Adresse** für Crossref und Unpaywall, am besten eine Funktionsadresse eurer Einrichtung.
 - **Einen Hostnamen in Caddy**, z. B. `bibliothekshackathon.aisc.hpi.de`.
