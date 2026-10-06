@@ -35,6 +35,8 @@ Dieser Leitfaden ist für alle, die den Hackathon vorbereiten, technisch betreue
 - Die Bibliotheks-Bausteine brauchen **Internet**, aber keine Zugangsdaten. Ausnahmen: Ein OpenAlex-Schlüssel wird dringend empfohlen, und eine Kontakt-E-Mail beschleunigt Crossref und schaltet Unpaywall frei.
 - Alle Einstellungen stehen in der Datei `.env` im Projektordner.
 
+Können die Teilnehmenden kein Docker installieren, gibt es eine Alternative: eine gemeinsame Instanz im Cluster, in der jede Gruppe ein eigenes Konto hat. Siehe [Gehostete Instanz](../HOSTING.de.md).
+
 ## 2. Checkliste Vorbereitung
 
 **Zwei bis vier Wochen vorher**
@@ -94,7 +96,7 @@ OpenAlex bremst Suchanfragen ohne Schlüssel bei hoher Last oder sperrt sie ganz
 
 ### Kontakt-E-Mail
 
-Crossref und Unpaywall bitten um eine Kontaktadresse (`KONTAKT_EMAIL`). Mit Adresse erlaubt Crossref drei parallele Anfragen statt einer, und der Baustein *Volltexte holen* nutzt zusätzlich Unpaywall. Am besten eine Funktionsadresse der Einrichtung nehmen.
+Crossref und Unpaywall bitten um eine Kontaktadresse (`KONTAKT_EMAIL`). Mit Adresse erlaubt Crossref drei parallele Anfragen statt einer, und der Baustein *Volltexte holen* nutzt zusätzlich Unpaywall. Am besten eine Funktionsadresse der Einrichtung nehmen. Die Gruppen können auch selbst eine Adresse eintragen, als globale Variable `KONTAKT_EMAIL` in Langflow (siehe [Bausteine](../COMPONENTS.de.md#39-bibliothek)); sie gilt dann statt der aus der `.env`.
 
 ### Die `.env` einer Gruppe
 

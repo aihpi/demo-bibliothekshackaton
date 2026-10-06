@@ -1,0 +1,58 @@
+# Creates one Langflow account per group and gives each its own copy of the example flows
+# (scripts/konten_anlegen.py). Safe to run again: existing accounts only get their password from the
+# secret, and an account only receives the flows it does not have yet.
+#
+# PostSync, so it runs after Langflow is healthy, and on every sync. That is how new groups or a
+# changed password take effect: edit GRUPPEN_KONTEN, seal the secret again, sync.
+#
+# Without ArgoCD (kubectl apply -k) it runs straight away and waits for Langflow on its own. To run it
+# again by hand:
+#   kubectl delete job konten-anlegen -n bibliothekshackathon --ignore-not-found
+#   kubectl apply -k k8s
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: konten-anlegen
+  labels:
+    app: konten-anlegen
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  backoffLimit: 3
+  template:
+    metadata:
+      labels:
+        app: konten-anlegen
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: konten-anlegen
+          # Same build as the Langflow deployment; the CI rewrites both tags together.
+          image: ghcr.io/aihpi/demo-bibliothekshackaton/langflow:latest
+          command: ["python", "/app/scripts/konten_anlegen.py"]
+          env:
+            - name: LANGFLOW_URL
+              value: http://langflow
+            - name: LANGFLOW_SUPERUSER
+              valueFrom:
+                configMapKeyRef:
+                  name: langflow-config
+                  key: LANGFLOW_SUPERUSER
+            - name: LANGFLOW_SUPERUSER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bibliothekshackathon-secret
+                  key: LANGFLOW_SUPERUSER_PASSWORD
+            - name: GRUPPEN_KONTEN
+              valueFrom:
+                secretKeyRef:
+                  name: bibliothekshackathon-secret
+                  key: GRUPPEN_KONTEN
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+            requests:
+              cpu: "50m"
+              memory: "64Mi"

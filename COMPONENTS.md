@@ -599,6 +599,14 @@ Runs Python code. For anyone who can program a little; not needed for the challe
 
 These components were built for the hackathon. They connect Langflow to library databases and take care of details like splitting reference lists or waiting when a database is busy.
 
+**Contact email.** *Literaturangaben prüfen*, *Literatursuche*, *Quellen anreichern* and *Volltexte holen* send a contact address to Crossref, OpenAlex and Unpaywall if they have one. Crossref then answers faster, and Unpaywall finds more free full texts. Enter it once and it applies to all four:
+
+1. Top right, open the menu → *Settings* → *Global Variables* → *Add New*.
+2. *Type*: leave it at *Credential*. *Name*: `KONTAKT_EMAIL`. *Value*: your email address. Leave *Apply to fields* empty.
+3. Click *Save Variable*.
+
+The field shows the address as dots, like a password. Without the variable the blocks work as well, just more slowly; on a laptop they also take `KONTAKT_EMAIL` from `.env`.
+
 #### 3.9.1 Katalogsuche (hbz / lobid)
 
 Searches for books and other media in the hbz union catalogue (via lobid.org). Good for literature that has no DOI and is therefore missing from Crossref and OpenAlex.
@@ -642,6 +650,8 @@ Checks whether the publications in a reference list exist and are cited correctl
 | Out | Prüfbericht (check report) | Message | The result as text: for each reference ✅ confirmed, ⚠️ discrepancy, ❓ not found or 🚫 retracted, with details |
 | Out | Tabelle | Table | The same as a table |
 
+**Hidden settings:** *Kontakt-E-Mail* (contact email, see [above](#39-bibliothek)).
+
 **Note:** ❓ does not always mean "made up": books and websites often have no DOI. Check those with *Katalogsuche*. **Examples:** flows 01 and 04.
 
 #### 3.9.4 Literatursuche (OpenAlex)
@@ -658,7 +668,7 @@ Searches for academic publications from all publishers in OpenAlex, with abstrac
 | Out | Treffer (Tabelle) | Table | The hits as a table, e.g. for *Volltexte holen* |
 | Out | Trefferliste (Text) | Message | The hits as a list, for a prompt |
 
-**Hidden settings:** *Nur mit Abstract* (only hits with an abstract, on by default).
+**Hidden settings:** *Nur mit Abstract* (only hits with an abstract, on by default), *Kontakt-E-Mail* (contact email, see [above](#39-bibliothek)).
 
 **Note:** without an OpenAlex key in `.env`, OpenAlex slows down when many people search; the block then falls back to Crossref for the search. **Examples:** flows 03 and 04.
 
@@ -684,6 +694,8 @@ Adds information from OpenAlex to each reference in a list: abstract, topic, num
 | Out | Überblick (Text) (overview) | Message | Statistics and all sources as text, for a prompt |
 | Out | Quellen (Tabelle) (sources) | Table | All sources with their information, e.g. for *Volltexte holen* |
 
+**Hidden settings:** *Kontakt-E-Mail* (contact email, see [above](#39-bibliothek)).
+
 **Examples:** flow 02.
 
 #### 3.9.7 Volltexte holen (Open Access)
@@ -697,6 +709,8 @@ Downloads the free full texts (PDFs) of publications and extracts their text. If
 | In | Zeichen pro Dokument (characters per document) | number | Longer texts are shortened, keeping beginning and end (3000 by default). Small models can't handle much text. |
 | Out | Texte für die KI (texts for the AI) | Message | The texts, numbered, for a prompt |
 | Out | Tabelle mit Volltexten (table with full texts) | Table | The same as a table |
+
+**Hidden settings:** *Kontakt-E-Mail* (contact email, see [above](#39-bibliothek)). With it, the block also asks Unpaywall for free full texts.
 
 **Examples:** flow 03.
 

@@ -9,9 +9,10 @@ import os
 
 import httpx
 from lfx.custom.custom_component.component import Component
-from lfx.io import BoolInput, DropdownInput, IntInput, MessageTextInput, Output
+from lfx.io import BoolInput, DropdownInput, IntInput, MessageTextInput, Output, SecretStrInput
 from lfx.schema.dataframe import DataFrame
 from lfx.schema.message import Message
+from lfx.utils.secrets import secret_value_to_str
 
 OPENALEX = "https://api.openalex.org"
 FELDER = ("id,doi,title,publication_year,type,cited_by_count,open_access,primary_location,"
@@ -53,13 +54,13 @@ def werk_als_zeile(werk: dict) -> dict:
     }
 
 
-async def openalex_abfragen(client: httpx.AsyncClient, pfad: str, params: dict) -> httpx.Response:
+async def openalex_abfragen(client: httpx.AsyncClient, pfad: str, params: dict, kontakt: str = "") -> httpx.Response:
     """Fragt OpenAlex ab und wartet bei Überlastung (HTTP 429) kurz, bevor es erneut versucht."""
     schluessel = os.getenv("OPENALEX_API_KEY", "")
     if schluessel:
         params["api_key"] = schluessel
-    elif os.getenv("KONTAKT_EMAIL"):
-        params["mailto"] = os.getenv("KONTAKT_EMAIL")
+    elif kontakt:
+        params["mailto"] = kontakt
     for versuch in range(3):
         antwort = await client.get(f"{OPENALEX}{pfad}", params=params)
         if antwort.status_code not in {429, 503} or versuch == 2:
@@ -93,6 +94,17 @@ class OpenAlexSucheComponent(Component):
                   info="Nur Publikationen mit frei verfügbarem Volltext."),
         BoolInput(name="nur_mit_abstract", display_name="Nur mit Abstract", value=True, advanced=True),
         DropdownInput(name="sortierung", display_name="Sortierung", options=list(SORTIERUNG), value="Relevanz"),
+        SecretStrInput(
+            name="kontakt_email",
+            display_name="Kontakt-E-Mail",
+            info="Für Crossref, OpenAlex und Unpaywall: schnellere Antworten und mehr freie Volltexte. Am einfachsten "
+            "einmal als globale Variable KONTAKT_EMAIL anlegen (Settings → Global Variables), dann gilt sie für alle "
+            "Bausteine.",
+            value="KONTAKT_EMAIL",
+            load_from_db=True,
+            advanced=True,
+            required=False,
+        ),
     ]
 
     outputs = [
@@ -102,6 +114,12 @@ class OpenAlexSucheComponent(Component):
 
     _zwischenspeicher: tuple | None = None
     _hinweis = ""
+
+    def _kontakt(self) -> str:
+        """Kontakt-E-Mail aus der globalen Variable KONTAKT_EMAIL der Gruppe, sonst aus der Umgebung (.env)."""
+        wert = secret_value_to_str(self.kontakt_email) if getattr(self, "kontakt_email", None) else ""
+        wert = (wert or os.getenv("KONTAKT_EMAIL", "")).strip()
+        return wert if "@" in wert else ""
 
     async def _suchen(self) -> list[dict]:
         suche = (self.suchanfrage or "").strip().strip('"')
@@ -126,7 +144,7 @@ class OpenAlexSucheComponent(Component):
             params["sort"] = SORTIERUNG[self.sortierung]
 
         async with httpx.AsyncClient(timeout=30) as client:
-            antwort = await openalex_abfragen(client, "/works", params)
+            antwort = await openalex_abfragen(client, "/works", params, self._kontakt())
             if antwort.status_code in {429, 503} and not os.getenv("OPENALEX_API_KEY"):
                 # Ohne Schlüssel sperrt OpenAlex die Suche bei hoher Last. Ersatz: über Crossref suchen
                 # und die Treffer per DOI in OpenAlex nachschlagen (das ist auch ohne Schlüssel erlaubt).
@@ -158,13 +176,15 @@ class OpenAlexSucheComponent(Component):
         params = {"query": suche, "rows": min(anzahl * 3, 100), "select": "DOI", "filter": ",".join(filter_teile)}
         if sortierung:
             params |= {"sort": sortierung, "order": "desc"}
+        if self._kontakt():
+            params["mailto"] = self._kontakt()
         antwort = await client.get("https://api.crossref.org/works", params=params)
         antwort.raise_for_status()
         dois = [t["DOI"].lower() for t in antwort.json()["message"]["items"]]
         if not dois:
             return []
         antwort = await openalex_abfragen(client, "/works", {
-            "filter": "doi:" + "|".join(dois[:50]), "per_page": 50, "select": FELDER})
+            "filter": "doi:" + "|".join(dois[:50]), "per_page": 50, "select": FELDER}, self._kontakt())
         antwort.raise_for_status()
         nach_doi = {(w.get("doi") or "").replace("https://doi.org/", "").lower(): w for w in antwort.json()["results"]}
         werke = [nach_doi[d] for d in dois if d in nach_doi]
