@@ -13,7 +13,8 @@ Diese Anleitung führt euch vom leeren Laptop bis zum eigenen KI-Workflow. Die F
 7. [Cluster oder lokales Modell?](#7-cluster-oder-lokales-modell)
 8. [Tipps für gute Prompts](#8-tipps-für-gute-prompts)
 9. [Wenn etwas nicht klappt](#9-wenn-etwas-nicht-klappt)
-10. [Begriffe](#10-begriffe)
+10. [Nach dem Hackathon weitermachen](#10-nach-dem-hackathon-weitermachen)
+11. [Begriffe](#11-begriffe)
 
 ---
 
@@ -21,7 +22,16 @@ Diese Anleitung führt euch vom leeren Laptop bis zum eigenen KI-Workflow. Die F
 
 Ihr baut **Flows**: Ketten aus Bausteinen, die Daten Schritt für Schritt verarbeiten. Ein Baustein holt zum Beispiel Metadaten aus einer Literaturdatenbank, ein anderer lässt ein Sprachmodell einen Bericht schreiben.
 
-Für jede Challenge gibt es einen fertigen Beispiel-Flow. Ihr müsst also nicht bei null anfangen, sondern könnt ausprobieren, verändern und erweitern. Die Aufgaben stehen in den [Challenges](02_challenges.md).
+Der Tag hat zwei Ziele: verstehen, wie LLM-Workflows und Agenten funktionieren, und lernen, eigene Workflows in Langflow zu bauen, sodass ihr auch nach heute allein weitermachen könnt. Dafür geht es Schritt für Schritt voran:
+
+| Teil | Worum es geht | Was ihr baut |
+|---|---|---|
+| 1. LLM-Workflows | Sprachmodelle, Prompts, Modelle und Backends | einen festen Ablauf: aus einem Abstract Schlagwörter machen und passende Literatur suchen |
+| 2. Agenten | Die KI wählt selbst ihre Werkzeuge | einen Recherche-Agenten mit Literatursuche und Katalogsuche |
+| 3. Agentische Workflows | Feste Struktur, an den richtigen Stellen KI-Entscheidungen | eine Auskunfts-Weiche, die Anfragen auf den passenden Weg schickt |
+| 4. Use Cases | Anwenden, was ihr könnt | an einer Challenge oder einer eigenen Idee |
+
+Jeder Teil beginnt mit kurzer Theorie. Danach kommen **Aufträge**: Die Schritte stehen auf den Folien, und ihr baut sie in Langflow nach. Für den Nachmittag gibt es zu jeder Challenge einen fertigen Beispiel-Flow, ihr müsst also nicht bei null anfangen. Die Aufgaben stehen in den [Challenges](02_challenges.md).
 
 ## 2. Einrichten (einmalig, ca. 20 Minuten)
 
@@ -172,7 +182,7 @@ Im Baustein **KI-Modell** wählt ihr die **Quelle**:
 
 *Standard (aus .env)* nimmt, was die Orga voreingestellt hat. Im Feld **Modell** könnt ihr mit dem kleinen Pfeil-Knopf die verfügbaren Modelle laden und eines auswählen.
 
-**Wann lokal?** Wenn es um Daten geht, die das Haus nicht verlassen sollen, z. B. unveröffentlichte Abschlussarbeiten oder Anfragen von Nutzer:innen. Das ist eine gute Diskussionsfrage für eure Präsentation.
+**Wann lokal?** Wenn es um Daten geht, die das Haus nicht verlassen sollen, z. B. unveröffentlichte Abschlussarbeiten oder Anfragen von Nutzer:innen. Das ist eine gute Diskussionsfrage für euer Show & Tell.
 
 ## 8. Tipps für gute Prompts
 
@@ -202,7 +212,18 @@ Im Baustein **KI-Modell** wählt ihr die **Quelle**:
 | Die KI erinnert sich an alte Antworten | Im Playground links eine neue Sitzung starten (**+**). |
 | Etwas ist kaputt | Den Flow aus `flows/` neu importieren (*Upload*) oder die Orga fragen. |
 
-## 10. Begriffe
+## 10. Nach dem Hackathon weitermachen
+
+Langflow läuft auf eurem Laptop weiter, auch nach heute.
+
+- **Starten:** Docker Desktop öffnen, dann `starten.bat` bzw. `starten.command` doppelklicken. Eure Flows bleiben erhalten.
+- **Flows sichern:** in der Übersicht beim Flow auf die drei Punkte → *Export*. Mit *Upload* lassen sie sich wieder einlesen, auch auf einem anderen Rechner. Dort muss der Ordner `komponenten/` mitkommen, sonst fehlen die Bibliotheks-Bausteine.
+- **KI-Zugang:** Euer Gruppen-Schlüssel für den Cluster gilt noch **zehn Tage, bis zum 17.10.2026**. Danach könnt ihr ein lokales Modell mit Ollama nutzen ([Abschnitt 7](#7-cluster-oder-lokales-modell)) oder einen KI-Zugang eurer Einrichtung in die `.env` eintragen.
+- **Nachlesen:** diese Anleitung, die [Bausteine-Übersicht](../COMPONENTS.de.md), die [Challenges](02_challenges.md) und die [Langflow-Dokumentation](https://docs.langflow.org/).
+
+Für jedes neue Vorhaben hilft der **Bauplan** aus den [Challenges](02_challenges.md#bevor-ihr-loslegt-der-bauplan): zerlegen, zuordnen, wählen, klein bauen, absichern.
+
+## 11. Begriffe
 
 Begriffe rund um Langflow und Sprachmodelle, wie sie in diesen Anleitungen verwendet werden.
 

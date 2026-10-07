@@ -52,26 +52,29 @@ Können die Teilnehmenden kein Docker installieren, gibt es eine Alternative: ei
 - [ ] Laptops vorbereiten ([Abschnitt 4](#4-laptops-vorbereiten))
 - [ ] Für jede Gruppe eine fertige `.env` erstellen
 - [ ] Probelauf aller Flows ([Abschnitt 5](#5-probelauf))
+- [ ] Die Aufträge 2a bis 3b aus den Folien einmal selbst durchbauen ([Abschnitt 5](#5-probelauf))
 - [ ] Challenges und Anleitung ausdrucken oder als Link bereitstellen
 
 **Am Tag**
 
 - [ ] Alle Laptops starten, Langflow öffnen, einen Flow testen
-- [ ] Beamer-Laptop mit Flow 00 und 01 für die Einführung
+- [ ] Beamer-Laptop mit den Folien (`dokumente/Hackathon-Praesentation_DE.pptx`) und Langflow für die Live-Teile
 - [ ] Zettel mit WLAN-Zugang und Link zum Repository
 
 ## 3. Zugänge einrichten
 
 ### LiteLLM-Cluster
 
-Pro Gruppe einen eigenen **virtuellen Schlüssel** anlegen, am besten mit Budget und Ablaufdatum. Beispiel für die LiteLLM-Admin-API:
+Pro Gruppe einen eigenen **virtuellen Schlüssel** anlegen, am besten mit Budget und Ablaufdatum. Die Schlüssel sollten **zehn Tage über den Hackathon hinaus** gültig bleiben, damit die Teilnehmenden zu Hause weiterbauen können. Beispiel für die LiteLLM-Admin-API:
 
 ```bash
 curl -X POST "$LITELLM_URL/key/generate" \
   -H "Authorization: Bearer $LITELLM_MASTER_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"key_alias": "hackathon-gruppe-1", "models": ["<modellname>"], "max_budget": 10, "duration": "3d", "rpm_limit": 60}'
+  -d '{"key_alias": "hackathon-gruppe-1", "models": ["<modellname>"], "max_budget": 10, "duration": "10d", "rpm_limit": 60}'
 ```
+
+`duration` zählt ab dem Anlegen. Wer die Schlüssel schon vor dem Hackathon anlegt, rechnet die Tage bis dahin dazu (z. B. `"13d"` bei drei Tagen Vorlauf) und nennt den Teilnehmenden das genaue Ablaufdatum.
 
 Beim Modell auf Folgendes achten:
 
@@ -159,27 +162,32 @@ Beim Probelauf auf Folgendes achten:
 - Flow 01 findet in der Testliste: 4 × bestätigt, 3 × Abweichung, 2 × nicht gefunden, 1 × zurückgezogen.
 - Flow 02 findet 17 von 17 Quellen.
 - Flow 04 benutzt Werkzeuge. Antwortet der Agent, ohne zu suchen, beherrscht das Modell keine Werkzeugaufrufe.
+- Die Aufträge 2a bis 3b aus den Folien gibt es nicht als fertige Flows. Einmal selbst durchbauen, besonders diese Schritte: das KI-Modell an den Eingang *Language Model* von *Agent* und *Smart Router* anschließen, Tool Mode bei *Literatursuche* und *Katalogsuche*, die *Route Message* der Route Sonstiges. Flow 04 zeigt, wie der Agent verbunden wird.
 
 ## 6. Ablauf des Tages
 
-Ein Vorschlag für einen Tag:
+Der Tag folgt dem Prinzip *erst verstehen, dann bauen, dann anwenden*. Am Vormittag führen drei Lernblöcke Schritt für Schritt von einfachen LLM-Workflows über Agenten zu agentischen Workflows. Jeder Block beginnt mit kurzer Theorie und endet mit Aufträgen, die die Gruppen in Langflow bauen. Erst am Nachmittag arbeiten die Gruppen an den Use Cases (Challenges). Ziel ist, dass alle nach Hause gehen und allein weiterarbeiten können, nicht dass am Ende fertige Lösungen stehen.
+
+Die Folien dazu liegen in `dokumente/Hackathon-Praesentation_DE.pptx`. Die Theorie, die Aufträge und Hinweise für die Moderation stehen in den Notizen der Folien.
 
 | Zeit | Programmpunkt |
 |---|---|
-| 09:30 | Ankommen, Laptops starten, Gruppen finden |
-| 10:00 | Begrüßung, Ziele, Challenges vorstellen (15 min) |
-| 10:15 | **Live-Einführung in Langflow** am Beamer: Flow 00 ausführen, Prompt ändern, Flow 01 mit Testdaten zeigen, Zwischenergebnisse ansehen (30 min) |
-| 10:45 | Gruppen wählen eine Challenge, erste Schritte 🟢 |
-| 12:30 | Mittagspause |
-| 13:15 | Weiterarbeit 🟡 🔴, Betreuende gehen herum |
-| 14:30 | Kurzer Zwischenstand: Jede Gruppe sagt in einem Satz, woran sie arbeitet |
-| 15:30 | Präsentationen (5 min pro Gruppe + Fragen) |
-| 16:30 | Diskussion: Was davon würden wir im Alltag nutzen? Was nicht, und warum? |
-| 17:00 | Abschluss |
+| 10:00 | Ankommen, letzte Installationen abschließen. Wer fertig ist, öffnet Langflow und probiert Flow 00 aus |
+| 10:20 | Begrüßung, zwei Ziele, Lernpfad, Thesen zum Abstimmen |
+| 10:30 | **Teil 1: LLM-Workflows.** Theorie (Sprachmodell, Prompt, Einstellungen, Modell und Backend, Grenzen), dann Aufträge 1a bis 1c: Flow 00 anpassen, einen eigenen Flow bauen, ihn um eine Literatursuche erweitern |
+| 11:25 | **Teil 2: Agenten.** Theorie (Workflow oder Agent, Werkzeuge, Agentenschleife, Grenzen), dann Aufträge 2a und 2b: ein eigener Agent mit einem und mit zwei Werkzeugen |
+| 12:10 | Mittagspause |
+| 12:50 | **Teil 3: Agentische Workflows.** Theorie (Spektrum, vier Muster, Mensch in der Schleife, Bauplan), dann Aufträge 3a und 3b: die Auskunfts-Weiche mit dem Smart Router |
+| 13:35 | **Teil 4: Use Cases.** Gruppen wählen eine Challenge oder eine eigene Idee, machen zuerst den Bauplan auf Papier und bauen dann |
+| 15:15 | Show & Tell: 3 Minuten pro Gruppe |
+| 15:40 | Rückblick auf die Thesen, „So macht ihr zu Hause weiter“, Feedback |
+| 16:00 | Ende |
 
-**Betreuung:** eine technisch versierte Person pro drei bis vier Gruppen. Die fachliche Expertise bringen die Teilnehmenden selbst mit; die Betreuung hilft vor allem bei Langflow, den Modellen und der Technik.
+Der Zeitplan ist knapp. Wenn es eng wird, lassen sich Auftrag 1c und der Bonus in 3b kürzen; die Aufträge 2a, 2b und 3a sollten bleiben, weil sie aufeinander aufbauen.
 
-**Einführung live zeigen, nicht erklären.** Am wirkungsvollsten ist der Referenz-Checker: erst eine erfundene Angabe von einem Chatbot erzeugen lassen, dann zeigen, wie der Flow sie findet.
+**Betreuung:** eine technisch versierte Person pro drei bis vier Gruppen. Die fachliche Expertise bringen die Teilnehmenden selbst mit; die Betreuung hilft vor allem bei Langflow, den Modellen und der Technik. In der Use-Case-Phase beim Herumgehen nach dem Bauplan fragen, bevor es um einzelne Bausteine geht.
+
+**Live zeigen, nicht erklären.** Vor jedem Auftrag kurz am Beamer vormachen, wo die Bausteine liegen und wie man verbindet. In Teil 2 lohnt es sich, im Playground die aufgeklappten Schritte des Agenten zu zeigen.
 
 ## 7. Fehlerbehebung für Betreuende
 
@@ -200,8 +208,8 @@ Die häufigsten Probleme der Teilnehmenden stehen in der [Anleitung für Teilneh
 ## 8. Nach dem Hackathon
 
 - Die Flows der Gruppen einsammeln: in Langflow beim Flow auf die drei Punkte → *Export*. Die JSON-Dateien lassen sich später wieder importieren.
-- LiteLLM-Schlüssel der Gruppen deaktivieren.
-- Rückmeldungen sammeln: Welche Challenge hat funktioniert, welche war zu schwer?
+- Die LiteLLM-Schlüssel laufen nach zehn Tagen von selbst ab, wenn sie mit `duration` angelegt wurden ([Abschnitt 3](#3-zugänge-einrichten)). Den Teilnehmenden das Ablaufdatum nennen.
+- Rückmeldungen sammeln: Welche Aufträge und Challenges haben funktioniert, welche waren zu schwer? Die offenen Fragen aus dem Feedback am Ende, wenn möglich, nachliefern.
 - Wer weitermachen will: Die JSON-Dateien laufen in jedem Langflow 1.12, solange der Ordner `komponenten/` mitkommt.
 
 ## 9. Wartung und Weiterentwicklung
@@ -218,6 +226,7 @@ Die häufigsten Probleme der Teilnehmenden stehen in der [Anleitung für Teilneh
 | `scripts/flows_bauen.py` | erzeugt `flows/` über die Langflow-API und testet die Flows |
 | `scripts/beispieldaten_erzeugen.py` | erzeugt die Beispiel-Masterarbeit |
 | `anleitungen/` | diese Anleitungen |
+| `dokumente/` | Installationsanleitung, Bausteine-Übersicht und die Folien für den Tag |
 
 **Einen Baustein ändern:** Datei in `komponenten/bibliothek/` bearbeiten, `docker compose restart langflow`, dann `uv run --with httpx scripts/flows_bauen.py --testen`. Die Flows enthalten den Code der Bausteine; darum nach jeder Änderung die Flows neu bauen.
 
