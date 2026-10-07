@@ -1,14 +1,26 @@
 # Challenges
 
-Jede Gruppe wählt eine Challenge. Jede Challenge hat einen fertigen **Start-Flow** und drei Stufen:
+Am Nachmittag wendet ihr an, was ihr am Vormittag in den drei Lernblöcken gebaut habt: Workflows, Agenten und agentische Workflows. Jede Gruppe wählt eine Challenge oder eine eigene Idee. Jede Challenge hat einen fertigen **Start-Flow**, eine passende **Bauweise** und drei Stufen:
 
 - 🟢 **Einstieg**: den Flow verstehen und anpassen, ohne neue Bausteine
 - 🟡 **Ausbau**: neue Bausteine hinzufügen und verbinden
-- 🔴 **Vertiefung**: etwas Neues bauen, das es so noch nicht gibt
+- 🔴 **Vertiefung**: etwas Neues bauen, das es so noch nicht gibt, zum Beispiel einen agentischen Workflow
 
 Ihr müsst nicht alle Stufen schaffen. Ein gut durchdachter Flow der Stufe 🟢 mit einer klugen Diskussion ist mehr wert als ein halbfertiger 🔴-Flow.
 
 **Legt vor dem Ändern eine Kopie des Start-Flows an** (drei Punkte → *Duplicate*).
+
+## Bevor ihr loslegt: der Bauplan
+
+Nehmt euch zehn Minuten und plant auf Papier, bevor ihr Bausteine zieht:
+
+1. **Zerlegen:** Wie würdet ihr die Aufgabe von Hand erledigen? Schritt für Schritt aufschreiben.
+2. **Zuordnen:** Braucht der Schritt KI, oder reicht ein Baustein oder eine Datenquelle?
+3. **Wählen:** Immer der gleiche Weg? Dann ein Workflow. Hängt der Weg von der Anfrage ab? Dann eine Weiche oder ein Agent.
+4. **Klein bauen:** einen Schritt bauen, testen, Zwischenergebnisse ansehen. Dann den nächsten.
+5. **Absichern:** festlegen, wo ein Mensch prüft, und mit echten Beispielen testen.
+
+Der Bauplan hilft auch zu Hause bei jedem neuen Vorhaben.
 
 ---
 
@@ -19,6 +31,8 @@ Ihr müsst nicht alle Stufen schaffen. Ein gut durchdachter Flow der Stufe 🟢 
 Sprachmodelle erfinden Literaturangaben, die täuschend echt aussehen. Auch in echten Literaturverzeichnissen stecken Tippfehler, falsche Jahre und zurückgezogene Artikel. Baut ein Werkzeug, mit dem Auskunft, Schreibberatung oder Studierende ein Literaturverzeichnis in einer Minute prüfen können.
 
 **Start-Flow:** `01 Referenz-Checker`
+
+**Bauweise:** Workflow, im Ausbau mit Agent
 
 **Testdaten:** `daten/literaturliste_zum_pruefen.txt` (zehn Angaben mit eingebauten Fehlern), `daten/beispiel_masterarbeit.pdf`
 
@@ -55,6 +69,8 @@ Wer Abschlussarbeiten betreut, begutachtet oder in der Schreibberatung sitzt, wi
 
 **Start-Flow:** `02 Masterarbeit – Quellen analysieren`
 
+**Bauweise:** Workflow
+
 **Testdaten:** `daten/beispiel_masterarbeit.pdf` (fiktive Arbeit mit 17 echten Quellen)
 
 ### 🟢 Einstieg
@@ -89,6 +105,8 @@ Wer Abschlussarbeiten betreut, begutachtet oder in der Schreibberatung sitzt, wi
 Für einen systematischen Literaturüberblick muss man Publikationen vieler Verlage sammeln, die Volltexte lesen und vergleichen. Baut einen Flow, der zu einer Forschungsfrage Literatur zusammenträgt, freie Volltexte auswertet und Forschungslücken benennt.
 
 **Start-Flow:** `03 Literaturreview – Forschungslücken finden`
+
+**Bauweise:** Workflow, im Ausbau agentisch
 
 **Beispielfrage:** *Wie verändern Sprachmodelle die Auskunft in wissenschaftlichen Bibliotheken?*
 
@@ -130,19 +148,18 @@ Ihr habt ein Problem aus dem Bibliotheksalltag, das euch schon lange ärgert? Ba
 
 ---
 
-## Präsentation (5 Minuten pro Gruppe)
+## Show & Tell (3 Minuten pro Gruppe)
 
-1. **Problem:** Wer hat das Problem, und warum ist es wichtig? (1 Minute)
-2. **Demo:** Den Flow live zeigen, mit einem echten Beispiel. (2 Minuten)
-3. **Grenzen:** Was klappt noch nicht? Wo irrt die KI? (1 Minute)
-4. **Ausblick:** Würdet ihr das im Alltag einsetzen? Was bräuchte es dafür? (1 Minute)
+Kein Wettbewerb: Jede Gruppe zeigt, was sie gebaut und was sie gelernt hat. Was nicht geklappt hat, ist ausdrücklich willkommen, daraus lernen alle am meisten.
 
-Worauf die Jury achtet:
+1. **Aufgabe:** Welches Problem wolltet ihr lösen? (30 Sekunden)
+2. **Demo:** Den Flow live zeigen, mit einem echten Beispiel. (90 Sekunden)
+3. **Gelernt:** Was hat nicht geklappt? Was würdet ihr anders bauen? (60 Sekunden)
 
-| Kriterium | Frage |
-|---|---|
-| Nutzen | Löst der Flow ein echtes Problem aus dem Bibliotheksalltag? |
-| Funktion | Läuft er, und kommt ein brauchbares Ergebnis heraus? |
-| Verlässlichkeit | Wie geht der Flow mit Fehlern der KI um? Wird geprüft statt geraten? |
-| Verantwortung | Wurden Datenschutz, Urheberrecht und Transparenz bedacht? |
-| Kreativität | Gibt es eine überraschende Idee oder Kombination? |
+Leitfragen für das Publikum:
+
+- Würde ich das im Alltag nutzen?
+- Wo prüft der Flow, statt zu raten?
+- Was ist mit Datenschutz und Urheberrecht?
+
+**Vorher den Flow exportieren** (drei Punkte → *Export*), damit er nicht verloren geht.
