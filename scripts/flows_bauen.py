@@ -405,7 +405,7 @@ def flow_schulungsplanung(lf: Langflow) -> Flow:
         "in `daten/schulungsplanung/`.\n\n"
         "**So arbeitet der Flow:**\n"
         "1. **Read File:** die Schulungsliste (Schulung, Turnus, Schulungspersonal) und die Urlaubstage "
-        "hochladen, als Excel oder CSV.\n"
+        "hochladen, als Excel oder CSV, dazu den Kalender des Jahres aus `daten/schulungsplanung/`.\n"
         "2. Im Playground den **Zeitraum** angeben, z. B. *Plane November und Dezember 2026*.\n"
         "3. Die **KI** plant die Termine als CSV-Tabelle: Turnus einhalten, Wochentage und Uhrzeiten "
         "abwechseln, Urlaub auslassen. **Type Convert** macht daraus eine echte Tabelle.\n"
@@ -423,12 +423,14 @@ def flow_schulungsplanung(lf: Langflow) -> Flow:
     auftrag = f.baustein("ChatInput", 480, -300, "zeitraum", titel="Zeitraum (Chat)")
     schulungen = f.baustein("File", 480, 60, "schulungen", titel="Schulungsliste (Excel/CSV)")
     urlaub = f.baustein("File", 480, 440, "urlaub", titel="Urlaubstage (Excel/CSV)")
-    heute = f.baustein("CurrentDate", 480, 820, "heute", titel="Heutiges Datum")
+    kalender = f.baustein("File", 480, 820, "kalender", titel="Kalender (CSV)")
+    heute = f.baustein("CurrentDate", 480, 1200, "heute", titel="Heutiges Datum")
     planung = f.baustein("Prompt Template", 920, 0, "planung", {"template": (
         "HEUTE: {heute}\n"
         "AUFTRAG: {zeitraum}\n\n"
         "SCHULUNGEN (Schulung, Turnus, Schulungspersonal):\n{schulungen}\n\n"
-        "URLAUBSTAGE DES SCHULUNGSPERSONALS:\n{urlaub}\n\n---\n"
+        "URLAUBSTAGE DES SCHULUNGSPERSONALS:\n{urlaub}\n\n"
+        "KALENDER (Datum, Wochentag):\n{kalender}\n\n---\n"
         "Du planst die Schulungstermine einer Hochschulbibliothek. Die meisten Studierenden sind im Fernstudium "
         "und haben zu unterschiedlichen Zeiten Kapazitäten für eine Schulung.\n\n"
         "Gehe so vor:\n"
@@ -442,7 +444,8 @@ def flow_schulungsplanung(lf: Langflow) -> Flow:
         "5. Wechsle Wochentage und Uhrzeiten ab: Termine derselben Schulung liegen an verschiedenen Wochentagen "
         "und zu verschiedenen Uhrzeiten. Nutze die Zeitfenster des bisherigen Plans: montags bis samstags, "
         "zwischen 09:00 und 18:00 Uhr.\n"
-        "6. Prüfe zu jedem Datum den richtigen Wochentag. Kein Termin an einem Sonntag.\n"
+        "6. Nimm nur Daten aus dem KALENDER und übernimm den Wochentag genau von dort. Kein Termin an einem "
+        "Sonntag (So).\n"
         "7. Übernimm die Namen der Schulungen und Personen Zeichen für Zeichen aus der Liste. Erfinde nichts.\n\n"
         "Antworte nur mit einer CSV-Tabelle, nach Datum sortiert, ohne Erklärung und ohne ```. "
         "Trennzeichen ist das Komma; Werte mit Komma stehen in Anführungszeichen.\n"
@@ -477,6 +480,7 @@ def flow_schulungsplanung(lf: Langflow) -> Flow:
     f.verbinden(auftrag, "message", planung, "zeitraum")
     f.verbinden(schulungen, "message", planung, "schulungen")
     f.verbinden(urlaub, "message", planung, "urlaub")
+    f.verbinden(kalender, "message", planung, "kalender")
     f.verbinden(heute, "current_date", planung, "heute")
     f.verbinden(planung, "prompt", modell, "input_value")
     f.verbinden(modell, "text_output", plan, "input_data")

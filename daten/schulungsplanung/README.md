@@ -36,6 +36,10 @@ Aufbau:
 
 Die Tabelle enthält 15 Termine vom 17.09. bis 29.10.2026, montags bis samstags zwischen 9:00 und 18:00 Uhr.
 
+## Kalender
+
+[`kalender_2026.csv`](kalender_2026.csv) und [`kalender_2027.csv`](kalender_2027.csv) enthalten jeden Tag des Jahres mit seinem Wochentag (`datum,wochentag`, z. B. `02.11.2026,Mo`). Flow 05 gibt den Kalender der KI mit, damit sie Wochentage nachschlägt statt sie zu berechnen. Weitere Jahre erzeugt `uv run scripts/kalender_erzeugen.py 2028`.
+
 ## Noch nicht vorhanden
 
 - Die Excel-Listen mit Schulungen, Turnus und Schulungspersonal
