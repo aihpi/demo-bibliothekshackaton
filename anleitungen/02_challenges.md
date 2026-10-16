@@ -20,7 +20,7 @@ Sprachmodelle erfinden Literaturangaben, die täuschend echt aussehen. Auch in e
 
 **Start-Flow:** `01 Referenz-Checker`
 
-**Testdaten:** `daten/literaturliste_zum_pruefen.txt` (zehn Angaben mit eingebauten Fehlern), `daten/beispiel_masterarbeit.pdf`
+**Testdaten:** `daten/referenz_checker/literaturliste_zum_pruefen.txt` (zehn Angaben mit eingebauten Fehlern), `daten/masterarbeit_quellenanalyse/beispiel_masterarbeit.pdf`
 
 ### 🟢 Einstieg
 
@@ -56,7 +56,7 @@ Wer Abschlussarbeiten betreut, begutachtet oder in der Schreibberatung sitzt, wi
 
 **Start-Flow:** `02 Masterarbeit – Quellen analysieren`
 
-**Testdaten:** `daten/beispiel_masterarbeit.pdf` (fiktive Arbeit mit 17 echten Quellen)
+**Testdaten:** `daten/masterarbeit_quellenanalyse/beispiel_masterarbeit.pdf` (fiktive Arbeit mit 17 echten Quellen)
 
 ### 🟢 Einstieg
 

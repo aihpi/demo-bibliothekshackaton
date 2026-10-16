@@ -1,4 +1,4 @@
-"""Erzeugt die fiktive Beispiel-Masterarbeit daten/beispiel_masterarbeit.pdf.
+"""Erzeugt die fiktive Beispiel-Masterarbeit daten/masterarbeit_quellenanalyse/beispiel_masterarbeit.pdf.
 
     uv run --with reportlab scripts/beispieldaten_erzeugen.py
 
@@ -13,7 +13,7 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import cm
 from reportlab.platypus import PageBreak, Paragraph, SimpleDocTemplate, Spacer
 
-ZIEL = Path(__file__).resolve().parent.parent / "daten" / "beispiel_masterarbeit.pdf"
+ZIEL = Path(__file__).resolve().parent.parent / "daten" / "masterarbeit_quellenanalyse" / "beispiel_masterarbeit.pdf"
 
 TITEL = "Offene Metadaten und KI-gestützte Recherche in wissenschaftlichen Bibliotheken"
 

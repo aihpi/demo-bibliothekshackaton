@@ -14,7 +14,7 @@ Der Hackathon selbst läuft auf Deutsch: Die Beispiel-Flows, die Bausteine und d
 ## Funktionen
 
 - **Visuell statt Code**: Flows werden in Langflow aus Bausteinen zusammengeklickt. Jeder Beispiel-Flow erklärt sich mit einer Notiz direkt auf der Arbeitsfläche.
-- **Sechs fertige Beispiel-Flows** als Ausgangspunkt für die Challenges:
+- **Sieben fertige Beispiel-Flows** als Ausgangspunkt für die Challenges und Use Cases:
 
   | Flow | Was er tut |
   | --- | --- |
@@ -24,6 +24,7 @@ Der Hackathon selbst läuft auf Deutsch: Die Beispiel-Flows, die Bausteine und d
   | `02 Masterarbeit – Quellen analysieren` | Liest ein PDF, schneidet das Literaturverzeichnis aus, reichert alle Quellen über OpenAlex an und lässt die KI die Quellenbasis bewerten |
   | `03 Literaturreview – Forschungslücken finden` | Forschungsfrage → Suchbegriffe → verlagsübergreifende Suche → freie Volltexte → Themen, Widersprüche, Forschungslücken |
   | `04 Recherche-Agent` | Ein KI-Agent, der selbst entscheidet, ob er Artikel sucht, den Katalog befragt oder Angaben prüft |
+  | `05 Schulungsplanung` | Plant Schulungstermine aus einer Schulungsliste und den Urlaubstagen, erzeugt die HTML-Tabelle für die Lernplattform ohne KI und entwirft die Werbe-Mail. Use Case einer Hochschulbibliothek |
 
 - **Bibliotheks-Bausteine** (Kategorie *Bibliothek* in Langflow):
 
@@ -103,7 +104,7 @@ Die ausführliche Anleitung liegt in [`anleitungen/`](anleitungen/):
 
 Die [Bausteine-Anleitung](COMPONENTS.de.md) erklärt jeden Baustein in der Leiste von Langflow mit seinen Eingängen und Ausgängen, in der Reihenfolge, in der die Teilnehmenden sie finden.
 
-Beispieldaten liegen in [`daten/`](daten/): eine Literaturliste mit eingebauten Fehlern und eine fiktive Masterarbeit als PDF.
+Beispieldaten liegen in [`daten/`](daten/), ein Ordner pro Use Case mit Beschreibung und Daten: eine Literaturliste mit eingebauten Fehlern, eine fiktive Masterarbeit als PDF und der Use Case Schulungsplanung.
 
 ### Empfehlungen
 

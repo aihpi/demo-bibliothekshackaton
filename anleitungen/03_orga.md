@@ -160,6 +160,7 @@ Beim Probelauf auf Folgendes achten:
 - Flow 01b liefert je nach Modell ein anderes Ergebnis. In den Probeläufen mit `qwen3.5:4b` hat es die Abweichungen bei [2], [7] und [9] übersehen und [1] bestätigt, obwohl die Suche das Original gar nicht gefunden hat. Das ist so gewollt: Der Flow zeigt, was passiert, wenn die KI statt Programmcode entscheidet. Scheitert *Crossref fragen* mit „SSRF Protection“, fehlt `api.crossref.org` in `LANGFLOW_SSRF_ALLOWED_HOSTS` (`docker-compose.yml`).
 - Flow 02 findet 17 von 17 Quellen.
 - Flow 04 benutzt Werkzeuge. Antwortet der Agent, ohne zu suchen, beherrscht das Modell keine Werkzeugaufrufe.
+- Flow 05 hat keine Testdaten. Zum Ausprobieren eine eigene Schulungsliste und Urlaubstage als Excel oder CSV hochladen. In den Probeläufen mit `qwen3.5:4b` und `qwen3.5:9b` waren die Wochentage durchgehend falsch, und es entstanden deutlich zu viele Termine. Mit dem Cluster ist der Flow noch nicht erprobt.
 
 ## 6. Ablauf des Tages
 
@@ -215,7 +216,7 @@ Die häufigsten Probleme der Teilnehmenden stehen in der [Anleitung für Teilneh
 | `.env.example` | Vorlage für die Einstellungen |
 | `komponenten/bibliothek/` | die Bibliotheks-Bausteine (Python), eine Datei pro Baustein |
 | `flows/` | die Beispiel-Flows (JSON), werden beim Start automatisch geladen |
-| `daten/` | Testdaten für die Challenges |
+| `daten/` | Daten zu den Use Cases, ein Ordner pro Use Case mit Beschreibung und Testdaten |
 | `scripts/flows_bauen.py` | erzeugt `flows/` über die Langflow-API und testet die Flows |
 | `scripts/beispieldaten_erzeugen.py` | erzeugt die Beispiel-Masterarbeit |
 | `anleitungen/` | diese Anleitungen |
