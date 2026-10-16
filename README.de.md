@@ -14,12 +14,13 @@ Der Hackathon selbst läuft auf Deutsch: Die Beispiel-Flows, die Bausteine und d
 ## Funktionen
 
 - **Visuell statt Code**: Flows werden in Langflow aus Bausteinen zusammengeklickt. Jeder Beispiel-Flow erklärt sich mit einer Notiz direkt auf der Arbeitsfläche.
-- **Fünf fertige Beispiel-Flows** als Ausgangspunkt für die Challenges:
+- **Sechs fertige Beispiel-Flows** als Ausgangspunkt für die Challenges:
 
   | Flow | Was er tut |
   | --- | --- |
   | `00 Erste Schritte – Hallo KI` | Der kleinste Flow: Frage, Anweisung, Antwort |
   | `01 Referenz-Checker` | Prüft ein Literaturverzeichnis gegen Crossref: Existenz, Jahr, Erstautor:in, DOI, zurückgezogene Artikel |
+  | `01b Referenz-Checker – nur Standard-Bausteine` | Dieselbe Aufgabe nur mit Standard-Bausteinen von Langflow (Schleife, API-Abfrage, JSON auslesen), zum Vergleich mit 01. Hier entscheidet die KI, ob eine Angabe passt |
   | `02 Masterarbeit – Quellen analysieren` | Liest ein PDF, schneidet das Literaturverzeichnis aus, reichert alle Quellen über OpenAlex an und lässt die KI die Quellenbasis bewerten |
   | `03 Literaturreview – Forschungslücken finden` | Forschungsfrage → Suchbegriffe → verlagsübergreifende Suche → freie Volltexte → Themen, Widersprüche, Forschungslücken |
   | `04 Recherche-Agent` | Ein KI-Agent, der selbst entscheidet, ob er Artikel sucht, den Katalog befragt oder Angaben prüft |
