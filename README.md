@@ -14,12 +14,13 @@ The hackathon itself runs in German: the example flows, the components and the g
 ## Features
 
 - **Visual instead of code**: flows are put together in Langflow from building blocks. Every example flow explains itself with a note directly on the canvas.
-- **Six ready-made example flows** as starting points for the challenges and use cases:
+- **Seven ready-made example flows** as starting points for the challenges and use cases:
 
   | Flow | What it does |
   | --- | --- |
   | `00 Erste Schritte – Hallo KI` | The smallest possible flow: question, instruction, answer |
   | `01 Referenz-Checker` | Checks a reference list against Crossref: existence, year, first author, DOI, retracted articles |
+  | `01b Referenz-Checker – nur Standard-Bausteine` | The same task built only from Langflow's standard blocks (loop, API request, JSON parsing), to compare with 01. Here the AI decides whether a reference matches |
   | `02 Masterarbeit – Quellen analysieren` | Reads a PDF, cuts out the reference list, enriches every source via OpenAlex and has the AI assess the source base |
   | `03 Literaturreview – Forschungslücken finden` | Research question → search terms → cross-publisher search → open full texts → themes, contradictions, research gaps |
   | `04 Recherche-Agent` | An AI agent that decides for itself whether to search for articles, query the catalogue or check references |
@@ -87,6 +88,10 @@ docker compose up -d
 
 Without Git, and for what to watch out for (your own flows, the example flows), see [Update to the latest version](INSTALL.md#update-to-the-latest-version) in the installation guide.
 
+### Hosted instance
+
+Instead of one Langflow per laptop, the kit can also run as one shared instance on the AISC Kubernetes cluster, deployed by ArgoCD. Each group logs in with its own account and gets its own copy of the example flows; nothing needs to be installed. How to set it up and run it: [hosting guide](HOSTING.md).
+
 ## User Guide
 
 ### Using the Tool
@@ -104,7 +109,7 @@ Sample data is in [`daten/`](daten/), one folder per use case with a description
 ### Recommendations
 
 - Add a free [OpenAlex API key](https://openalex.org/settings/api) to `.env`. Without a key, OpenAlex throttles searches under load, and all groups on the same Wi-Fi share the limit.
-- Add a contact email (`KONTAKT_EMAIL`): Crossref then answers faster, and Unpaywall finds additional open full texts.
+- Add a contact email (`KONTAKT_EMAIL`), in `.env` or as a global variable in Langflow: Crossref then answers faster, and Unpaywall finds additional open full texts.
 - Agents (flow 04) need models that can use tools. This works most reliably with the cluster.
 
 ## Limitations
@@ -124,6 +129,8 @@ uv run --with httpx scripts/flows_bauen.py --testen   # build, run every flow on
 ```
 
 The components are in [`komponenten/bibliothek/`](komponenten/bibliothek/). Langflow reads them at startup; after changing them, run `docker compose restart langflow` and rebuild the flows. The sample thesis is generated with `uv run --with reportlab scripts/beispieldaten_erzeugen.py`.
+
+The tests cover the hosted instance (the account script and the manifests under `k8s/`): `uv run pytest`.
 
 ## References
 

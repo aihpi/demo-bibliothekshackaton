@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: langflow-db-storage
+  labels:
+    app: langflow-db
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      # Users, flows, messages and variables. Uploaded files live on langflow-files.
+      storage: 5Gi

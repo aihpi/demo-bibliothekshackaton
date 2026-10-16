@@ -100,7 +100,7 @@ Wer es lieber von Hand macht: `.env.example` kopieren, die Kopie `.env` nennen u
 | `LOKAL_BASE_URL` | Adresse des lokalen Modells. Nur ändern, wenn ihr Ollama in Docker nutzt (siehe [Schritt 7](#7-optional-ein-lokales-ki-modell)). |
 | `LOKAL_MODELL` | Name des lokalen Modells, standardmäßig `qwen3.5:4b` |
 | `LOKAL_KONTEXT` | Wie viel Text das lokale Modell auf einmal liest. So lassen. |
-| `KONTAKT_EMAIL` | Eine E-Mail-Adresse. Crossref antwortet dann schneller, und Unpaywall findet mehr freie Volltexte. |
+| `KONTAKT_EMAIL` | Eine E-Mail-Adresse. Crossref antwortet dann schneller, und Unpaywall findet mehr freie Volltexte. Ihr könnt sie auch später in Langflow als globale Variable eintragen (siehe [Bausteine](COMPONENTS.de.md#39-bibliothek)). |
 | `OPENALEX_API_KEY` | Ein kostenloser Schlüssel von [openalex.org](https://openalex.org/settings/api). Ohne Schlüssel bremst OpenAlex die Suche, wenn viele sie nutzen, und alle Gruppen im selben WLAN teilen sich das Limit. |
 
 > **Versteckte Datei auf dem Mac:** Dateien, deren Name mit einem Punkt beginnt, sind im Finder versteckt. Mit **⌘ + ⇧ + .** (Befehlstaste, Umschalttaste, Punkt) macht ihr sie sichtbar.

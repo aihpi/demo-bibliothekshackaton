@@ -14,9 +14,10 @@ from statistics import median
 
 import httpx
 from lfx.custom.custom_component.component import Component
-from lfx.io import IntInput, MultilineInput, Output
+from lfx.io import IntInput, MultilineInput, Output, SecretStrInput
 from lfx.schema.dataframe import DataFrame
 from lfx.schema.message import Message
+from lfx.utils.secrets import secret_value_to_str
 from rapidfuzz import fuzz
 
 CROSSREF = "https://api.crossref.org"
@@ -182,6 +183,17 @@ class QuellenAnreichernComponent(Component):
             required=True,
         ),
         IntInput(name="max_angaben", display_name="Höchstens anreichern", value=60),
+        SecretStrInput(
+            name="kontakt_email",
+            display_name="Kontakt-E-Mail",
+            info="Für Crossref, OpenAlex und Unpaywall: schnellere Antworten und mehr freie Volltexte. Am einfachsten "
+            "einmal als globale Variable KONTAKT_EMAIL anlegen (Settings → Global Variables), dann gilt sie für alle "
+            "Bausteine.",
+            value="KONTAKT_EMAIL",
+            load_from_db=True,
+            advanced=True,
+            required=False,
+        ),
     ]
 
     outputs = [
@@ -191,13 +203,19 @@ class QuellenAnreichernComponent(Component):
 
     _zwischenspeicher: tuple | None = None
 
+    def _kontakt(self) -> str:
+        """Kontakt-E-Mail aus der globalen Variable KONTAKT_EMAIL der Gruppe, sonst aus der Umgebung (.env)."""
+        wert = secret_value_to_str(self.kontakt_email) if getattr(self, "kontakt_email", None) else ""
+        wert = (wert or os.getenv("KONTAKT_EMAIL", "")).strip()
+        return wert if "@" in wert else ""
+
     async def _get(self, client: httpx.AsyncClient, url: str, params: dict | None = None) -> httpx.Response:
         params = dict(params or {})
         if url.startswith(OPENALEX):
             if os.getenv("OPENALEX_API_KEY"):
                 params["api_key"] = os.getenv("OPENALEX_API_KEY")
-            elif os.getenv("KONTAKT_EMAIL"):
-                params["mailto"] = os.getenv("KONTAKT_EMAIL")
+            elif self._kontakt():
+                params["mailto"] = self._kontakt()
         for versuch in range(4):
             antwort = await client.get(url, params=params)
             if antwort.status_code not in {429, 503} or versuch == 3:
@@ -238,7 +256,7 @@ class QuellenAnreichernComponent(Component):
         if self._zwischenspeicher and self._zwischenspeicher[0] == schluessel:
             return self._zwischenspeicher[1]
         angaben = literaturangaben_zerlegen(self.literaturangaben or "")[: self.max_angaben]
-        kontakt = os.getenv("KONTAKT_EMAIL", "")
+        kontakt = self._kontakt()
         # Crossref erlaubt ohne Kontakt-E-Mail nur eine Anfrage gleichzeitig, mit E-Mail drei
         begrenzung = asyncio.Semaphore(3 if kontakt else 1)
         kopf = {"User-Agent": "Bibliothekshackathon-Demo (Langflow)" + (f"; mailto:{kontakt}" if kontakt else "")}

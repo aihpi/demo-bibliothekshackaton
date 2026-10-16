@@ -599,6 +599,14 @@ Führt Python-Code aus. Für alle, die ein wenig programmieren können; für die
 
 Diese Bausteine wurden für den Hackathon gebaut. Sie verbinden Langflow mit Bibliotheks-Datenbanken und kümmern sich um Einzelheiten wie das Zerlegen von Literaturverzeichnissen oder das Warten, wenn eine Datenbank ausgelastet ist.
 
+**Kontakt-E-Mail.** *Literaturangaben prüfen*, *Literatursuche*, *Quellen anreichern* und *Volltexte holen* schicken Crossref, OpenAlex und Unpaywall eine Kontaktadresse mit, wenn sie eine haben. Crossref antwortet dann schneller, und Unpaywall findet mehr freie Volltexte. Ihr tragt sie einmal ein, dann gilt sie für alle vier:
+
+1. Oben rechts das Menü öffnen → *Settings* → *Global Variables* → *Add New*.
+2. *Type*: auf *Credential* lassen. *Name*: `KONTAKT_EMAIL`. *Value*: eure E-Mail-Adresse. *Apply to fields* leer lassen.
+3. Auf *Save Variable* klicken.
+
+Das Feld zeigt die Adresse als Punkte, wie ein Passwort. Ohne die Variable funktionieren die Bausteine auch, nur langsamer; auf dem Laptop nehmen sie außerdem `KONTAKT_EMAIL` aus der `.env`.
+
 #### 3.9.1 Katalogsuche (hbz / lobid)
 
 Sucht Bücher und andere Medien im hbz-Verbundkatalog (über lobid.org). Gut für Literatur ohne DOI, die deshalb in Crossref und OpenAlex fehlt.
@@ -642,6 +650,8 @@ Prüft, ob die Publikationen eines Literaturverzeichnisses existieren und korrek
 | Aus | Prüfbericht | Message | Das Ergebnis als Text: zu jeder Angabe ✅ bestätigt, ⚠️ Abweichung, ❓ nicht gefunden oder 🚫 zurückgezogen, mit Einzelheiten |
 | Aus | Tabelle | Table | Dasselbe als Tabelle |
 
+**Versteckte Einstellungen:** *Kontakt-E-Mail* (siehe [oben](#39-bibliothek)).
+
 **Hinweis:** ❓ heißt nicht immer „erfunden“: Bücher und Webseiten haben oft keine DOI. Prüft sie mit der *Katalogsuche*. **Beispiele:** Flows 01 und 04.
 
 #### 3.9.4 Literatursuche (OpenAlex)
@@ -658,7 +668,7 @@ Sucht wissenschaftliche Publikationen aller Verlage in OpenAlex, mit Abstracts u
 | Aus | Treffer (Tabelle) | Table | Die Treffer als Tabelle, z. B. für *Volltexte holen* |
 | Aus | Trefferliste (Text) | Message | Die Treffer als Liste, für einen Prompt |
 
-**Versteckte Einstellungen:** *Nur mit Abstract* (nur Treffer mit Abstract, standardmäßig an).
+**Versteckte Einstellungen:** *Nur mit Abstract* (nur Treffer mit Abstract, standardmäßig an), *Kontakt-E-Mail* (siehe [oben](#39-bibliothek)).
 
 **Hinweis:** Ohne OpenAlex-Schlüssel in der `.env` bremst OpenAlex, wenn viele suchen; der Baustein sucht dann ersatzweise über Crossref. **Beispiele:** Flows 03 und 04.
 
@@ -684,6 +694,8 @@ Ergänzt jede Angabe eines Literaturverzeichnisses um Informationen aus OpenAlex
 | Aus | Überblick (Text) | Message | Statistik und alle Quellen als Text, für einen Prompt |
 | Aus | Quellen (Tabelle) | Table | Alle Quellen mit ihren Informationen, z. B. für *Volltexte holen* |
 
+**Versteckte Einstellungen:** *Kontakt-E-Mail* (siehe [oben](#39-bibliothek)).
+
 **Beispiele:** Flow 02.
 
 #### 3.9.7 Volltexte holen (Open Access)
@@ -697,6 +709,8 @@ Lädt die freien Volltexte (PDFs) von Publikationen herunter und liest ihren Tex
 | Ein | Zeichen pro Dokument | Zahl | Längere Texte werden gekürzt, Anfang und Schluss bleiben (standardmäßig 3000). Kleine Modelle vertragen wenig Text. |
 | Aus | Texte für die KI | Message | Die Texte, nummeriert, für einen Prompt |
 | Aus | Tabelle mit Volltexten | Table | Dasselbe als Tabelle |
+
+**Versteckte Einstellungen:** *Kontakt-E-Mail* (siehe [oben](#39-bibliothek)). Damit fragt der Baustein zusätzlich Unpaywall nach freien Volltexten.
 
 **Beispiele:** Flow 03.
 

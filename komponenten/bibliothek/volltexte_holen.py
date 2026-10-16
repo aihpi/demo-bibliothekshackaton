@@ -14,9 +14,10 @@ import re
 import httpx
 from bs4 import BeautifulSoup
 from lfx.custom.custom_component.component import Component
-from lfx.io import DataFrameInput, IntInput, Output
+from lfx.io import DataFrameInput, IntInput, Output, SecretStrInput
 from lfx.schema.dataframe import DataFrame
 from lfx.schema.message import Message
+from lfx.utils.secrets import secret_value_to_str
 from pypdf import PdfReader
 
 logging.getLogger("pypdf").setLevel(logging.ERROR)  # keine Schrift-Warnungen im Protokoll
@@ -61,6 +62,17 @@ class VolltexteHolenComponent(Component):
                  info="Wie viele Publikationen verarbeitet werden."),
         IntInput(name="max_zeichen", display_name="Zeichen pro Dokument", value=3000,
                  info="Längere Texte werden gekürzt (Anfang und Schluss bleiben). Kleine Modelle vertragen wenig Text."),
+        SecretStrInput(
+            name="kontakt_email",
+            display_name="Kontakt-E-Mail",
+            info="Für Crossref, OpenAlex und Unpaywall: schnellere Antworten und mehr freie Volltexte. Am einfachsten "
+            "einmal als globale Variable KONTAKT_EMAIL anlegen (Settings → Global Variables), dann gilt sie für alle "
+            "Bausteine.",
+            value="KONTAKT_EMAIL",
+            load_from_db=True,
+            advanced=True,
+            required=False,
+        ),
     ]
 
     outputs = [
@@ -69,6 +81,12 @@ class VolltexteHolenComponent(Component):
     ]
 
     _zwischenspeicher: tuple | None = None
+
+    def _kontakt(self) -> str:
+        """Kontakt-E-Mail aus der globalen Variable KONTAKT_EMAIL der Gruppe, sonst aus der Umgebung (.env)."""
+        wert = secret_value_to_str(self.kontakt_email) if getattr(self, "kontakt_email", None) else ""
+        wert = (wert or os.getenv("KONTAKT_EMAIL", "")).strip()
+        return wert if "@" in wert else ""
 
     async def _laden(self, client: httpx.AsyncClient, url: str) -> str:
         antwort = await client.get(url)
@@ -83,7 +101,7 @@ class VolltexteHolenComponent(Component):
 
     async def _urls(self, client: httpx.AsyncClient, zeile: dict) -> list[str]:
         urls = [zeile.get("volltext_url")] if zeile.get("volltext_url") else []
-        kontakt = os.getenv("KONTAKT_EMAIL", "")
+        kontakt = self._kontakt()
         if zeile.get("doi") and kontakt:
             try:
                 antwort = await client.get(f"https://api.unpaywall.org/v2/{zeile['doi']}", params={"email": kontakt})

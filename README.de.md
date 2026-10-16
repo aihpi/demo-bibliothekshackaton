@@ -14,12 +14,13 @@ Der Hackathon selbst läuft auf Deutsch: Die Beispiel-Flows, die Bausteine und d
 ## Funktionen
 
 - **Visuell statt Code**: Flows werden in Langflow aus Bausteinen zusammengeklickt. Jeder Beispiel-Flow erklärt sich mit einer Notiz direkt auf der Arbeitsfläche.
-- **Sechs fertige Beispiel-Flows** als Ausgangspunkt für die Challenges und Use Cases:
+- **Sieben fertige Beispiel-Flows** als Ausgangspunkt für die Challenges und Use Cases:
 
   | Flow | Was er tut |
   | --- | --- |
   | `00 Erste Schritte – Hallo KI` | Der kleinste Flow: Frage, Anweisung, Antwort |
   | `01 Referenz-Checker` | Prüft ein Literaturverzeichnis gegen Crossref: Existenz, Jahr, Erstautor:in, DOI, zurückgezogene Artikel |
+  | `01b Referenz-Checker – nur Standard-Bausteine` | Dieselbe Aufgabe nur mit Standard-Bausteinen von Langflow (Schleife, API-Abfrage, JSON auslesen), zum Vergleich mit 01. Hier entscheidet die KI, ob eine Angabe passt |
   | `02 Masterarbeit – Quellen analysieren` | Liest ein PDF, schneidet das Literaturverzeichnis aus, reichert alle Quellen über OpenAlex an und lässt die KI die Quellenbasis bewerten |
   | `03 Literaturreview – Forschungslücken finden` | Forschungsfrage → Suchbegriffe → verlagsübergreifende Suche → freie Volltexte → Themen, Widersprüche, Forschungslücken |
   | `04 Recherche-Agent` | Ein KI-Agent, der selbst entscheidet, ob er Artikel sucht, den Katalog befragt oder Angaben prüft |
@@ -87,6 +88,10 @@ docker compose up -d
 
 Ohne Git, und worauf ihr achten solltet (eigene Flows, Beispiel-Flows), steht unter [Auf die neueste Version aktualisieren](INSTALL.de.md#auf-die-neueste-version-aktualisieren) in der Installationsanleitung.
 
+### Gehostete Instanz
+
+Statt eines Langflow pro Laptop kann der Bibliothekshackathon auch als eine gemeinsame Instanz im Kubernetes-Cluster des AISC laufen, ausgerollt von ArgoCD. Jede Gruppe meldet sich mit einem eigenen Konto an und bekommt eine eigene Kopie der Beispiel-Flows; installiert werden muss nichts. Einrichtung und Betrieb: [Anleitung für die gehostete Instanz](HOSTING.de.md).
+
 ## Benutzung
 
 ### Anleitungen
@@ -104,7 +109,7 @@ Beispieldaten liegen in [`daten/`](daten/), ein Ordner pro Use Case mit Beschrei
 ### Empfehlungen
 
 - Einen kostenlosen [OpenAlex-API-Schlüssel](https://openalex.org/settings/api) in `.env` eintragen. Ohne Schlüssel bremst OpenAlex die Suche bei Last, und alle Gruppen im selben WLAN teilen sich das Limit.
-- Eine Kontakt-E-Mail (`KONTAKT_EMAIL`) eintragen: Crossref antwortet dann schneller, und Unpaywall findet zusätzliche freie Volltexte.
+- Eine Kontakt-E-Mail (`KONTAKT_EMAIL`) eintragen, in der `.env` oder als globale Variable in Langflow: Crossref antwortet dann schneller, und Unpaywall findet zusätzliche freie Volltexte.
 - Agenten (Flow 04) brauchen Modelle, die Werkzeuge bedienen können. Mit dem Cluster funktioniert das am zuverlässigsten.
 
 ## Grenzen
@@ -124,6 +129,8 @@ uv run --with httpx scripts/flows_bauen.py --testen   # bauen, jeden Flow einmal
 ```
 
 Die Bausteine liegen in [`komponenten/bibliothek/`](komponenten/bibliothek/). Langflow liest sie beim Start; nach Änderungen `docker compose restart langflow` und die Flows neu bauen. Die Beispiel-Masterarbeit erzeugt `uv run --with reportlab scripts/beispieldaten_erzeugen.py`.
+
+Die Tests decken die gehostete Instanz ab (das Konten-Skript und die Manifeste unter `k8s/`): `uv run pytest`.
 
 ## Quellen
 

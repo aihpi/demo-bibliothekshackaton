@@ -35,6 +35,8 @@ Dieser Leitfaden ist für alle, die den Hackathon vorbereiten, technisch betreue
 - Die Bibliotheks-Bausteine brauchen **Internet**, aber keine Zugangsdaten. Ausnahmen: Ein OpenAlex-Schlüssel wird dringend empfohlen, und eine Kontakt-E-Mail beschleunigt Crossref und schaltet Unpaywall frei.
 - Alle Einstellungen stehen in der Datei `.env` im Projektordner.
 
+Können die Teilnehmenden kein Docker installieren, gibt es eine Alternative: eine gemeinsame Instanz im Cluster, in der jede Gruppe ein eigenes Konto hat. Siehe [Gehostete Instanz](../HOSTING.de.md).
+
 ## 2. Checkliste Vorbereitung
 
 **Zwei bis vier Wochen vorher**
@@ -94,7 +96,7 @@ OpenAlex bremst Suchanfragen ohne Schlüssel bei hoher Last oder sperrt sie ganz
 
 ### Kontakt-E-Mail
 
-Crossref und Unpaywall bitten um eine Kontaktadresse (`KONTAKT_EMAIL`). Mit Adresse erlaubt Crossref drei parallele Anfragen statt einer, und der Baustein *Volltexte holen* nutzt zusätzlich Unpaywall. Am besten eine Funktionsadresse der Einrichtung nehmen.
+Crossref und Unpaywall bitten um eine Kontaktadresse (`KONTAKT_EMAIL`). Mit Adresse erlaubt Crossref drei parallele Anfragen statt einer, und der Baustein *Volltexte holen* nutzt zusätzlich Unpaywall. Am besten eine Funktionsadresse der Einrichtung nehmen. Die Gruppen können auch selbst eine Adresse eintragen, als globale Variable `KONTAKT_EMAIL` in Langflow (siehe [Bausteine](../COMPONENTS.de.md#39-bibliothek)); sie gilt dann statt der aus der `.env`.
 
 ### Die `.env` einer Gruppe
 
@@ -150,11 +152,12 @@ Modellempfehlungen: `qwen3.5:4b` (3,4 GB, läuft fast überall), `qwen3.5:9b` (6
 uv run --with httpx scripts/flows_bauen.py --testen
 ```
 
-Erwartete Laufzeiten: mit dem Cluster je Flow 10–60 Sekunden; mit `qwen3.5:4b` auf einer Laptop-Grafikkarte ca. 5 s (Flow 00), 40 s (01), 50 s (02), 2 min (03), 10 s (04). Ohne Grafikkarte ein Vielfaches davon.
+Erwartete Laufzeiten: mit dem Cluster je Flow 10–60 Sekunden; mit `qwen3.5:4b` auf einer Laptop-Grafikkarte ca. 5 s (Flow 00), 40 s (01 und 01b), 50 s (02), 2 min (03), 10 s (04). Ohne Grafikkarte ein Vielfaches davon.
 
 Beim Probelauf auf Folgendes achten:
 
 - Flow 01 findet in der Testliste: 4 × bestätigt, 3 × Abweichung, 2 × nicht gefunden, 1 × zurückgezogen.
+- Flow 01b liefert je nach Modell ein anderes Ergebnis. In den Probeläufen mit `qwen3.5:4b` hat es die Abweichungen bei [2], [7] und [9] übersehen und [1] bestätigt, obwohl die Suche das Original gar nicht gefunden hat. Das ist so gewollt: Der Flow zeigt, was passiert, wenn die KI statt Programmcode entscheidet. Scheitert *Crossref fragen* mit „SSRF Protection“, fehlt `api.crossref.org` in `LANGFLOW_SSRF_ALLOWED_HOSTS` (`docker-compose.yml`).
 - Flow 02 findet 17 von 17 Quellen.
 - Flow 04 benutzt Werkzeuge. Antwortet der Agent, ohne zu suchen, beherrscht das Modell keine Werkzeugaufrufe.
 - Flow 05 hat keine Testdaten. Zum Ausprobieren eine eigene Schulungsliste und Urlaubstage als Excel oder CSV hochladen. In den Probeläufen mit `qwen3.5:4b` und `qwen3.5:9b` waren die Wochentage durchgehend falsch, und es entstanden deutlich zu viele Termine. Mit dem Cluster ist der Flow noch nicht erprobt.

@@ -68,7 +68,7 @@ Beim ersten Start lädt Docker Langflow herunter (knapp 1 GB, einige Minuten). D
 
 ## 3. Langflow in fünf Minuten
 
-Beim Öffnen seht ihr die Übersicht. Im Projekt **Starter Project** liegen die sechs Beispiel-Flows. Ein Klick öffnet einen Flow.
+Beim Öffnen seht ihr die Übersicht. Im Projekt **Starter Project** liegen die sieben Beispiel-Flows. Ein Klick öffnet einen Flow.
 
 ![Ein Flow in Langflow](bilder/flow_referenz_checker.png)
 
@@ -147,6 +147,14 @@ Nützliche Standard-Bausteine von Langflow:
 - **Agent**: eine KI mit Werkzeugen, siehe Flow 04
 - **URL**: den Text einer Webseite holen
 - **If-Else / Smart Router**: je nach Ergebnis unterschiedlich weitermachen
+
+**Kontakt-E-Mail eintragen (empfohlen):** *Literaturangaben prüfen*, *Literatursuche*, *Quellen anreichern* und *Volltexte holen* arbeiten schneller und finden mehr freie Volltexte, wenn sie eine E-Mail-Adresse mitschicken können. Tragt sie einmal ein, dann gilt sie für alle Bausteine:
+
+1. Oben rechts das Menü öffnen → *Settings* → *Global Variables* → *Add New*.
+2. *Type* auf *Credential* lassen, *Name*: `KONTAKT_EMAIL`, *Value*: eure E-Mail-Adresse.
+3. Auf *Save Variable* klicken.
+
+Habt ihr die Adresse schon in der `.env` eingetragen, ist das nicht nötig.
 
 **Werkzeug-Modus:** Ein Baustein wird zum Werkzeug für einen Agenten, wenn ihr in seiner Leiste den Schalter **Tool Mode** aktiviert und den Ausgang *Toolset* mit dem Eingang *Tools* des Agenten verbindet.
 
