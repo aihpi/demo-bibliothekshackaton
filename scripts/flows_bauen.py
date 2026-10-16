@@ -48,6 +48,16 @@ class Langflow:
         antwort.raise_for_status()
         return antwort.json()["frontend_node"]
 
+    def feld_aendern(self, knoten: dict, feld: str, wert) -> dict:
+        """Wie eine Auswahl im Editor: Der Baustein blendet danach die passenden Felder ein."""
+        antwort = self.http.post("/api/v1/custom_component/update", json={
+            "code": knoten["template"]["code"]["value"], "template": knoten["template"],
+            "field": feld, "field_value": wert})
+        antwort.raise_for_status()
+        neu = antwort.json()
+        neu["template"][feld]["value"] = wert
+        return neu
+
     def werkzeug_modus(self, knoten: dict) -> dict:
         antwort = self.http.post("/api/v1/custom_component/update", json={
             "code": knoten["template"]["code"]["value"], "template": knoten["template"],
@@ -66,8 +76,10 @@ class Flow:
         self.kanten: list[dict] = []
 
     def baustein(self, typ: str, x: float, y: float, kurz: str, werte: dict | None = None,
-                 titel: str | None = None, werkzeug: bool = False) -> str:
+                 titel: str | None = None, werkzeug: bool = False, auswahl: dict | None = None) -> str:
         knoten = copy.deepcopy(self.lf.bausteine[typ])
+        for feld, wert in (auswahl or {}).items():
+            knoten = self.lf.feld_aendern(knoten, feld, wert)
         for feld, wert in (werte or {}).items():
             knoten["template"][feld]["value"] = wert
         if titel:
@@ -109,10 +121,25 @@ class Flow:
         q["selected_output"] = ausgang
         ausgabe = next(o for o in q["node"]["outputs"] if o["name"] == ausgang)
         eingang = z["node"]["template"][feld]
+        # Der Editor löscht beim Öffnen Verbindungen zu ausgeblendeten Feldern (z. B. Query Parameters)
+        eingang["advanced"] = False
         griff_q = {"dataType": q["type"], "id": quelle, "name": ausgang, "output_types": ausgabe["types"]}
         griff_z = {"fieldName": feld, "id": ziel, "inputTypes": eingang.get("input_types") or [],
                    "type": eingang["type"]}
+        self._kante(quelle, griff_q, ziel, griff_z)
 
+    def schleife_schliessen(self, quelle: str, ausgang: str, schleife: str) -> None:
+        """Das Ergebnis eines Durchlaufs zurück in die Loop: Die Kante endet am Ausgang "Item", nicht an einem Feld."""
+        q, s = self._knoten(quelle), self._knoten(schleife)
+        q["selected_output"] = ausgang
+        ausgabe = next(o for o in q["node"]["outputs"] if o["name"] == ausgang)
+        item = next(o for o in s["node"]["outputs"] if o["name"] == "item")
+        griff_q = {"dataType": q["type"], "id": quelle, "name": ausgang, "output_types": ausgabe["types"]}
+        griff_s = {"dataType": s["type"], "id": schleife, "name": "item",
+                   "output_types": item["types"] + (item.get("loop_types") or [])}
+        self._kante(quelle, griff_q, schleife, griff_s)
+
+    def _kante(self, quelle: str, griff_q: dict, ziel: str, griff_z: dict) -> None:
         def text(griff: dict) -> str:
             return json.dumps(griff, ensure_ascii=False).replace('"', "œ")
 
@@ -177,7 +204,7 @@ def flow_referenzen(lf: Langflow) -> Flow:
         "2. **Literaturangaben prüfen** gleicht jede Angabe mit **Crossref** ab (Titel, Jahr, "
         "Erstautor:in, DOI) und fragt nach **zurückgezogenen** Artikeln.\n"
         "3. Die **KI** schreibt daraus einen verständlichen Prüfbericht.\n\n"
-        "**Testdaten:** `daten/literaturliste_zum_pruefen.txt` – mit eingebauten Fehlern.\n\n"
+        "**Testdaten:** `daten/referenz_checker/literaturliste_zum_pruefen.txt` – mit eingebauten Fehlern.\n\n"
         "## 💡 Ideen zum Weiterbauen\n"
         "- Statt Chat: PDF hochladen (**Read File** + **Literaturverzeichnis finden** davor)\n"
         "- Nicht gefundene Bücher in der **Katalogsuche** nachschlagen\n"
@@ -207,6 +234,110 @@ def flow_referenzen(lf: Langflow) -> Flow:
     return f
 
 
+# JQ-Ausdrücke für Flow 01b: Suchanfrage an Crossref bauen und die Treffer als lesbare Zeilen ausgeben.
+JQ_SUCHANFRAGE = ('{"query.bibliographic": .text, "rows": 3, '
+                  '"select": "DOI,title,author,issued,container-title,type,updated-by"}')
+JQ_TREFFER = (
+    '.result.message.items | if length == 0 then "(keine Treffer)" else map('
+    '"- " + (.author[0].family // .author[0].name // "?")'
+    ' + " (" + ((.issued["date-parts"][0][0] // "?") | tostring) + "): "'
+    ' + (.title[0] // "?") + ". " + (."container-title"[0] // "") + ". DOI " + .DOI'
+    ' + (if ([."updated-by"[]? | select(.type == "retraction")] | length) > 0 then " – ZURÜCKGEZOGEN" else "" end)'
+    ') | join("\\n") end')
+
+
+def flow_referenzen_standard(lf: Langflow) -> Flow:
+    f = Flow(lf, "01b_referenz_checker_standard", "01b Referenz-Checker – nur Standard-Bausteine",
+             "Dieselbe Aufgabe wie Flow 01, aber nur mit Standard-Bausteinen von Langflow gebaut: "
+             "Schleife, API-Abfrage bei Crossref, und die KI entscheidet, ob ein Treffer passt.", "ListTree")
+    f.notiz(
+        "# 🧩 Referenz-Checker aus Standard-Bausteinen\n\n"
+        "Dieselbe Aufgabe wie **Flow 01**, aber ohne den Baustein *Literaturangaben prüfen*. "
+        "Alles hier gibt es in jedem Langflow (einzige Ausnahme: **KI-Modell**, damit die Einstellungen "
+        "aus der `.env` gelten).\n\n"
+        "**So arbeitet der Flow:**\n"
+        "1. **Split Text** zerlegt das Verzeichnis in Zeilen: eine Zeile = eine Angabe.\n"
+        "2. **Loop** nimmt die Angaben nacheinander (oberer Bereich, die Schleife):\n"
+        "   - **Data Operations** baut daraus mit einem JQ-Ausdruck die Suchanfrage,\n"
+        "   - **API Request** fragt Crossref nach den 3 ähnlichsten Treffern,\n"
+        "   - ein zweites **Data Operations** macht aus der Antwort lesbare Zeilen,\n"
+        "   - **Prompt Template** legt Angabe und Treffer zusammen und gibt sie an die Loop zurück.\n"
+        "3. Wenn alle Angaben durch sind, gibt **Done** alles weiter. Die **KI** entscheidet für jede Angabe, "
+        "ob ein Treffer passt, und schreibt den Prüfbericht.\n\n"
+        "## ⚖️ Unterschiede zu Flow 01\n"
+        "- **Wer entscheidet?** In 01 vergleicht Programmcode Titel, Jahr und Autor:in. Hier urteilt die KI "
+        "und kann sich dabei irren.\n"
+        "- **Mehr Bausteine:** 14 statt 6, dafür sieht man jeden Schritt.\n"
+        "- **Suche statt Nachschlagen:** Crossref listet oft Arbeiten *über* eine Publikation zuerst. "
+        "Flow 01 schlägt vorhandene DOIs direkt nach und wählt aus 10 Treffern, hier gibt es nur die ersten 3.\n"
+        "- **Nur eine Angabe pro Zeile:** Umbrochene Angaben (z. B. aus PDFs) werden falsch zerlegt.\n"
+        "- **Keine DOI-Prüfung:** Ob eine DOI existiert, prüft niemand, DataCite fehlt.\n"
+        "- **Kein zweiter Versuch:** Ist Crossref überlastet, bricht der Flow ab.\n\n"
+        "**Testdaten:** `daten/referenz_checker/literaturliste_zum_pruefen.txt` – vergleicht das Ergebnis mit Flow 01!",
+        -160, -900, breite=520)
+    eingabe = f.baustein("ChatInput", 440, 120, "verzeichnis", titel="Literaturverzeichnis (Chat)")
+    zerlegen = f.baustein("SplitText", 840, 60, "angaben",
+                          {"separator": "\n", "chunk_size": 1, "chunk_overlap": 0, "clean_output": True},
+                          titel="Angaben trennen")
+    schleife = f.baustein("LoopComponent", 1240, 120, "angaben", titel="Jede Angabe einzeln")
+    f.notiz(
+        "## 🔁 Die Schleife\n"
+        "Alles in diesem Bereich läuft **einmal pro Literaturangabe**. Die Linie ganz rechts führt "
+        "zurück in die Loop: Dann kommt die nächste Angabe dran.",
+        1660, -900, breite=2120, farbe="amber")
+    jq_modus = {"input_type": "JSON", "operation": [{"name": "JQ Expression", "icon": "terminal"}]}
+    angabe = f.baustein("ParserComponent", 1680, -720, "angabe", {"pattern": "{text}"}, titel="Angabe als Text")
+    anfrage = f.baustein("Operations", 1680, -380, "anfrage", {"query": JQ_SUCHANFRAGE},
+                         titel="Suchanfrage bauen", auswahl=jq_modus)
+    crossref = f.baustein("APIRequest", 2100, -420, "crossref", {
+        "url_input": "https://api.crossref.org/works",
+        "headers": [{"key": "User-Agent", "value": "Bibliothekshackathon-Demo (Langflow)"}],
+    }, titel="Crossref fragen")
+    treffer = f.baustein("Operations", 2520, -380, "treffer", {"query": JQ_TREFFER},
+                         titel="Treffer auslesen", auswahl=jq_modus)
+    treffer_text = f.baustein("ParserComponent", 2940, -380, "treffer", {"pattern": "{result}"},
+                              titel="Treffer als Text")
+    zusammen = f.baustein("Prompt Template", 3360, -620, "zusammen", {
+        "template": "ANGABE: {angabe}\nCROSSREF-TREFFER:\n{treffer}\n"}, titel="Angabe + Treffer")
+    alle = f.baustein("ParserComponent", 1680, 520, "alle", {"pattern": "{text}"}, titel="Alle Ergebnisse als Text")
+    prompt = f.baustein("Prompt Template", 2100, 460, "bericht", {"template": (
+        "ERGEBNISSE DER CROSSREF-SUCHE:\n{ergebnisse}\n\n---\n"
+        "Du unterstützt eine Bibliothek beim Prüfen von Literaturverzeichnissen.\n"
+        "Oben steht zu jeder Literaturangabe (ANGABE) die Liste der ähnlichsten Treffer in der Datenbank Crossref.\n"
+        "Entscheide für jede Angabe, ob einer der Treffer dieselbe Publikation ist. Vergleiche Titel, "
+        "Jahr (±1) und Erstautor:in, und falls die Angabe eine DOI enthält, auch die DOI.\n"
+        "- ✅ bestätigt: Titel, Jahr und Erstautor:in passen\n"
+        "- ⚠️ Abweichung: dieselbe Publikation, aber Jahr, Erstautor:in oder DOI weichen ab\n"
+        "- ❓ nicht gefunden: kein Treffer ist dieselbe Publikation (vielleicht erfunden – oder ein Buch/eine "
+        "Webseite ohne DOI)\n"
+        "- 🚫 zurückgezogen: der passende Treffer ist als ZURÜCKGEZOGEN markiert\n\n"
+        "Schreibe einen kurzen Prüfbericht auf Deutsch:\n"
+        "1. Tabelle: Nr. | Status | Begründung in wenigen Worten\n"
+        "2. Gesamteinschätzung in zwei Sätzen.\n"
+        "3. Alle Angaben mit Problemen: Problem und konkreter Korrekturvorschlag.\n"
+        "4. Welche Angaben sollte jemand von Hand im Bibliothekskatalog prüfen?\n"
+        "Verwende nur Informationen aus der Suche. Erfinde keine Daten.")}, titel="Prompt: Prüfbericht")
+    modell = f.baustein(KI_MODELL, 2520, 400, "modell")
+    ausgabe = f.baustein("ChatOutput", 2940, 500, "bericht", titel="Prüfbericht")
+    tabelle = f.baustein("ChatOutput", 1680, 900, "tabelle", titel="Suchergebnisse")
+    f.verbinden(eingabe, "message", zerlegen, "data_inputs")
+    f.verbinden(zerlegen, "dataframe", schleife, "data")
+    f.verbinden(schleife, "item", angabe, "input_data")
+    f.verbinden(schleife, "item", anfrage, "data")
+    f.verbinden(anfrage, "data_output", crossref, "query_params")
+    f.verbinden(crossref, "data", treffer, "data")
+    f.verbinden(treffer, "data_output", treffer_text, "input_data")
+    f.verbinden(angabe, "parsed_text", zusammen, "angabe")
+    f.verbinden(treffer_text, "parsed_text", zusammen, "treffer")
+    f.schleife_schliessen(zusammen, "prompt", schleife)
+    f.verbinden(schleife, "done", alle, "input_data")
+    f.verbinden(schleife, "done", tabelle, "input_value")
+    f.verbinden(alle, "parsed_text", prompt, "ergebnisse")
+    f.verbinden(prompt, "prompt", modell, "input_value")
+    f.verbinden(modell, "text_output", ausgabe, "input_value")
+    return f
+
+
 def flow_masterarbeit(lf: Langflow) -> Flow:
     f = Flow(lf, "02_masterarbeit_quellenanalyse", "02 Masterarbeit – Quellen analysieren",
              "Liest eine Abschlussarbeit (PDF), zieht alle verwendeten Publikationen heraus, reichert sie mit "
@@ -216,7 +347,7 @@ def flow_masterarbeit(lf: Langflow) -> Flow:
         "**Problem:** Wer eine Arbeit berät oder begutachtet, will schnell sehen: Auf welche Literatur "
         "stützt sie sich? Ist sie aktuell, vielfältig, frei zugänglich?\n\n"
         "**So arbeitet der Flow:**\n"
-        "1. **Read File:** PDF hochladen (Beispiel: `daten/beispiel_masterarbeit.pdf`)\n"
+        "1. **Read File:** PDF hochladen (Beispiel: `daten/masterarbeit_quellenanalyse/beispiel_masterarbeit.pdf`)\n"
         "2. **Literaturverzeichnis finden** schneidet das Verzeichnis aus.\n"
         "3. **Quellen anreichern** holt für jede Angabe Abstract, Thema, Zitationen und "
         "Open-Access-Status aus **OpenAlex** und rechnet eine Statistik.\n"
@@ -366,13 +497,144 @@ def flow_agent(lf: Langflow) -> Flow:
     return f
 
 
+# Kopf und Schluss der Tabelle aus daten/schulungsplanung/lernplattform_tabelle_vorlage.html, Links als Platzhalter
+TD = 'style="padding: 8px; border: 1px solid rgb(204, 204, 204); width: {breite};"'
+LERNPLATTFORM_ZEILE = (
+    "    <tr>\n"
+    f"      <td {TD.format(breite='15.6716%')}>{{wochentag}}, {{datum}}</td>\n"
+    f"      <td {TD.format(breite='10.6343%')}>{{uhrzeit}} Uhr</td>\n"
+    f"      <td {TD.format(breite='73.694%')}><a href=\"LINK_ZUM_ZOOM_MEETING\" target=\"_blank\" "
+    "rel=\"noopener noreferrer\">{veranstaltung}</a></td>\n"
+    "    </tr>")
+TH = 'style="text-align: left; padding: 8px; border: 1px solid rgb(204, 204, 204); width: {breite};" scope="col"'
+LERNPLATTFORM_SEITE = (
+    "Quellcode für die Lernplattform (in den HTML-Editor einfügen, Links ersetzen):\n\n```html\n"
+    '<h4 id="aktuell" style="text-align: left;"><strong>Aktuelle Termine</strong></h4>\n'
+    "<p><strong>Dauer:</strong> bitte Beschreibung beachten; ansonsten jeweils 1 Stunde; Sprechstunden 30 Min.</p>\n"
+    '<table style="width: 100%; border-collapse: collapse;">\n'
+    "  <thead>\n"
+    '    <tr style="background-color: #e9ecef;">\n'
+    f"      <th {TH.format(breite='15.6716%')}>Datum</th>\n"
+    f"      <th {TH.format(breite='10.6343%')}>Uhrzeit</th>\n"
+    f"      <th {TH.format(breite='73.694%')}>Veranstaltung</th>\n"
+    "    </tr>\n"
+    "  </thead>\n"
+    "  <tbody>\n{zeilen}\n  </tbody>\n</table>\n"
+    "<p>Der Zoom-Link ist direkt im jeweiligen Thema verlinkt – einfach zum Termin draufklicken und Du wirst "
+    "zum Meetingraum weitergeleitet.</p>\n"
+    '<p>Verpasst? In unserer <strong><a href="LINK_ZUR_VIDEOGALERIE">Videogalerie</a></strong> findest Du '
+    "Aufzeichnungen der meisten Schulungsthemen.</p>\n```")
+
+
+def flow_schulungsplanung(lf: Langflow) -> Flow:
+    f = Flow(lf, "05_schulungsplanung", "05 Schulungsplanung",
+             "Plant Schulungstermine nach Turnus und Urlaubstagen, erzeugt die HTML-Tabelle für die Lernplattform "
+             "und einen Entwurf der Werbe-Mail. Use Case einer Hochschulbibliothek.", "CalendarDays")
+    f.notiz(
+        "# 📅 Schulungsplanung\n\n"
+        "**Use Case** einer Hochschulbibliothek, deren Studierende überwiegend im Fernstudium sind, beschrieben "
+        "in `daten/schulungsplanung/`.\n\n"
+        "**So arbeitet der Flow:**\n"
+        "1. **Read File:** die Schulungsliste (Schulung, Turnus, Schulungspersonal) und die Urlaubstage "
+        "hochladen, als Excel oder CSV, dazu den Kalender des Jahres aus `daten/schulungsplanung/`.\n"
+        "2. Im Playground den **Zeitraum** angeben, z. B. *Plane November und Dezember 2026*.\n"
+        "3. Die **KI** plant die Termine als CSV-Tabelle: Turnus einhalten, Wochentage und Uhrzeiten "
+        "abwechseln, Urlaub auslassen. **Type Convert** macht daraus eine echte Tabelle.\n"
+        "4. **Parser** macht aus jeder Zeile eine Tabellenzeile im Format der Lernplattform, ohne KI.\n"
+        "5. Die **KI** schreibt aus den Terminen die Werbe-Mail.\n\n"
+        "**Vor dem ersten Lauf:** Im Baustein *Prompt: Werbe-Mail* die Vorlage der Bibliothek einfügen.\n\n"
+        "⚠️ Die KI plant, der Flow prüft nicht nach. Kontrolliert Wochentage, Turnus und Urlaub im Ergebnis. "
+        "Kleine lokale Modelle verrechnen sich dabei deutlich; nehmt für diesen Flow den Cluster.\n\n"
+        "## 💡 Ideen zum Weiterbauen\n"
+        "- Den Plan prüfen lassen, z. B. einen zweiten KI-Schritt, der Urlaub und Turnus kontrolliert\n"
+        "- Zeitfenster anpassen: Im Prompt stehen die Zeiten aus dem bisherigen Plan der Lernplattform\n"
+        "- Die Links zu Zoom und zur Anmeldung automatisch einsetzen\n"
+        "- Den Plan als Excel speichern (**Write File**)",
+        -120, -360, breite=520)
+    auftrag = f.baustein("ChatInput", 480, -300, "zeitraum", titel="Zeitraum (Chat)")
+    schulungen = f.baustein("File", 480, 60, "schulungen", titel="Schulungsliste (Excel/CSV)")
+    urlaub = f.baustein("File", 480, 440, "urlaub", titel="Urlaubstage (Excel/CSV)")
+    kalender = f.baustein("File", 480, 820, "kalender", titel="Kalender (CSV)")
+    heute = f.baustein("CurrentDate", 480, 1200, "heute", titel="Heutiges Datum")
+    planung = f.baustein("Prompt Template", 920, 0, "planung", {"template": (
+        "HEUTE: {heute}\n"
+        "AUFTRAG: {zeitraum}\n\n"
+        "SCHULUNGEN (Schulung, Turnus, Schulungspersonal):\n{schulungen}\n\n"
+        "URLAUBSTAGE DES SCHULUNGSPERSONALS:\n{urlaub}\n\n"
+        "KALENDER (Datum, Wochentag):\n{kalender}\n\n---\n"
+        "Du planst die Schulungstermine einer Hochschulbibliothek. Die meisten Studierenden sind im Fernstudium "
+        "und haben zu unterschiedlichen Zeiten Kapazitäten für eine Schulung.\n\n"
+        "Gehe so vor:\n"
+        "1. Bestimme den Zeitraum aus dem AUFTRAG. Plane nur Termine in diesem Zeitraum.\n"
+        "2. Bestimme für jede Schulung die Zahl der Termine im Zeitraum: monatlich = ein Termin in jedem Monat, "
+        "alle zwei Monate = ein Termin je zwei Monate, alle drei Monate = ein Termin je drei Monate. "
+        "Mehr Termine sind falsch.\n"
+        "3. Jeder Termin findet einmal statt und bekommt genau eine Person aus dem Schulungspersonal dieser "
+        "Schulung. Wechsle die Personen ab.\n"
+        "4. Wähle für jeden Termin einen Tag, an dem diese Person keinen Urlaub hat.\n"
+        "5. Wechsle Wochentage und Uhrzeiten ab: Termine derselben Schulung liegen an verschiedenen Wochentagen "
+        "und zu verschiedenen Uhrzeiten. Nutze die Zeitfenster des bisherigen Plans: montags bis samstags, "
+        "zwischen 09:00 und 18:00 Uhr.\n"
+        "6. Nimm nur Daten aus dem KALENDER und übernimm den Wochentag genau von dort. Kein Termin an einem "
+        "Sonntag (So).\n"
+        "7. Übernimm die Namen der Schulungen und Personen Zeichen für Zeichen aus der Liste. Erfinde nichts.\n\n"
+        "Antworte nur mit einer CSV-Tabelle, nach Datum sortiert, ohne Erklärung und ohne ```. "
+        "Trennzeichen ist das Komma; Werte mit Komma stehen in Anführungszeichen.\n"
+        "Die erste Zeile ist genau diese Kopfzeile:\n"
+        "datum,wochentag,uhrzeit,veranstaltung,person\n"
+        "Jede weitere Zeile ist ein Termin: datum (TT.MM.JJJJ), wochentag (Mo, Di, Mi, Do, Fr oder Sa), "
+        "uhrzeit (HH:MM), veranstaltung, person.")},
+        titel="Prompt: Planung")
+    # max_tokens bremst kleine Modelle, die sonst endlos weitere Termine erzeugen
+    modell = f.baustein(KI_MODELL, 1360, -520, "planung", {"temperature": 0.2, "max_tokens": 2000},
+                        titel="KI-Modell (Planung)")
+    # CSV-Text statt Structured Output: kleine lokale Modelle scheitern an dessen erzwungenem Tool-Aufruf
+    plan = f.baustein("TypeConverterComponent", 1360, 0, "plan", {"output_type": "Table", "auto_parse": True},
+                      titel="Plan als Tabelle")
+    tabelle = f.baustein("ChatOutput", 1800, -420, "plan", titel="Schulungsplan")
+    zeilen = f.baustein("ParserComponent", 1800, 0, "zeilen", {"pattern": LERNPLATTFORM_ZEILE},
+                        titel="Tabellenzeilen für die Lernplattform")
+    seite = f.baustein("Prompt Template", 2240, 0, "lernplattform", {"template": LERNPLATTFORM_SEITE}, titel="HTML für die Lernplattform")
+    html = f.baustein("ChatOutput", 2680, 60, "html", titel="Quellcode Lernplattform")
+    termine = f.baustein("ParserComponent", 1800, 480, "termine",
+                         {"pattern": "- {wochentag}, {datum}, {uhrzeit} Uhr: {veranstaltung}"}, titel="Terminliste")
+    mail_prompt = f.baustein("Prompt Template", 2240, 440, "mail", {"template": (
+        "TERMINE:\n{termine}\n\n---\n"
+        "Schreibe mit den Terminen oben eine Mail an eine Abteilung der Hochschule, die für die Schulungen der "
+        "Bibliothek wirbt. Halte dich genau an die Vorlage unten und setze nur die Termine ein. Verwende nur die "
+        "Termine oben und erfinde nichts dazu.\n\n"
+        "VORLAGE DER WERBE-MAIL:\n"
+        "(Hier die Vorlage der Bibliothek einfügen. Ohne Vorlage schreibt die KI einen eigenen Entwurf.)")},
+        titel="Prompt: Werbe-Mail")
+    mail_modell = f.baustein(KI_MODELL, 2680, 400, "mail", titel="KI-Modell (Mail)")
+    mail = f.baustein("ChatOutput", 3120, 480, "mail", titel="Werbe-Mail")
+    f.verbinden(auftrag, "message", planung, "zeitraum")
+    f.verbinden(schulungen, "message", planung, "schulungen")
+    f.verbinden(urlaub, "message", planung, "urlaub")
+    f.verbinden(kalender, "message", planung, "kalender")
+    f.verbinden(heute, "current_date", planung, "heute")
+    f.verbinden(planung, "prompt", modell, "input_value")
+    f.verbinden(modell, "text_output", plan, "input_data")
+    f.verbinden(plan, "dataframe_output", tabelle, "input_value")
+    f.verbinden(plan, "dataframe_output", zeilen, "input_data")
+    f.verbinden(zeilen, "parsed_text", seite, "zeilen")
+    f.verbinden(seite, "prompt", html, "input_value")
+    f.verbinden(plan, "dataframe_output", termine, "input_data")
+    f.verbinden(termine, "parsed_text", mail_prompt, "termine")
+    f.verbinden(mail_prompt, "prompt", mail_modell, "input_value")
+    f.verbinden(mail_modell, "text_output", mail, "input_value")
+    return f
+
+
 # ---------------------------------------------------------------------------------------------
 
 TESTS = {
     "00 Erste Schritte – Hallo KI": {"eingabe": "Wie lange darf ich ein Buch normalerweise ausleihen?"},
-    "01 Referenz-Checker": {"eingabe_datei": "daten/literaturliste_zum_pruefen.txt"},
+    "01 Referenz-Checker": {"eingabe_datei": "daten/referenz_checker/literaturliste_zum_pruefen.txt"},
+    "01b Referenz-Checker – nur Standard-Bausteine": {
+        "eingabe_datei": "daten/referenz_checker/literaturliste_zum_pruefen.txt"},
     "02 Masterarbeit – Quellen analysieren": {"eingabe": "Bitte analysiere die Quellen dieser Masterarbeit.",
-                                                "pdf": "daten/beispiel_masterarbeit.pdf"},
+                                                "pdf": "daten/masterarbeit_quellenanalyse/beispiel_masterarbeit.pdf"},
     "03 Literaturreview – Forschungslücken finden": {
         "eingabe": "Wie verändern Sprachmodelle die Auskunft in wissenschaftlichen Bibliotheken?"},
     "04 Recherche-Agent": {"eingabe": "Gibt es ein Buch von Umberto Eco darüber, wie man eine Abschlussarbeit "
@@ -392,6 +654,9 @@ def speichern(lf: Langflow, flow: Flow) -> None:
 
 
 def testen(lf: Langflow, flow: Flow) -> None:
+    if flow.name not in TESTS:
+        print("  (keine Testdaten, nicht ausgeführt)")
+        return
     test = TESTS[flow.name]
     eingabe = test.get("eingabe") or (WURZEL / test["eingabe_datei"]).read_text(encoding="utf-8")
     tweaks = {}
@@ -424,7 +689,8 @@ def main() -> None:
 
     lf = Langflow(args.url)
     ZIEL.mkdir(exist_ok=True)
-    for baue in (flow_hallo, flow_referenzen, flow_masterarbeit, flow_review, flow_agent):
+    for baue in (flow_hallo, flow_referenzen, flow_referenzen_standard, flow_masterarbeit, flow_review, flow_agent,
+                 flow_schulungsplanung):
         flow = baue(lf)
         if args.nur and args.nur not in flow.name:
             continue  # gebaut wird trotzdem alles, damit Fehler in jedem Flow auffallen
