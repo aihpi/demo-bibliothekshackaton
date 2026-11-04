@@ -78,7 +78,7 @@ Beim ersten Start lädt Docker Langflow herunter (knapp 1 GB, einige Minuten). D
 
 ## 3. Langflow in fünf Minuten
 
-Beim Öffnen seht ihr die Übersicht. Im Projekt **Starter Project** liegen die sieben Beispiel-Flows. Ein Klick öffnet einen Flow.
+Beim Öffnen seht ihr die Übersicht. Im Projekt **Starter Project** liegen die sieben Beispiel-Flows (00 bis 05) und die neun Flows des [Lernpfads](lernpfad/README.md) (L1 bis L9). Ein Klick öffnet einen Flow.
 
 ![Ein Flow in Langflow](bilder/flow_referenz_checker.png)
 
@@ -219,6 +219,7 @@ Langflow läuft auf eurem Laptop weiter, auch nach heute.
 - **Starten:** Docker Desktop öffnen, dann `starten.bat` bzw. `starten.command` doppelklicken. Eure Flows bleiben erhalten.
 - **Flows sichern:** in der Übersicht beim Flow auf die drei Punkte → *Export*. Mit *Upload* lassen sie sich wieder einlesen, auch auf einem anderen Rechner. Dort muss der Ordner `komponenten/` mitkommen, sonst fehlen die Bibliotheks-Bausteine.
 - **KI-Zugang:** Euer Gruppen-Schlüssel für den Cluster gilt noch **zehn Tage, bis zum 17.10.2026**. Danach könnt ihr ein lokales Modell mit Ollama nutzen ([Abschnitt 7](#7-cluster-oder-lokales-modell)) oder einen KI-Zugang eurer Einrichtung in die `.env` eintragen.
+- **Üben:** Der [Lernpfad](lernpfad/README.md) führt in neun Flows durch die Standard-Bausteine von Langflow, mit Übungen zu jeder wichtigen Einstellung. Er eignet sich gut, um nach dem Hackathon allein weiterzulernen.
 - **Nachlesen:** diese Anleitung, die [Bausteine-Übersicht](../COMPONENTS.de.md), die [Challenges](02_challenges.md) und die [Langflow-Dokumentation](https://docs.langflow.org/).
 
 Für jedes neue Vorhaben hilft der **Bauplan** aus den [Challenges](02_challenges.md#bevor-ihr-loslegt-der-bauplan): zerlegen, zuordnen, wählen, klein bauen, absichern.

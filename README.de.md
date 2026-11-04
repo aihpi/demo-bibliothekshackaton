@@ -26,6 +26,7 @@ Der Hackathon selbst läuft auf Deutsch: Die Beispiel-Flows, die Bausteine und d
   | `04 Recherche-Agent` | Ein KI-Agent, der selbst entscheidet, ob er Artikel sucht, den Katalog befragt oder Angaben prüft |
   | `05 Schulungsplanung` | Plant Schulungstermine aus einer Schulungsliste und den Urlaubstagen, erzeugt die HTML-Tabelle für die Lernplattform ohne KI und entwirft die Werbe-Mail. Use Case einer Hochschulbibliothek |
 
+- **Ein Lernpfad aus neun Flows** (`L1` bis `L9`), einer pro Arbeitsschritt: Daten importieren, Texte aufbereiten, Tabellen und JSON, Ergebnisse ausgeben, Prompts und Modelle, strukturierte Antworten, Verzweigen, Schleifen und Agenten. Zu jedem gibt es eine Schritt-für-Schritt-Anleitung mit Übungen, die zeigen, was die Standard-Bausteine tun und wann man welchen nimmt.
 - **Bibliotheks-Bausteine** (Kategorie *Bibliothek* in Langflow):
 
   | Baustein | Quelle |
@@ -101,6 +102,7 @@ Die ausführliche Anleitung liegt in [`anleitungen/`](anleitungen/):
 1. [**Anleitung für Teilnehmende**](anleitungen/01_teilnehmende.md): installieren, starten, erster Flow, eigene Flows bauen, häufige Probleme.
 2. [**Challenges**](anleitungen/02_challenges.md): die Aufgaben des Hackathons, jeweils in drei Stufen.
 3. [**Leitfaden für die Orga**](anleitungen/03_orga.md): Vorbereitung, Zugangsdaten, Ablaufplan, Fehlerbehebung, Wartung.
+4. [**Lernpfad**](anleitungen/lernpfad/README.md): neun Flows mit Anleitungen und Übungen, um die Standard-Bausteine von Langflow kennenzulernen, vom Datenimport bis zu Agenten.
 
 Die [Bausteine-Anleitung](COMPONENTS.de.md) erklärt jeden Baustein in der Leiste von Langflow mit seinen Eingängen und Ausgängen, in der Reihenfolge, in der die Teilnehmenden sie finden.
 
@@ -126,11 +128,14 @@ Die Flows in `flows/` werden nicht von Hand gepflegt, sondern von [`scripts/flow
 ```bash
 docker compose up -d
 uv run --with httpx scripts/flows_bauen.py --testen   # bauen, jeden Flow einmal ausführen, exportieren
+uv run --with httpx scripts/lernpfad_bauen.py --testen   # dasselbe für den Lernpfad L1 bis L9
 ```
+
+Jeder Lernpfad-Flow ist ein Modul in [`scripts/lernpfad/`](scripts/lernpfad/), mit Anleitung in [`anleitungen/lernpfad/`](anleitungen/lernpfad/) und Testdaten in [`daten/lernpfad/`](daten/lernpfad/).
 
 Die Bausteine liegen in [`komponenten/bibliothek/`](komponenten/bibliothek/). Langflow liest sie beim Start; nach Änderungen `docker compose restart langflow` und die Flows neu bauen. Die Beispiel-Masterarbeit erzeugt `uv run --with reportlab scripts/beispieldaten_erzeugen.py`.
 
-Die Tests decken die gehostete Instanz ab (das Konten-Skript und die Manifeste unter `k8s/`): `uv run pytest`.
+Die Tests decken die gehostete Instanz ab (das Konten-Skript und die Manifeste unter `k8s/`) und prüfen, ob Module, Flows, Anleitungen und Testdaten des Lernpfads zusammenpassen: `uv run pytest`.
 
 ## Quellen
 

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - Beispiel-Flow 01b: Referenz-Checker nur aus Standard-Bausteinen, zum Vergleich mit Flow 01
+- Lernpfad: Flows L1 bis L9 mit Anleitungen und Übungen zu den Standard-Bausteinen (`anleitungen/lernpfad/`), gebaut von `scripts/lernpfad_bauen.py`
 
 ### Changed
 
