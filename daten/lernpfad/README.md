@@ -15,6 +15,7 @@ Alle Daten sind ausgedacht oder stammen aus offenen Quellen. Personen, E-Mail-Ad
 | [`fachreferate.csv`](fachreferate.csv) | Fachreferat und Standort für sieben Fächer, zum Verbinden mit den Neuerwerbungen (Merge). Für das Fach `Allgemein` gibt es mit Absicht keinen Eintrag. | L3 |
 | [`neuerwerbungen_nachtrag.csv`](neuerwerbungen_nachtrag.csv) | Drei weitere Neuerwerbungen mit denselben Spalten wie `neuerwerbungen.csv`, zum Anhängen (Concatenate) | L3 |
 | [`dois.txt`](dois.txt) | Neun DOIs, eine pro Zeile: sieben bei Crossref verzeichnet (eine davon zu einem zurückgezogenen Artikel), eine DataCite-DOI (Zenodo) und eine ausgedachte | L8 |
+| [`auskunftsanfragen.txt`](auskunftsanfragen.txt) | Zehn ausgedachte Auskunftsanfragen zum Einfügen in den Playground: Ausleihe, Recherche, Technik, Fernleihe, eine ohne passende Kategorie, dazu Anfragen mit erfundener E-Mail-Adresse und Ausweisnummer, mit einem Passwort und mit einem Manipulationsversuch | L7 |
 
 ## So nutzt ihr sie
 
