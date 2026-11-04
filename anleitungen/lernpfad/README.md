@@ -19,7 +19,7 @@ Die Module bauen aufeinander auf. L1 bis L4 kommen ganz ohne KI aus: Dort geht e
 
 | Modul | Arbeitsschritt | Wichtigste Bausteine | KI | Dauer |
 | --- | --- | --- | --- | --- |
-| L1 Daten importieren | Daten aus Dateien, Webseiten, Webdiensten und der Websuche holen | Read File, URL, API Request, Web Search, Mock Data, SQL Database | nein | 45 Min. |
+| [L1 Daten importieren](L1_daten_importieren.md) | Daten aus Dateien, Webseiten, Webdiensten und der Websuche holen | Read File, URL, API Request, Web Search, Mock Data | nein | 45 Min. |
 | L2 Texte aufbereiten | Unordentlichen Text säubern und in Stücke zerlegen | Data Operations (Text), Split Text, Type Convert | nein | 45 Min. |
 | L3 Tabellen und JSON | Aus der Antwort eines Webdienstes und einer Liste eine saubere Tabelle machen | Data Operations (JSON, Table), Dynamic Create Data, Type Convert, Parser | nein | 60 Min. |
 | L4 Ergebnisse ausgeben | Ergebnisse als Liste, HTML, Zitate oder Datei ausgeben | Parser, Prompt Template, Chat Output, Write File | nein | 45 Min. |
@@ -61,7 +61,6 @@ Die Bausteine in der Reihenfolge der Leiste *Components*, mit dem Modul, in dem 
 | | Chat Output | L4, (alle) |
 | Data Sources | API Request | L1, (L3, L8) |
 | | Mock Data | L1 |
-| | SQL Database | L1 |
 | | URL | L1, (L9) |
 | | Web Search | L1, (L9) |
 | Models & Agents | Agent | L9 |
@@ -94,6 +93,7 @@ Die Bausteine in der Reihenfolge der Leiste *Components*, mit dem Modul, in dem 
 
 | Baustein | Grund |
 | --- | --- |
+| SQL Database | Braucht einen Datenbankserver mit Zugang. Datenbankdateien auf dem Laptop (SQLite) sperrt Langflow. [L1](L1_daten_importieren.md#5-wann-nehme-ich-was) erklärt, wann er sich lohnt. |
 | Webhook, A2A Agent | Verbinden Langflow mit anderen Programmen oder Agenten im Netz. Dafür braucht es ein zweites System, das es im Hackathon nicht gibt. |
 | Embedding Model, Knowledge, Memory Base | Brauchen einen Embedding-Anbieter, der in diesem Projekt nicht eingerichtet ist (siehe [Bausteine-Übersicht](../../COMPONENTS.de.md#333-embedding-model)). |
 | Listen, Notify | In Langflow als *Beta* gekennzeichnet. Was sie leisten, geht mit einer Verbindungslinie einfacher. |

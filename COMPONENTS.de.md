@@ -144,7 +144,7 @@ Lädt den Inhalt einer oder mehrerer Webseiten herunter, auf Wunsch auch den der
 
 **Versteckte Einstellungen:** *Output Format* (*Text*, *Markdown* oder *HTML*), *Prevent Outside* (auf derselben Website bleiben, standardmäßig an), *Headers*, *Timeout*.
 
-**Hinweis:** Es gilt dieselbe Adressprüfung wie bei *API Request*. Manche Webseiten, z. B. Wikipedia, lehnen Anfragen ohne Absenderkennung ab. Dann unter *Headers* in der Zeile *User-Agent* eine eintragen, z. B. `Bibliothekshackathon (Langflow)`.
+**Hinweis:** Es gilt dieselbe Adressprüfung wie bei *API Request*. Manche Webseiten, z. B. Wikipedia, lehnen Anfragen ohne Absenderkennung ab. Dann unter *Headers* in der Zeile *User-Agent* eine eintragen, mit Name und Webadresse, z. B. `Bibliothekshackathon/1.0 (https://github.com/aihpi/demo-bibliothekshackaton)`. Ein Name allein reicht Wikipedia nicht.
 
 #### 3.2.5 Web Search
 

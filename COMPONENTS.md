@@ -144,7 +144,7 @@ Downloads the content of one or more web pages, and optionally of the pages they
 
 **Hidden settings:** *Output Format* (*Text*, *Markdown* or *HTML*), *Prevent Outside* (stay on the same website, on by default), *Headers*, *Timeout*.
 
-**Note:** the same address check as for *API Request* applies. Some websites, such as Wikipedia, refuse requests without a sender name. Then enter one under *Headers* in the row *User-Agent*, e.g. `Bibliothekshackathon (Langflow)`.
+**Note:** the same address check as for *API Request* applies. Some websites, such as Wikipedia, refuse requests without a sender name. Then enter one under *Headers* in the row *User-Agent*, with a name and a web address, e.g. `Bibliothekshackathon/1.0 (https://github.com/aihpi/demo-bibliothekshackaton)`. A name alone is not enough for Wikipedia.
 
 #### 3.2.5 Web Search
 
