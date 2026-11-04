@@ -57,7 +57,7 @@ Die Bausteine in der Reihenfolge der Leiste *Components*, mit dem Modul, in dem 
 
 | Kategorie | Baustein | Modul |
 | --- | --- | --- |
-| Input & Output | Chat Input | L1, (L5, L7, L9) |
+| Input & Output | Chat Input | L1, (L5, L7, L8, L9) |
 | | Chat Output | L4, (alle) |
 | Data Sources | API Request | L1, (L3, L8) |
 | | Mock Data | L1 |
@@ -66,28 +66,28 @@ Die Bausteine in der Reihenfolge der Leiste *Components*, mit dem Modul, in dem 
 | Models & Agents | Agent | L9 |
 | | Language Model | L5 |
 | | Message History | L5 |
-| | Prompt Template | L5, (L4, alle mit KI) |
+| | Prompt Template | L5, (L4, L6, L7, L8) |
 | LLM Operations | Batch Run | L6, (L8) |
 | | Guardrails | L7 |
 | | LLM Selector | L5 |
 | | Smart Router | L7 |
 | | Smart Transform | L6 |
 | | Structured Output | L6 |
-| Files & Knowledge | Read File | L1, (L2, L3) |
+| Files & Knowledge | Read File | L1, (L2, L3, L4, L6) |
 | | Write File | L4 |
 | | File System | L9 |
-| Processing | Data Operations | L2, L3, (L8) |
+| Processing | Data Operations | L2, L3, (L4, L8) |
 | | Dynamic Create Data | L3 |
 | | Parser | L3, L4, (L8) |
 | | Split Text | L2, (L8) |
-| | Type Convert | L2, (L3, L6) |
+| | Type Convert | L2, L3, (L4, L6) |
 | Flow Control | Human Input | L7 |
 | | If-Else | L7 |
 | | Loop | L8 |
 | | Run Flow | L9 |
 | Utilities | Calculator | L9 |
 | | Current Date | L5, (L9) |
-| Bibliothek | KI-Modell | L5, (alle mit KI) |
+| Bibliothek | KI-Modell | L5, (L6, L7, L9) |
 
 **Nicht im Lernpfad**, und warum:
 

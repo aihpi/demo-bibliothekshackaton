@@ -63,6 +63,42 @@ def test_relative_links_in_guides_resolve(anleitung):
         assert noch_nicht_gebaut or (anleitung.parent / ziel).exists(), f"{anleitung.name}: {ziel}"
 
 
+# Node type in the exported flow -> block name as the sidebar and the coverage table show it
+BAUSTEIN = {
+    "APIRequest": "API Request", "Agent": "Agent", "BatchRunComponent": "Batch Run",
+    "CalculatorComponent": "Calculator", "ChatInput": "Chat Input", "ChatOutput": "Chat Output",
+    "ConditionalRouter": "If-Else", "CurrentDate": "Current Date", "DynamicCreateData": "Dynamic Create Data",
+    "File": "Read File", "FileSystemTool": "File System", "GuardrailValidatorV2": "Guardrails",
+    "HumanInput": "Human Input", "LLMSelectorComponent": "LLM Selector", "LanguageModelComponent": "Language Model",
+    "LoopComponent": "Loop", "Memory": "Message History", "MockDataGenerator": "Mock Data",
+    "Operations": "Data Operations", "ParserComponent": "Parser", "Prompt Template": "Prompt Template",
+    "RunFlow": "Run Flow", "SaveToFile": "Write File", "Smart Transform": "Smart Transform",
+    "SmartRouter": "Smart Router", "SplitText": "Split Text", "StructuredOutput": "Structured Output",
+    "TypeConverterComponent": "Type Convert", "URLComponent": "URL", "UnifiedWebSearch": "Web Search",
+    "ext:bibliothek:KIModellComponent@extra": "KI-Modell",
+}
+
+
+def _abdeckung() -> dict[str, str]:
+    uebersicht = (ANLEITUNGEN / "README.md").read_text(encoding="utf-8")
+    abschnitt = uebersicht.split("## 3. Welcher Baustein wo vorkommt")[1].split("**Nicht im Lernpfad**")[0]
+    zeilen = re.finditer(r"^\|[^|]*\| ([^|]+) \| (L[^|]*) \|$", abschnitt, re.MULTILINE)
+    return {z.group(1).strip(): z.group(2) for z in zeilen}
+
+
+@pytest.mark.parametrize("datei", DATEIEN)
+def test_coverage_table_names_every_block_the_flow_uses(datei):
+    abdeckung = _abdeckung()
+    modul = datei.split("_", 1)[0]
+    for knoten in _flow(datei)["data"]["nodes"]:
+        if knoten["type"] != "genericNode":
+            continue
+        baustein = BAUSTEIN.get(knoten["data"]["type"])
+        assert baustein, f"neuer Bausteintyp {knoten['data']['type']}: in BAUSTEIN und der Übersicht eintragen"
+        eintrag = abdeckung.get(baustein, "")
+        assert modul in re.findall(r"L\d+", eintrag) or "alle" in eintrag, f"{baustein} fehlt bei {modul}"
+
+
 def _erwaehnte_daten(text: str) -> set[str]:
     return set(re.findall(r"daten/lernpfad/[\w./-]+\.\w+", text))
 
