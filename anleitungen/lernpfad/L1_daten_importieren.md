@@ -284,7 +284,7 @@ Der Bibliotheks-Baustein *Katalogsuche* macht dasselbe und bereitet die Antwort 
 | --- | --- |
 | *No files to process* | In *Read File* ist keine Datei hochgeladen. Mit *Select files* eine Datei wählen. Ohne Datei bricht der ganze Lauf im Playground ab. |
 | *Access to local file paths … is disabled* | Ihr habt einen Pfad eingetippt. Langflow liest nur hochgeladene Dateien. |
-| *Invalid URL provided* | Die Adresse enthält Leerzeichen oder Umlaute. Leerzeichen durch `+` oder `%20` ersetzen. |
+| *Invalid URL provided* | Die Adresse enthält Leerzeichen. Sie durch `+` oder `%20` ersetzen. |
 | *SSRF Protection: … blocked IP address* | Langflow sperrt Adressen auf dem Laptop und im lokalen Netz. Nur öffentliche Adressen funktionieren. |
 | `status_code` 429 bei OpenAlex oder Crossref | Zu viele Anfragen. Kurz warten. Für OpenAlex hilft ein API-Schlüssel (siehe [Anleitung für Teilnehmende](../01_teilnehmende.md#23-zugangsdaten-eintragen)). |
 | Die Websuche liefert eine leere Tabelle | Die Suchmaschine hat die Anfrage abgelehnt, oder der RSS-Feed hat eine falsche Adresse. Später noch einmal versuchen oder den Modus wechseln. |
