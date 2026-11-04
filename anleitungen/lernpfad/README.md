@@ -22,7 +22,7 @@ Die Module bauen aufeinander auf. L1 bis L4 kommen ganz ohne KI aus: Dort geht e
 | [L1 Daten importieren](L1_daten_importieren.md) | Daten aus Dateien, Webseiten, Webdiensten und der Websuche holen | Read File, URL, API Request, Web Search, Mock Data | nein | 45 Min. |
 | L2 Texte aufbereiten | Unordentlichen Text säubern und in Stücke zerlegen | Data Operations (Text), Split Text, Type Convert | nein | 45 Min. |
 | L3 Tabellen und JSON | Aus der Antwort eines Webdienstes und einer Liste eine saubere Tabelle machen | Data Operations (JSON, Table), Dynamic Create Data, Type Convert, Parser | nein | 60 Min. |
-| L4 Ergebnisse ausgeben | Ergebnisse als Liste, HTML, Zitate oder Datei ausgeben | Parser, Prompt Template, Chat Output, Write File | nein | 45 Min. |
+| [L4 Ergebnisse ausgeben](L4_ergebnisse_ausgeben.md) | Ergebnisse als Liste, HTML, Zitate oder Datei ausgeben | Parser, Prompt Template, Chat Output, Write File | nein | 45 Min. |
 | L5 Prompts und Modelle | Wie Prompt und Modelleinstellungen eine Antwort verändern | Prompt Template, KI-Modell, Language Model, Message History, Current Date | ja | 60 Min. |
 | L6 Strukturierte Antworten | Aus freiem Text mit KI Daten machen, auf vier Wegen im Vergleich | Structured Output, Type Convert, Batch Run, Smart Transform | ja | 60 Min. |
 | L7 Verzweigen und absichern | Anfragen prüfen und auf den passenden Weg schicken | If-Else, Smart Router, Guardrails, Human Input | ja | 60 Min. |
