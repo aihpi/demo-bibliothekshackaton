@@ -14,6 +14,7 @@ Alle Daten sind ausgedacht oder stammen aus offenen Quellen. Personen, E-Mail-Ad
 | [`text_aus_pdf.txt`](text_aus_pdf.txt) | Ein ausgedachter Fachartikel, wie er aus einem PDF kopiert wird: Silbentrennung am Zeilenende, Umbrüche mitten im Satz, Kopfzeilen mit Seitenzahl, doppelte Leerzeichen. Enthält drei echte DOIs und zwei ausgedachte E-Mail-Adressen. | L2 |
 | [`fachreferate.csv`](fachreferate.csv) | Fachreferat und Standort für sieben Fächer, zum Verbinden mit den Neuerwerbungen (Merge). Für das Fach `Allgemein` gibt es mit Absicht keinen Eintrag. | L3 |
 | [`neuerwerbungen_nachtrag.csv`](neuerwerbungen_nachtrag.csv) | Drei weitere Neuerwerbungen mit denselben Spalten wie `neuerwerbungen.csv`, zum Anhängen (Concatenate) | L3 |
+| [`dois.txt`](dois.txt) | Neun DOIs, eine pro Zeile: sieben bei Crossref verzeichnet (eine davon zu einem zurückgezogenen Artikel), eine DataCite-DOI (Zenodo) und eine ausgedachte | L8 |
 
 ## So nutzt ihr sie
 

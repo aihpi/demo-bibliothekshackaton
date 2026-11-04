@@ -26,7 +26,7 @@ Die Module bauen aufeinander auf. L1 bis L4 kommen ganz ohne KI aus: Dort geht e
 | L5 Prompts und Modelle | Wie Prompt und Modelleinstellungen eine Antwort verändern | Prompt Template, KI-Modell, Language Model, Message History, Current Date | ja | 60 Min. |
 | L6 Strukturierte Antworten | Aus freiem Text mit KI Daten machen, auf vier Wegen im Vergleich | Structured Output, Type Convert, Batch Run, Smart Transform | ja | 60 Min. |
 | L7 Verzweigen und absichern | Anfragen prüfen und auf den passenden Weg schicken | If-Else, Smart Router, Guardrails, Human Input | ja | 60 Min. |
-| L8 Wiederholen mit Loop | Eine Liste Eintrag für Eintrag abarbeiten | Loop, API Request, Data Operations, Batch Run | teils | 45 Min. |
+| [L8 Wiederholen mit Loop](L8_wiederholen_mit_loop.md) | Eine Liste Eintrag für Eintrag abarbeiten | Loop, Split Text, API Request, Data Operations, Batch Run | teils | 60 Min. |
 | L9 Agenten | Eine KI selbst entscheiden lassen, welche Werkzeuge sie nutzt | Agent, Web Search, URL, Calculator, Current Date, Run Flow | ja | 60 Min. |
 
 **Wer wenig Zeit hat**, nimmt L1, L3, L5 und L6: Daten holen, Daten in Form bringen, ein Modell ansprechen und aus seiner Antwort wieder Daten machen. Das ist das Gerüst fast jedes Flows.
