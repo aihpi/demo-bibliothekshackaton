@@ -23,7 +23,7 @@ Die Module bauen aufeinander auf. L1 bis L4 kommen ganz ohne KI aus: Dort geht e
 | [L2 Texte aufbereiten](L2_texte_aufbereiten.md) | Unordentlichen Text säubern, Muster herausziehen und Text in Stücke zerlegen | Data Operations (Text), Split Text, Type Convert | nein | 45 Min. |
 | [L3 Tabellen und JSON](L3_tabellen_und_json.md) | Aus der Antwort eines Webdienstes und einer Liste eine saubere Tabelle machen | Data Operations (JSON, Table), Dynamic Create Data, Type Convert, Parser | nein | 60 Min. |
 | [L4 Ergebnisse ausgeben](L4_ergebnisse_ausgeben.md) | Ergebnisse als Liste, HTML, Zitate oder Datei ausgeben | Parser, Prompt Template, Chat Output, Write File | nein | 45 Min. |
-| L5 Prompts und Modelle | Wie Prompt und Modelleinstellungen eine Antwort verändern | Prompt Template, KI-Modell, Language Model, Message History, Current Date | ja | 60 Min. |
+| [L5 Prompts und Modelle](L5_prompts_und_modelle.md) | Wie Prompt und Modelleinstellungen eine Antwort verändern | Prompt Template, KI-Modell, Language Model, Message History, Current Date, LLM Selector | ja | 60 Min. |
 | L6 Strukturierte Antworten | Aus freiem Text mit KI Daten machen, auf vier Wegen im Vergleich | Structured Output, Type Convert, Batch Run, Smart Transform | ja | 60 Min. |
 | [L7 Verzweigen und absichern](L7_verzweigen_und_absichern.md) | Anfragen prüfen und auf den passenden Weg schicken | If-Else, Smart Router, Guardrails, Human Input | ja | 60 Min. |
 | [L8 Wiederholen mit Loop](L8_wiederholen_mit_loop.md) | Eine Liste Eintrag für Eintrag abarbeiten | Loop, Split Text, API Request, Data Operations, Batch Run | teils | 60 Min. |

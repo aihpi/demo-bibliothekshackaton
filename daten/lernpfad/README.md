@@ -9,8 +9,8 @@ Alle Daten sind ausgedacht oder stammen aus offenen Quellen. Personen, E-Mail-Ad
 
 | Datei | Inhalt | Genutzt in |
 | --- | --- | --- |
-| [`neuerwerbungen.csv`](neuerwerbungen.csv) | 15 Neuerwerbungen einer Bibliothek mit ISBN, Titel, Autor:in, Jahr, Verlag, Fach, Seiten, Preis und Status. Mit eingebauten Fehlern zum Aufräumen: eine doppelte Zeile, ein fehlendes Jahr, ein Fach in Kleinschreibung, Leerzeichen um einen Titel. | L1, L2, L3, L4 |
-| [`benutzungsordnung.txt`](benutzungsordnung.txt) | Auszug aus der Benutzungsordnung einer ausgedachten Bibliothek, acht Paragrafen | L1, L2 |
+| [`neuerwerbungen.csv`](neuerwerbungen.csv) | 15 Neuerwerbungen einer Bibliothek mit ISBN, Titel, Autor:in, Jahr, Verlag, Fach, Seiten, Preis und Status. Mit eingebauten Fehlern zum Aufräumen: eine doppelte Zeile, ein fehlendes Jahr, ein Fach in Kleinschreibung, Leerzeichen um einen Titel. | L1, L2, L3, L4, L5 |
+| [`benutzungsordnung.txt`](benutzungsordnung.txt) | Auszug aus der Benutzungsordnung einer ausgedachten Bibliothek, acht Paragrafen | L1, L2, L5 |
 | [`text_aus_pdf.txt`](text_aus_pdf.txt) | Ein ausgedachter Fachartikel, wie er aus einem PDF kopiert wird: Silbentrennung am Zeilenende, Umbrüche mitten im Satz, Kopfzeilen mit Seitenzahl, doppelte Leerzeichen. Enthält drei echte DOIs und zwei ausgedachte E-Mail-Adressen. | L2 |
 | [`fachreferate.csv`](fachreferate.csv) | Fachreferat und Standort für sieben Fächer, zum Verbinden mit den Neuerwerbungen (Merge). Für das Fach `Allgemein` gibt es mit Absicht keinen Eintrag. | L3 |
 | [`neuerwerbungen_nachtrag.csv`](neuerwerbungen_nachtrag.csv) | Drei weitere Neuerwerbungen mit denselben Spalten wie `neuerwerbungen.csv`, zum Anhängen (Concatenate) | L3 |
