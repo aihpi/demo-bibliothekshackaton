@@ -12,7 +12,8 @@ AUSKUNFT = (
     "Stütze dich nur auf die Benutzungsordnung oben und nenne den Paragrafen, z. B. (§ 3). Steht die Antwort "
     "nicht darin, sag das ehrlich und verweise an die Information der Bibliothek. Erfinde nichts.\n"
     "Antworte auf Deutsch in höchstens vier Sätzen.\n\n"
-    "NEUE FRAGE: {frage}")
+    "NEUE FRAGE: {frage}"
+)
 
 TEST = {
     "eingabe": "Wie lange darf ich ein Buch behalten, und was kostet es, wenn ich es zu spät zurückbringe?",
@@ -22,9 +23,14 @@ TEST = {
 
 
 def bauen(lf) -> Flow:
-    f = Flow(lf, DATEI, "L5 Prompts und Modelle",
-             "Lernpfad 5: Wie Prompt und Modelleinstellungen eine Antwort verändern. Prompt Template, KI-Modell, "
-             "Language Model, Message History und Current Date.", "MessageSquareText")
+    f = Flow(
+        lf,
+        DATEI,
+        "L5 Prompts und Modelle",
+        "Lernpfad 5: Wie Prompt und Modelleinstellungen eine Antwort verändern. Prompt Template, KI-Modell, "
+        "Language Model, Message History und Current Date.",
+        "MessageSquareText",
+    )
     f.notiz(
         "# 💬 L5 Prompts und Modelle\n\n"
         "Eine Auskunft zur **Benutzungsordnung** der Musterbibliothek. Der Flow zeigt, was eine Antwort "
@@ -40,7 +46,10 @@ def bauen(lf) -> Flow:
         "2. **Playground** öffnen und fragen, z. B. *Wie lange darf ich ein Buch behalten?*\n"
         "3. Nachfragen, z. B. *Und wie oft kann ich verlängern?* Der Flow erinnert sich an das Gespräch.\n\n"
         "Anleitung mit Übungen: `anleitungen/lernpfad/L5_prompts_und_modelle.md`",
-        -200, -260, breite=500)
+        -200,
+        -260,
+        breite=500,
+    )
 
     frage = f.baustein("ChatInput", 420, 0, "frage", titel="Frage (Chat)")
     heute = f.baustein("CurrentDate", 420, 360, "heute", {"timezone": "Europe/Berlin"}, titel="Heutiges Datum")
@@ -54,13 +63,28 @@ def bauen(lf) -> Flow:
     modell = f.baustein(KI_MODELL, 1300, -40, "auskunft", titel="KI-Modell (Auskunft)")
     antwort = f.baustein("ChatOutput", 1740, 40, "antwort", {"sender_name": "KI-Modell"}, titel="Antwort (KI-Modell)")
 
-    leicht = f.baustein("LanguageModelComponent", 1740, 520, "leicht", {
-        "system_message": ("Du schreibst in Leichter Sprache: kurze Sätze, ein Gedanke pro Satz, keine Fachwörter "
-                           "ohne Erklärung, Zahlen als Ziffern."),
-    }, titel="Language Model (Leichte Sprache)")
+    leicht = f.baustein(
+        "LanguageModelComponent",
+        1740,
+        520,
+        "leicht",
+        {
+            "system_message": (
+                "Du schreibst in Leichter Sprache: kurze Sätze, ein Gedanke pro Satz, keine Fachwörter "
+                "ohne Erklärung, Zahlen als Ziffern."
+            ),
+        },
+        titel="Language Model (Leichte Sprache)",
+    )
     # Nicht speichern: Sonst stünde jede Antwort doppelt im Gesprächsverlauf
-    antwort_leicht = f.baustein("ChatOutput", 2180, 600, "leicht", {
-        "sender_name": "Language Model", "should_store_message": False}, titel="Antwort (Leichte Sprache)")
+    antwort_leicht = f.baustein(
+        "ChatOutput",
+        2180,
+        600,
+        "leicht",
+        {"sender_name": "Language Model", "should_store_message": False},
+        titel="Antwort (Leichte Sprache)",
+    )
 
     f.verbinden(frage, "message", prompt, "frage")
     f.verbinden(heute, "current_date", prompt, "heute")

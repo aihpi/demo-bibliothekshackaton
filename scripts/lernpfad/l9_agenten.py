@@ -27,16 +27,21 @@ ANWEISUNGEN = (
 
 TEST = {
     "eingabe": "Was ist der neueste Beitrag im Bibliotheksportal (RSS-Feed https://bibliotheksportal.de/feed/) "
-               "und vor wie vielen Tagen ist er erschienen?",
+    "und vor wie vielen Tagen ist er erschienen?",
     # Agenten brauchen ein Modell, das Werkzeuge bedienen kann; der Laptop-Standard ist lokal.
     "werte": {"KIModell-agent": {"quelle": "Cluster (LiteLLM)"}},
 }
 
 
 def bauen(lf) -> Flow:
-    f = Flow(lf, DATEI, "L9 Agenten",
-             "Lernpfad 9: Ein Agent entscheidet selbst, welche Werkzeuge er nutzt: Websuche, Webseite, "
-             "Taschenrechner, Datum und ein ganzer Flow als Werkzeug.", "Bot")
+    f = Flow(
+        lf,
+        DATEI,
+        "L9 Agenten",
+        "Lernpfad 9: Ein Agent entscheidet selbst, welche Werkzeuge er nutzt: Websuche, Webseite, "
+        "Taschenrechner, Datum und ein ganzer Flow als Werkzeug.",
+        "Bot",
+    )
     f.notiz(
         "# 🤖 L9 Agenten\n\n"
         "In L1 bis L8 legt ihr den Weg der Daten fest. Ein **Agent** entscheidet ihn selbst: Er liest die "
@@ -54,25 +59,57 @@ def bauen(lf) -> Flow:
         "https://bibliotheksportal.de/feed/ und vor wie vielen Tagen ist er erschienen?*\n"
         "4. Über der Antwort die Schritte aufklappen: Welches Werkzeug, mit welcher Eingabe?\n\n"
         "Anleitung mit Übungen: `anleitungen/lernpfad/L9_agenten.md`",
-        -620, -420, breite=520)
+        -620,
+        -420,
+        breite=520,
+    )
 
-    suche = f.baustein("UnifiedWebSearch", 0, -380, "werkzeug", {"hl": "de", "gl": "DE", "ceid": "DE:de"},
-                       titel="Websuche (Web Search)", werkzeug=True)
-    seite = f.baustein("URLComponent", 0, 80, "werkzeug", {"headers": [{"key": "User-Agent", "value": USER_AGENT}]},
-                       titel="Webseite holen (URL)", werkzeug=True)
+    suche = f.baustein(
+        "UnifiedWebSearch",
+        0,
+        -380,
+        "werkzeug",
+        {"hl": "de", "gl": "DE", "ceid": "DE:de"},
+        titel="Websuche (Web Search)",
+        werkzeug=True,
+    )
+    seite = f.baustein(
+        "URLComponent",
+        0,
+        80,
+        "werkzeug",
+        {"headers": [{"key": "User-Agent", "value": USER_AGENT}]},
+        titel="Webseite holen (URL)",
+        werkzeug=True,
+    )
     rechner = f.baustein("CalculatorComponent", 0, 520, "werkzeug", titel="Taschenrechner (Calculator)", werkzeug=True)
-    datum = f.baustein("CurrentDate", 0, 820, "werkzeug", {"timezone": "Europe/Berlin"},
-                       titel="Datum (Current Date)", werkzeug=True)
-    referenzen = f.baustein("RunFlow", 0, 1120, "referenzen", {"flow_name_selected": ZIEL_FLOW},
-                            titel="Referenz-Checker (Run Flow)", werkzeug=True)
+    datum = f.baustein(
+        "CurrentDate", 0, 820, "werkzeug", {"timezone": "Europe/Berlin"}, titel="Datum (Current Date)", werkzeug=True
+    )
+    referenzen = f.baustein(
+        "RunFlow",
+        0,
+        1120,
+        "referenzen",
+        {"flow_name_selected": ZIEL_FLOW},
+        titel="Referenz-Checker (Run Flow)",
+        werkzeug=True,
+    )
     modell = f.baustein(KI_MODELL, 460, -420, "agent")
     eingabe = f.baustein("ChatInput", 460, 520, "frage")
-    agent = f.baustein("Agent", 920, 0, "recherche", {
-        "system_prompt": ANWEISUNGEN,
-        # Eigene Bausteine statt der eingebauten Werkzeuge, damit man sie sieht und einstellen kann
-        "add_current_date_tool": False,
-        "add_calculator_tool": False,
-    }, titel="Recherche-Agent")
+    agent = f.baustein(
+        "Agent",
+        920,
+        0,
+        "recherche",
+        {
+            "system_prompt": ANWEISUNGEN,
+            # Eigene Bausteine statt der eingebauten Werkzeuge, damit man sie sieht und einstellen kann
+            "add_current_date_tool": False,
+            "add_calculator_tool": False,
+        },
+        titel="Recherche-Agent",
+    )
     ausgabe = f.baustein("ChatOutput", 1380, 120, "antwort", titel="Antwort")
     for werkzeug in (suche, seite, rechner, datum, referenzen):
         f.verbinden(werkzeug, "component_as_tool", agent, "tools")

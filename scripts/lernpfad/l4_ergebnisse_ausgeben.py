@@ -17,13 +17,18 @@ HTML_SEITE = (
     "    <tr><th>Titel</th><th>Autor:in</th><th>Jahr</th><th>Status</th></tr>\n"
     "  </thead>\n"
     "  <tbody>\n{zeilen}\n  </tbody>\n"
-    "</table>")
+    "</table>"
+)
 
 
 def bauen(lf) -> Flow:
-    f = Flow(lf, DATEI, "L4 Ergebnisse ausgeben",
-             "Lernpfad 4: eine Tabelle als Zitierliste, Markdown-Liste, HTML-Seite, Text und Excel-Datei "
-             "ausgeben, ohne KI.", "FileOutput")
+    f = Flow(
+        lf,
+        DATEI,
+        "L4 Ergebnisse ausgeben",
+        "Lernpfad 4: eine Tabelle als Zitierliste, Markdown-Liste, HTML-Seite, Text und Excel-Datei ausgeben, ohne KI.",
+        "FileOutput",
+    )
     f.notiz(
         "# 📤 L4 Ergebnisse ausgeben\n\n"
         "Am Ende eines Flows steht ein Ergebnis, das Menschen weiterverwenden: eine Literaturliste, ein "
@@ -43,13 +48,30 @@ def bauen(lf) -> Flow:
         "3. **Playground** öffnen und irgendetwas abschicken.\n\n"
         "Die Excel-Datei findet ihr danach in der Übersicht von Langflow unter **My Files**.\n\n"
         "Anleitung mit Übungen: `anleitungen/lernpfad/L4_ergebnisse_ausgeben.md`",
-        -620, -200, breite=480)
+        -620,
+        -200,
+        breite=480,
+    )
 
     datei = f.baustein("File", 0, 0, "datei", titel="Neuerwerbungen lesen (Read File)")
-    luecken = f.baustein("Operations", 420, 0, "luecken", {"search_pattern": ",,", "replacement_text": ",o. J.,"},
-                         titel="Leere Felder füllen", auswahl={"input_type": "Text", "operation": [{"name": "Text Replace"}]})
-    tabelle = f.baustein("TypeConverterComponent", 840, 0, "tabelle", {"auto_parse": True}, titel="Als Tabelle",
-                         auswahl={"output_type": "Table"})
+    luecken = f.baustein(
+        "Operations",
+        420,
+        0,
+        "luecken",
+        {"search_pattern": ",,", "replacement_text": ",o. J.,"},
+        titel="Leere Felder füllen",
+        auswahl={"input_type": "Text", "operation": [{"name": "Text Replace"}]},
+    )
+    tabelle = f.baustein(
+        "TypeConverterComponent",
+        840,
+        0,
+        "tabelle",
+        {"auto_parse": True},
+        titel="Als Tabelle",
+        auswahl={"output_type": "Table"},
+    )
     f.verbinden(datei, "message", luecken, "text_input")
     f.verbinden(luecken, "message_output", tabelle, "input_data")
 
@@ -59,24 +81,42 @@ def bauen(lf) -> Flow:
     f.verbinden(tabelle, "dataframe_output", aus_tabelle, "input_value")
 
     y += 400
-    zitate = f.baustein("ParserComponent", x_parser, y, "zitate", {"pattern": "{autor} ({jahr}). {titel}. {verlag}."},
-                        titel="Zitierliste")
+    zitate = f.baustein(
+        "ParserComponent",
+        x_parser,
+        y,
+        "zitate",
+        {"pattern": "{autor} ({jahr}). {titel}. {verlag}."},
+        titel="Zitierliste",
+    )
     aus_zitate = f.baustein("ChatOutput", x_ausgabe, y, "zitate", {"sender_name": "Zitierliste"}, titel="Zitierliste")
     f.verbinden(tabelle, "dataframe_output", zitate, "input_data")
     f.verbinden(zitate, "parsed_text", aus_zitate, "input_value")
 
     y += 400
-    liste = f.baustein("ParserComponent", x_parser, y, "liste", {"pattern": "- **{titel}** von {autor} ({fach}, {status})"},
-                       titel="Markdown-Liste")
-    aus_liste = f.baustein("ChatOutput", x_ausgabe, y, "liste", {"sender_name": "Markdown-Liste"},
-                           titel="Markdown-Liste")
+    liste = f.baustein(
+        "ParserComponent",
+        x_parser,
+        y,
+        "liste",
+        {"pattern": "- **{titel}** von {autor} ({fach}, {status})"},
+        titel="Markdown-Liste",
+    )
+    aus_liste = f.baustein(
+        "ChatOutput", x_ausgabe, y, "liste", {"sender_name": "Markdown-Liste"}, titel="Markdown-Liste"
+    )
     f.verbinden(tabelle, "dataframe_output", liste, "input_data")
     f.verbinden(liste, "parsed_text", aus_liste, "input_value")
 
     y += 400
-    zeilen = f.baustein("ParserComponent", x_parser, y, "html", {
-        "pattern": "    <tr><td>{titel}</td><td>{autor}</td><td>{jahr}</td><td>{status}</td></tr>"},
-        titel="HTML-Tabellenzeilen")
+    zeilen = f.baustein(
+        "ParserComponent",
+        x_parser,
+        y,
+        "html",
+        {"pattern": "    <tr><td>{titel}</td><td>{autor}</td><td>{jahr}</td><td>{status}</td></tr>"},
+        titel="HTML-Tabellenzeilen",
+    )
     seite = f.baustein("Prompt Template", 1740, y, "seite", {"template": HTML_SEITE}, titel="HTML-Seite (ohne KI)")
     aus_seite = f.baustein("ChatOutput", x_ausgabe, y, "html", {"sender_name": "HTML"}, titel="HTML für die Webseite")
     f.verbinden(tabelle, "dataframe_output", zeilen, "input_data")
@@ -84,16 +124,28 @@ def bauen(lf) -> Flow:
     f.verbinden(seite, "prompt", aus_seite, "input_value")
 
     y += 460
-    text = f.baustein("ParserComponent", x_parser, y, "text", {"mode": "Stringify"}, titel="Alles als Text (Stringify)",
-                      auswahl={"mode": "Stringify"})
+    text = f.baustein(
+        "ParserComponent",
+        x_parser,
+        y,
+        "text",
+        {"mode": "Stringify"},
+        titel="Alles als Text (Stringify)",
+        auswahl={"mode": "Stringify"},
+    )
     aus_text = f.baustein("ChatOutput", x_ausgabe, y, "text", {"sender_name": "Text"}, titel="Alles als Text")
     f.verbinden(tabelle, "dataframe_output", text, "input_data")
     f.verbinden(text, "parsed_text", aus_text, "input_value")
 
     y += 400
-    speichern = f.baustein("SaveToFile", x_parser, y, "excel",
-                           {"file_name": "neuerwerbungen_aufbereitet", "local_format": "excel"},
-                           titel="Als Excel speichern (Write File)")
+    speichern = f.baustein(
+        "SaveToFile",
+        x_parser,
+        y,
+        "excel",
+        {"file_name": "neuerwerbungen_aufbereitet", "local_format": "excel"},
+        titel="Als Excel speichern (Write File)",
+    )
     aus_datei = f.baustein("ChatOutput", x_ausgabe, y, "datei", {"sender_name": "Write File"}, titel="Gespeichert")
     f.verbinden(tabelle, "dataframe_output", speichern, "input")
     f.verbinden(speichern, "message", aus_datei, "input_value")

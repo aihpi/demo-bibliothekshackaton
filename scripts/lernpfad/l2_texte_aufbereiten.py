@@ -16,8 +16,10 @@ KOPFZEILE = r"\s*Bibliotheksforum 12 \(2025\) +Seite \d+\s*"
 DOI_MUSTER = r"10\.\d{4,9}/[\w./-]*\w"
 
 TEST = {
-    "dateien": {"File-pdftext": ["daten/lernpfad/text_aus_pdf.txt"],
-                "File-ordnung": ["daten/lernpfad/benutzungsordnung.txt"]},
+    "dateien": {
+        "File-pdftext": ["daten/lernpfad/text_aus_pdf.txt"],
+        "File-ordnung": ["daten/lernpfad/benutzungsordnung.txt"],
+    },
 }
 
 
@@ -26,9 +28,14 @@ def _text(name: str) -> dict:
 
 
 def bauen(lf) -> Flow:
-    f = Flow(lf, DATEI, "L2 Texte aufbereiten",
-             "Lernpfad 2: Text aus einem PDF säubern, Muster herausziehen, Text in Stücke zerlegen und aus "
-             "Text eine Tabelle machen, ohne KI.", "Scissors")
+    f = Flow(
+        lf,
+        DATEI,
+        "L2 Texte aufbereiten",
+        "Lernpfad 2: Text aus einem PDF säubern, Muster herausziehen, Text in Stücke zerlegen und aus "
+        "Text eine Tabelle machen, ohne KI.",
+        "Scissors",
+    )
     f.notiz(
         "# ✂️ L2 Texte aufbereiten\n\n"
         "Text aus PDFs, Webseiten oder Katalogen ist selten sauber. Hier wird er **gesäubert**, "
@@ -46,22 +53,49 @@ def bauen(lf) -> Flow:
         "3. **Playground** öffnen und irgendetwas abschicken.\n"
         "4. Besser noch: jeden Baustein mit **▶** einzeln ausführen und die Ausgabe ansehen.\n\n"
         "Anleitung mit Übungen: `anleitungen/lernpfad/L2_texte_aufbereiten.md`",
-        -200, -260, breite=520)
+        -200,
+        -260,
+        breite=520,
+    )
 
     # Zeile 1: Text aus einem PDF säubern
     pdf = f.baustein("File", 420, 0, "pdftext", titel="Text aus dem PDF (Read File)")
-    trennung = f.baustein("Operations", 860, 0, "trennung",
-                          {"search_pattern": "-\\n", "replacement_text": "", "use_regex": True},
-                          titel="1 Silbentrennung entfernen", auswahl=_text("Text Replace"))
-    kopf = f.baustein("Operations", 1300, 0, "kopfzeilen",
-                      {"search_pattern": KOPFZEILE, "replacement_text": "\\n\\n",
-                       "use_regex": True},
-                      titel="2 Kopfzeilen entfernen", auswahl=_text("Text Replace"))
-    zeilen = f.baustein("Operations", 1740, 0, "zeilen",
-                        {"search_pattern": r"(?<!\n)\n(?!\n)", "replacement_text": " ", "use_regex": True},
-                        titel="3 Zeilen zusammenführen", auswahl=_text("Text Replace"))
-    sauber = f.baustein("Operations", 2180, 0, "sauber", {"remove_extra_spaces": True, "remove_empty_lines": False},
-                        titel="4 Leerzeichen säubern", auswahl=_text("Text Clean"))
+    trennung = f.baustein(
+        "Operations",
+        860,
+        0,
+        "trennung",
+        {"search_pattern": "-\\n", "replacement_text": "", "use_regex": True},
+        titel="1 Silbentrennung entfernen",
+        auswahl=_text("Text Replace"),
+    )
+    kopf = f.baustein(
+        "Operations",
+        1300,
+        0,
+        "kopfzeilen",
+        {"search_pattern": KOPFZEILE, "replacement_text": "\\n\\n", "use_regex": True},
+        titel="2 Kopfzeilen entfernen",
+        auswahl=_text("Text Replace"),
+    )
+    zeilen = f.baustein(
+        "Operations",
+        1740,
+        0,
+        "zeilen",
+        {"search_pattern": r"(?<!\n)\n(?!\n)", "replacement_text": " ", "use_regex": True},
+        titel="3 Zeilen zusammenführen",
+        auswahl=_text("Text Replace"),
+    )
+    sauber = f.baustein(
+        "Operations",
+        2180,
+        0,
+        "sauber",
+        {"remove_extra_spaces": True, "remove_empty_lines": False},
+        titel="4 Leerzeichen säubern",
+        auswahl=_text("Text Clean"),
+    )
     aus_sauber = f.baustein("ChatOutput", 2620, 40, "sauber", {"sender_name": "Gesäubert"}, titel="Gesäuberter Text")
     f.verbinden(pdf, "message", trennung, "text_input")
     f.verbinden(trennung, "message_output", kopf, "text_input")
@@ -69,8 +103,15 @@ def bauen(lf) -> Flow:
     f.verbinden(zeilen, "message_output", sauber, "text_input")
     f.verbinden(sauber, "message_output", aus_sauber, "input_value")
 
-    dois = f.baustein("Operations", 860, 560, "dois", {"extract_pattern": DOI_MUSTER, "max_matches": 10},
-                      titel="DOIs herausziehen", auswahl=_text("Text Extract"))
+    dois = f.baustein(
+        "Operations",
+        860,
+        560,
+        "dois",
+        {"extract_pattern": DOI_MUSTER, "max_matches": 10},
+        titel="DOIs herausziehen",
+        auswahl=_text("Text Extract"),
+    )
     aus_dois = f.baustein("ChatOutput", 1300, 600, "dois", {"sender_name": "DOIs"}, titel="Gefundene DOIs")
     zaehlen = f.baustein("Operations", 1740, 560, "zaehlen", titel="Wörter zählen", auswahl=_text("Word Count"))
     aus_zaehlen = f.baustein("ChatOutput", 2180, 600, "zaehlen", {"sender_name": "Zählung"}, titel="Zählung")
@@ -81,13 +122,20 @@ def bauen(lf) -> Flow:
 
     # Zeile 2: Text in Stücke zerlegen
     ordnung = f.baustein("File", 420, 1100, "ordnung", titel="Benutzungsordnung (Read File)")
-    stuecke = f.baustein("SplitText", 860, 1100, "abschnitte",
-                         {"separator": "\\n\\n", "chunk_size": 1, "chunk_overlap": 0, "clean_output": True},
-                         titel="In Abschnitte zerlegen (Split Text)")
-    aus_tabelle = f.baustein("ChatOutput", 1300, 1060, "abschnitte", {"sender_name": "Abschnitte"},
-                             titel="Abschnitte als Tabelle")
-    als_text = f.baustein("TypeConverterComponent", 1300, 1440, "text", {"output_type": "Message"},
-                          titel="Tabelle zu Text (Type Convert)")
+    stuecke = f.baustein(
+        "SplitText",
+        860,
+        1100,
+        "abschnitte",
+        {"separator": "\\n\\n", "chunk_size": 1, "chunk_overlap": 0, "clean_output": True},
+        titel="In Abschnitte zerlegen (Split Text)",
+    )
+    aus_tabelle = f.baustein(
+        "ChatOutput", 1300, 1060, "abschnitte", {"sender_name": "Abschnitte"}, titel="Abschnitte als Tabelle"
+    )
+    als_text = f.baustein(
+        "TypeConverterComponent", 1300, 1440, "text", {"output_type": "Message"}, titel="Tabelle zu Text (Type Convert)"
+    )
     aus_text = f.baustein("ChatOutput", 1740, 1480, "text", {"sender_name": "Als Text"}, titel="Abschnitte als Text")
     f.verbinden(ordnung, "message", stuecke, "data_inputs")
     f.verbinden(stuecke, "dataframe", aus_tabelle, "input_value")
@@ -95,8 +143,17 @@ def bauen(lf) -> Flow:
     f.verbinden(als_text, "message_output", aus_text, "input_value")
 
     # Zeile 3: aus kopiertem Text eine Tabelle machen
-    liste = f.baustein("Operations", 420, 1980, "liste", {"text_input": ZEITSCHRIFTEN, "table_separator": "|"},
-                       titel="Liste zu Tabelle", auswahl=_text("Text to DataFrame"))
-    aus_liste = f.baustein("ChatOutput", 860, 2020, "liste", {"sender_name": "Tabelle"}, titel="Zeitschriften als Tabelle")
+    liste = f.baustein(
+        "Operations",
+        420,
+        1980,
+        "liste",
+        {"text_input": ZEITSCHRIFTEN, "table_separator": "|"},
+        titel="Liste zu Tabelle",
+        auswahl=_text("Text to DataFrame"),
+    )
+    aus_liste = f.baustein(
+        "ChatOutput", 860, 2020, "liste", {"sender_name": "Tabelle"}, titel="Zeitschriften als Tabelle"
+    )
     f.verbinden(liste, "dataframe_output", aus_liste, "input_value")
     return f

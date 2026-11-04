@@ -45,8 +45,9 @@ def bauen_wie_im_editor(lf: Langflow, flow: Flow, daten: dict, eingabe: str | No
     body = {"data": daten, "inputs": {"input_value": eingabe, "session": f"test-{uuid.uuid4()}"}}
     if eingabe is None:
         del body["inputs"]
-    antwort = lf.http.post(f"/api/v1/build/{flow.id}/flow", json=body,
-                           params={"stop_component_id": ziel} if ziel else {})
+    antwort = lf.http.post(
+        f"/api/v1/build/{flow.id}/flow", json=body, params={"stop_component_id": ziel} if ziel else {}
+    )
     antwort.raise_for_status()
     gebaut = {}
     with lf.http.stream("GET", f"/api/v1/build/{antwort.json()['job_id']}/events") as ereignisse:

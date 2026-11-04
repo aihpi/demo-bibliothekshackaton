@@ -8,27 +8,35 @@ USER_AGENT = "Bibliothekshackathon/1.0 (https://github.com/aihpi/demo-bibliothek
 
 # Die Suche mit filter=doi antwortet immer mit JSON, auch wenn Crossref die DOI nicht kennt (dann ohne Treffer).
 # Die direkte Adresse /works/{doi} antwortet in dem Fall mit Text, an dem Data Operations scheitert.
-CROSSREF = ("https://api.crossref.org/works?filter=doi:{doi}&rows=1"
-            "&select=DOI,title,issued,container-title,is-referenced-by-count,updated-by")
+CROSSREF = (
+    "https://api.crossref.org/works?filter=doi:{doi}&rows=1"
+    "&select=DOI,title,issued,container-title,is-referenced-by-count,updated-by"
+)
 JQ_DATENSATZ = (
     '(.source | capture("doi:(?<doi>[^&]+)").doi) as $doi | .result.message.items[0] as $w | '
     'if $w == null then {doi: $doi, jahr: "", titel: "", zeitschrift: "", zitiert: 0, '
     'status: "nicht bei Crossref"} '
-    'else {doi: $doi, '
+    "else {doi: $doi, "
     'jahr: (($w.issued["date-parts"][0][0] // "?") | tostring), '
     'titel: ($w.title[0] // "?"), '
     'zeitschrift: ($w."container-title"[0] // "–"), '
     'zitiert: ($w."is-referenced-by-count" // 0), '
     'status: (if ([$w."updated-by"[]? | select(.type == "retraction")] | length) > 0 '
-    'then "ZURÜCKGEZOGEN" else "gefunden" end)} end')
+    'then "ZURÜCKGEZOGEN" else "gefunden" end)} end'
+)
 
 TEST = {"eingabe": (WURZEL / "daten/lernpfad/dois.txt").read_text(encoding="utf-8")}
 
 
 def bauen(lf) -> Flow:
-    f = Flow(lf, DATEI, "L8 Wiederholen mit Loop",
-             "Lernpfad 8: eine Liste von DOIs Eintrag für Eintrag bei Crossref nachschlagen und die Ergebnisse "
-             "als Tabelle sammeln, ohne KI.", "Repeat")
+    f = Flow(
+        lf,
+        DATEI,
+        "L8 Wiederholen mit Loop",
+        "Lernpfad 8: eine Liste von DOIs Eintrag für Eintrag bei Crossref nachschlagen und die Ergebnisse "
+        "als Tabelle sammeln, ohne KI.",
+        "Repeat",
+    )
     f.notiz(
         "# 🔁 L8 Wiederholen mit Loop\n\n"
         "Eine Liste von DOIs wird **Eintrag für Eintrag** bei **Crossref** nachgeschlagen. Keine KI.\n\n"
@@ -45,27 +53,57 @@ def bauen(lf) -> Flow:
         "2. **Playground** öffnen und den Inhalt von `daten/lernpfad/dois.txt` einfügen.\n"
         "3. Nach etwa 15 Sekunden erscheinen Tabelle und Liste.\n\n"
         "Anleitung mit Übungen: `anleitungen/lernpfad/L8_wiederholen_mit_loop.md`",
-        -160, -260, breite=480)
+        -160,
+        -260,
+        breite=480,
+    )
     f.notiz(
         "## 🔁 Die Schleife\n"
         "Alles in diesem Bereich läuft **einmal pro DOI**. Die Linie ganz rechts führt zurück an den Ausgang "
         "**Item** der Loop.",
-        1640, -900, breite=1720, farbe="amber")
+        1640,
+        -900,
+        breite=1720,
+        farbe="amber",
+    )
     eingabe = f.baustein("ChatInput", 420, 120, "dois", titel="DOI-Liste (Chat)")
-    zerlegen = f.baustein("SplitText", 820, 60, "dois",
-                          {"separator": "\n", "chunk_size": 1, "chunk_overlap": 0, "clean_output": True},
-                          titel="Eine DOI pro Zeile")
+    zerlegen = f.baustein(
+        "SplitText",
+        820,
+        60,
+        "dois",
+        {"separator": "\n", "chunk_size": 1, "chunk_overlap": 0, "clean_output": True},
+        titel="Eine DOI pro Zeile",
+    )
     schleife = f.baustein("LoopComponent", 1220, 120, "dois", titel="Jede DOI einzeln")
     doi = f.baustein("ParserComponent", 1660, -560, "doi", {"pattern": "{text}"}, titel="DOI als Text")
-    adresse = f.baustein("Prompt Template", 2080, -600, "adresse",
-                         {"template": CROSSREF}, titel="Adresse bauen")
-    crossref = f.baustein("APIRequest", 2500, -620, "crossref",
-                          {"headers": [{"key": "User-Agent", "value": USER_AGENT}]}, titel="Crossref fragen")
-    datensatz = f.baustein("Operations", 2920, -560, "datensatz", {"query": JQ_DATENSATZ}, titel="Felder auslesen",
-                           auswahl={"input_type": "JSON", "operation": [{"name": "JQ Expression", "icon": "terminal"}]})
+    adresse = f.baustein("Prompt Template", 2080, -600, "adresse", {"template": CROSSREF}, titel="Adresse bauen")
+    crossref = f.baustein(
+        "APIRequest",
+        2500,
+        -620,
+        "crossref",
+        {"headers": [{"key": "User-Agent", "value": USER_AGENT}]},
+        titel="Crossref fragen",
+    )
+    datensatz = f.baustein(
+        "Operations",
+        2920,
+        -560,
+        "datensatz",
+        {"query": JQ_DATENSATZ},
+        titel="Felder auslesen",
+        auswahl={"input_type": "JSON", "operation": [{"name": "JQ Expression", "icon": "terminal"}]},
+    )
     tabelle = f.baustein("ChatOutput", 1660, 420, "tabelle", titel="Ergebnistabelle")
-    liste = f.baustein("ParserComponent", 1660, 780, "liste",
-                       {"pattern": "- {doi}: {titel} ({jahr}), {zeitschrift}. {status}"}, titel="Als Liste")
+    liste = f.baustein(
+        "ParserComponent",
+        1660,
+        780,
+        "liste",
+        {"pattern": "- {doi}: {titel} ({jahr}), {zeitschrift}. {status}"},
+        titel="Als Liste",
+    )
     ausgabe = f.baustein("ChatOutput", 2080, 820, "liste", titel="Ergebnisliste")
     f.verbinden(eingabe, "message", zerlegen, "data_inputs")
     f.verbinden(zerlegen, "dataframe", schleife, "data")
