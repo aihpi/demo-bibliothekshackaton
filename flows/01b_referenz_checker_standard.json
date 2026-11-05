@@ -54,7 +54,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Get chat inputs from the Playground.",
-            "display_name": "Literaturverzeichnis (Chat)",
+            "display_name": "Chat Input",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -350,7 +350,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Split text into chunks based on specified criteria.",
-            "display_name": "Angaben trennen",
+            "display_name": "Split Text",
             "documentation": "https://docs.langflow.org/split-text",
             "edited": false,
             "field_order": [
@@ -622,7 +622,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Iterates through Data or Message objects, processing items individually and aggregating results from loop inputs.",
-            "display_name": "Jede Angabe einzeln",
+            "display_name": "Loop",
             "documentation": "https://docs.langflow.org/loop",
             "edited": false,
             "field_order": [
@@ -780,7 +780,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Extracts text using a template.",
-            "display_name": "Angabe als Text",
+            "display_name": "Parser",
             "documentation": "https://docs.langflow.org/parser",
             "edited": false,
             "field_order": [
@@ -2139,7 +2139,7 @@
             "base_classes": [
               "Message"
             ],
-            "display_name": "Suchanfrage bauen",
+            "display_name": "Data Operations",
             "documentation": "https://docs.langflow.org/components-processing#operations",
             "minimized": false,
             "custom_fields": {},
@@ -2308,7 +2308,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Make HTTP requests using URL or cURL commands.",
-            "display_name": "Crossref fragen",
+            "display_name": "API Request",
             "documentation": "https://docs.langflow.org/api-request",
             "edited": false,
             "field_order": [
@@ -3893,7 +3893,7 @@
             "base_classes": [
               "Message"
             ],
-            "display_name": "Treffer auslesen",
+            "display_name": "Data Operations",
             "documentation": "https://docs.langflow.org/components-processing#operations",
             "minimized": false,
             "custom_fields": {},
@@ -4062,7 +4062,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Extracts text using a template.",
-            "display_name": "Treffer als Text",
+            "display_name": "Parser",
             "documentation": "https://docs.langflow.org/parser",
             "edited": false,
             "field_order": [
@@ -4397,7 +4397,7 @@
               "Message"
             ],
             "name": "",
-            "display_name": "Angabe + Treffer",
+            "display_name": "Prompt Template",
             "priority": null,
             "documentation": "https://docs.langflow.org/components-prompts",
             "minimized": false,
@@ -4480,7 +4480,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Extracts text using a template.",
-            "display_name": "Alle Ergebnisse als Text",
+            "display_name": "Parser",
             "documentation": "https://docs.langflow.org/parser",
             "edited": false,
             "field_order": [
@@ -4792,7 +4792,7 @@
               "Message"
             ],
             "name": "",
-            "display_name": "Prompt: Prüfbericht",
+            "display_name": "Prompt Template",
             "priority": null,
             "documentation": "https://docs.langflow.org/components-prompts",
             "minimized": false,
@@ -5284,7 +5284,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Prüfbericht",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -5513,7 +5513,7 @@
                 "trace_as_metadata": true,
                 "track_in_telemetry": false,
                 "type": "str",
-                "value": "AI"
+                "value": "Prüfbericht"
               },
               "session_id": {
                 "_input_type": "MessageTextInput",
@@ -5586,7 +5586,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Suchergebnisse",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -5815,7 +5815,7 @@
                 "trace_as_metadata": true,
                 "track_in_telemetry": false,
                 "type": "str",
-                "value": "AI"
+                "value": "Suchergebnisse"
               },
               "session_id": {
                 "_input_type": "MessageTextInput",

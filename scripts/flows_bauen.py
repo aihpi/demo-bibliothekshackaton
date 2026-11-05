@@ -183,7 +183,7 @@ def flow_hallo(lf: Langflow) -> Flow:
     prompt = f.baustein("Prompt Template", 820, 60, "anweisung", {"template": (
         "Du bist eine freundliche, kompetente Auskunftsperson in einer wissenschaftlichen Bibliothek.\n"
         "Antworte kurz, auf Deutsch und in einfacher Sprache. Wenn du etwas nicht sicher weißt, sag das ehrlich.\n\n"
-        "Frage: {frage}")}, titel="Prompt: Anweisung")
+        "Frage: {frage}")})
     modell = f.baustein(KI_MODELL, 1220, 20, "modell")
     ausgabe = f.baustein("ChatOutput", 1620, 120, "antwort")
     f.verbinden(eingabe, "message", prompt, "frage")
@@ -210,7 +210,7 @@ def flow_referenzen(lf: Langflow) -> Flow:
         "- Nicht gefundene Bücher in der **Katalogsuche** nachschlagen\n"
         "- Den Bericht als Datei speichern (**Write File**)",
         -60, -160)
-    eingabe = f.baustein("ChatInput", 440, 120, "verzeichnis", titel="Literaturverzeichnis (Chat)")
+    eingabe = f.baustein("ChatInput", 440, 120, "verzeichnis")
     pruefen = f.baustein(REFERENZEN, 840, 60, "pruefen")
     prompt = f.baustein("Prompt Template", 1260, 0, "bericht", {"template": (
         "ABGLEICH EINES LITERATURVERZEICHNISSES MIT CROSSREF:\n{pruefergebnis}\n\n---\n"
@@ -222,10 +222,10 @@ def flow_referenzen(lf: Langflow) -> Flow:
         "1. Gesamteinschätzung in zwei Sätzen.\n"
         "2. Alle Angaben mit Problemen als Liste: Nummer, Problem, konkreter Korrekturvorschlag.\n"
         "3. Welche Angaben sollte jemand von Hand im Bibliothekskatalog prüfen?\n"
-        "Verwende nur Informationen aus dem Abgleich. Erfinde keine Daten.")}, titel="Prompt: Prüfbericht")
+        "Verwende nur Informationen aus dem Abgleich. Erfinde keine Daten.")})
     modell = f.baustein(KI_MODELL, 1680, -40, "modell")
-    ausgabe = f.baustein("ChatOutput", 2080, 60, "bericht", titel="Prüfbericht")
-    tabelle = f.baustein("ChatOutput", 1260, 620, "tabelle", titel="Ergebnistabelle")
+    ausgabe = f.baustein("ChatOutput", 2080, 60, "bericht", {"sender_name": "Prüfbericht"})
+    tabelle = f.baustein("ChatOutput", 1260, 620, "tabelle", {"sender_name": "Ergebnistabelle"})
     f.verbinden(eingabe, "message", pruefen, "literaturangaben")
     f.verbinden(pruefen, "bericht", prompt, "pruefergebnis")
     f.verbinden(pruefen, "tabelle", tabelle, "input_value")
@@ -275,31 +275,27 @@ def flow_referenzen_standard(lf: Langflow) -> Flow:
         "- **Kein zweiter Versuch:** Ist Crossref überlastet, bricht der Flow ab.\n\n"
         "**Testdaten:** `daten/referenz_checker/literaturliste_zum_pruefen.txt` – vergleicht das Ergebnis mit Flow 01!",
         -160, -900, breite=520)
-    eingabe = f.baustein("ChatInput", 440, 120, "verzeichnis", titel="Literaturverzeichnis (Chat)")
+    eingabe = f.baustein("ChatInput", 440, 120, "verzeichnis")
     zerlegen = f.baustein("SplitText", 840, 60, "angaben",
-                          {"separator": "\n", "chunk_size": 1, "chunk_overlap": 0, "clean_output": True},
-                          titel="Angaben trennen")
-    schleife = f.baustein("LoopComponent", 1240, 120, "angaben", titel="Jede Angabe einzeln")
+                          {"separator": "\n", "chunk_size": 1, "chunk_overlap": 0, "clean_output": True})
+    schleife = f.baustein("LoopComponent", 1240, 120, "angaben")
     f.notiz(
         "## 🔁 Die Schleife\n"
         "Alles in diesem Bereich läuft **einmal pro Literaturangabe**. Die Linie ganz rechts führt "
         "zurück in die Loop: Dann kommt die nächste Angabe dran.",
         1660, -900, breite=2120, farbe="amber")
     jq_modus = {"input_type": "JSON", "operation": [{"name": "JQ Expression", "icon": "terminal"}]}
-    angabe = f.baustein("ParserComponent", 1680, -720, "angabe", {"pattern": "{text}"}, titel="Angabe als Text")
-    anfrage = f.baustein("Operations", 1680, -380, "anfrage", {"query": JQ_SUCHANFRAGE},
-                         titel="Suchanfrage bauen", auswahl=jq_modus)
+    angabe = f.baustein("ParserComponent", 1680, -720, "angabe", {"pattern": "{text}"})
+    anfrage = f.baustein("Operations", 1680, -380, "anfrage", {"query": JQ_SUCHANFRAGE}, auswahl=jq_modus)
     crossref = f.baustein("APIRequest", 2100, -420, "crossref", {
         "url_input": "https://api.crossref.org/works",
         "headers": [{"key": "User-Agent", "value": "Bibliothekshackathon-Demo (Langflow)"}],
-    }, titel="Crossref fragen")
-    treffer = f.baustein("Operations", 2520, -380, "treffer", {"query": JQ_TREFFER},
-                         titel="Treffer auslesen", auswahl=jq_modus)
-    treffer_text = f.baustein("ParserComponent", 2940, -380, "treffer", {"pattern": "{result}"},
-                              titel="Treffer als Text")
+    })
+    treffer = f.baustein("Operations", 2520, -380, "treffer", {"query": JQ_TREFFER}, auswahl=jq_modus)
+    treffer_text = f.baustein("ParserComponent", 2940, -380, "treffer", {"pattern": "{result}"})
     zusammen = f.baustein("Prompt Template", 3360, -620, "zusammen", {
-        "template": "ANGABE: {angabe}\nCROSSREF-TREFFER:\n{treffer}\n"}, titel="Angabe + Treffer")
-    alle = f.baustein("ParserComponent", 1680, 520, "alle", {"pattern": "{text}"}, titel="Alle Ergebnisse als Text")
+        "template": "ANGABE: {angabe}\nCROSSREF-TREFFER:\n{treffer}\n"})
+    alle = f.baustein("ParserComponent", 1680, 520, "alle", {"pattern": "{text}"})
     prompt = f.baustein("Prompt Template", 2100, 460, "bericht", {"template": (
         "ERGEBNISSE DER CROSSREF-SUCHE:\n{ergebnisse}\n\n---\n"
         "Du unterstützt eine Bibliothek beim Prüfen von Literaturverzeichnissen.\n"
@@ -316,10 +312,10 @@ def flow_referenzen_standard(lf: Langflow) -> Flow:
         "2. Gesamteinschätzung in zwei Sätzen.\n"
         "3. Alle Angaben mit Problemen: Problem und konkreter Korrekturvorschlag.\n"
         "4. Welche Angaben sollte jemand von Hand im Bibliothekskatalog prüfen?\n"
-        "Verwende nur Informationen aus der Suche. Erfinde keine Daten.")}, titel="Prompt: Prüfbericht")
+        "Verwende nur Informationen aus der Suche. Erfinde keine Daten.")})
     modell = f.baustein(KI_MODELL, 2520, 400, "modell")
-    ausgabe = f.baustein("ChatOutput", 2940, 500, "bericht", titel="Prüfbericht")
-    tabelle = f.baustein("ChatOutput", 1680, 900, "tabelle", titel="Suchergebnisse")
+    ausgabe = f.baustein("ChatOutput", 2940, 500, "bericht", {"sender_name": "Prüfbericht"})
+    tabelle = f.baustein("ChatOutput", 1680, 900, "tabelle", {"sender_name": "Suchergebnisse"})
     f.verbinden(eingabe, "message", zerlegen, "data_inputs")
     f.verbinden(zerlegen, "dataframe", schleife, "data")
     f.verbinden(schleife, "item", angabe, "input_data")
@@ -357,10 +353,10 @@ def flow_masterarbeit(lf: Langflow) -> Flow:
         "- Die Quellentabelle als Excel/CSV speichern (**Write File**)\n"
         "- Zusätzlich jede Quelle prüfen (**Literaturangaben prüfen**)",
         -60, -200)
-    datei = f.baustein("File", 460, 0, "arbeit", titel="Abschlussarbeit (PDF)")
+    datei = f.baustein("File", 460, 0, "arbeit")
     verzeichnis = f.baustein(VERZEICHNIS, 860, 40, "verzeichnis")
     anreichern = f.baustein(ANREICHERN, 1260, 20, "anreichern")
-    auftrag = f.baustein("ChatInput", 1260, 480, "auftrag", titel="Auftrag (Chat)")
+    auftrag = f.baustein("ChatInput", 1260, 480, "auftrag")
     prompt = f.baustein("Prompt Template", 1680, 80, "analyse", {"template": (
         "AUSWERTUNG DER QUELLEN:\n{quellen}\n\n---\n"
         "Du bist Fachreferent:in in einer wissenschaftlichen Bibliothek und berätst Studierende.\n"
@@ -374,9 +370,9 @@ def flow_masterarbeit(lf: Langflow) -> Flow:
         "3. Auffälligkeiten: z. B. veraltete oder fehlende aktuelle Literatur, Einseitigkeit, nicht gefundene Angaben.\n"
         "4. Empfehlungen: Welche Art von Literatur könnte ergänzt werden?\n"
         "Nenne Quellen immer mit Nummer, z. B. [3], und nur Nummern, die in der Auswertung vorkommen. "
-        "Erfinde keine Quellen.")}, titel="Prompt: Quellenanalyse")
+        "Erfinde keine Quellen.")})
     modell = f.baustein(KI_MODELL, 2100, 20, "modell")
-    ausgabe = f.baustein("ChatOutput", 2500, 120, "analyse", titel="Quellenanalyse")
+    ausgabe = f.baustein("ChatOutput", 2500, 120, "analyse", {"sender_name": "Quellenanalyse"})
     f.verbinden(datei, "message", verzeichnis, "dokument")
     f.verbinden(verzeichnis, "verzeichnis", anreichern, "literaturangaben")
     f.verbinden(anreichern, "ueberblick", prompt, "quellen")
@@ -396,10 +392,11 @@ def flow_review(lf: Langflow) -> Flow:
         "sammeln, lesen und vergleichen.\n\n"
         "**So arbeitet der Flow:**\n"
         "1. Ihr stellt im Playground eine **Forschungsfrage** (gern auf Deutsch).\n"
-        "2. Die **erste KI** macht daraus englische Suchbegriffe.\n"
+        "2. Ein **Prompt Template** und das erste **KI-Modell** machen daraus englische Suchbegriffe.\n"
         "3. **Literatursuche (OpenAlex)** findet Publikationen aller Verlage.\n"
         "4. **Volltexte holen** lädt freie PDFs (Open Access), sonst das Abstract.\n"
-        "5. Die **zweite KI** vergleicht die Texte und benennt **Forschungslücken**.\n\n"
+        "5. Das zweite **Prompt Template** und **KI-Modell** vergleichen die Texte und benennen "
+        "**Forschungslücken**.\n\n"
         "**Beispielfrage:** *Wie verändern Sprachmodelle die Auskunft in wissenschaftlichen Bibliotheken?*\n\n"
         "## 💡 Ideen zum Weiterbauen\n"
         "- Filter ändern: Jahre, nur Open Access, Sortierung nach Zitationen\n"
@@ -408,14 +405,16 @@ def flow_review(lf: Langflow) -> Flow:
         "⚠️ Kleine lokale Modelle vertragen wenig Text: dann **Höchstens Dokumente** und "
         "**Zeichen pro Dokument** verringern.",
         -60, -240)
-    frage = f.baustein("ChatInput", 460, 120, "frage", titel="Forschungsfrage (Chat)")
+    frage = f.baustein("ChatInput", 460, 120, "frage")
+    f.notiz("**Schritt 1:** Suchbegriffe finden", 860, -380, breite=720, farbe="amber")
+    f.notiz("**Schritt 2:** Literaturüberblick schreiben", 2460, -160, breite=740, farbe="amber")
     such_prompt = f.baustein("Prompt Template", 860, -160, "suchbegriffe", {"template": (
         "Formuliere aus der folgenden Forschungsfrage eine kurze englische Suchanfrage für eine "
         "Literaturdatenbank: 3 bis 6 Schlüsselbegriffe, ohne Operatoren, ohne Anführungszeichen, ohne Erklärung.\n"
         "Nimm eindeutige Fachbegriffe. Beispiel: Die Bibliothek als Einrichtung heißt 'academic libraries' oder "
         "'library services' – 'libraries' allein findet auch Software-Bibliotheken.\n"
-        "Antworte nur mit der Suchanfrage.\n\nForschungsfrage: {frage}")}, titel="Prompt: Suchbegriffe")
-    such_modell = f.baustein(KI_MODELL, 1260, -220, "suche", {"temperature": 0.0}, titel="KI-Modell (Suchbegriffe)")
+        "Antworte nur mit der Suchanfrage.\n\nForschungsfrage: {frage}")})
+    such_modell = f.baustein(KI_MODELL, 1260, -220, "suche", {"temperature": 0.0})
     suche = f.baustein(OPENALEX, 1660, -160, "suche", {"anzahl": 8})
     volltexte = f.baustein(VOLLTEXTE, 2060, -60, "volltexte", {"max_dokumente": 6, "max_zeichen": 2500})
     review_prompt = f.baustein("Prompt Template", 2460, 60, "review", {"template": (
@@ -431,9 +430,9 @@ def flow_review(lf: Langflow) -> Flow:
         "4. Forschungslücken: Was wird nicht oder kaum untersucht? Begründe mit Nummern.\n"
         "5. Vorschläge für weitere Suchbegriffe\n"
         "Stütze jede Aussage auf Nummern, z. B. [2]. Passt eine Publikation nicht zur Frage, sag das. "
-        "Erfinde nichts. Antworte auf Deutsch.")}, titel="Prompt: Literaturüberblick")
-    review_modell = f.baustein(KI_MODELL, 2880, 0, "review", titel="KI-Modell (Überblick)")
-    ausgabe = f.baustein("ChatOutput", 3280, 120, "review", titel="Literaturüberblick")
+        "Erfinde nichts. Antworte auf Deutsch.")})
+    review_modell = f.baustein(KI_MODELL, 2880, 0, "review")
+    ausgabe = f.baustein("ChatOutput", 3280, 120, "review", {"sender_name": "Literaturüberblick"})
     f.verbinden(frage, "message", such_prompt, "frage")
     f.verbinden(such_prompt, "prompt", such_modell, "input_value")
     f.verbinden(such_modell, "text_output", suche, "suchanfrage")
@@ -487,7 +486,7 @@ def flow_agent(lf: Langflow) -> Flow:
             "- Antworte auf Deutsch, knapp und übersichtlich."),
         "add_current_date_tool": False,
         "add_calculator_tool": False,
-    }, titel="Recherche-Agent")
+    })
     ausgabe = f.baustein("ChatOutput", 1240, 120, "antwort")
     for werkzeug in (suche, katalog, pruefen):
         f.verbinden(werkzeug, "component_as_tool", agent, "tools")
@@ -542,7 +541,10 @@ def flow_schulungsplanung(lf: Langflow) -> Flow:
         "abwechseln, Urlaub auslassen. **Type Convert** macht daraus eine echte Tabelle.\n"
         "4. **Parser** macht aus jeder Zeile eine Tabellenzeile im Format der Lernplattform, ohne KI.\n"
         "5. Die **KI** schreibt aus den Terminen die Werbe-Mail.\n\n"
-        "**Vor dem ersten Lauf:** Im Baustein *Prompt: Werbe-Mail* die Vorlage der Bibliothek einfügen.\n\n"
+        "Die gelben Notizen sagen, welche Datei in welchen **Read File** gehört und was in welcher Zeile "
+        "entsteht.\n\n"
+        "**Vor dem ersten Lauf:** Im **Prompt Template** der Zeile *3 Werbe-Mail* die Vorlage der Bibliothek "
+        "einfügen.\n\n"
         "⚠️ Die KI plant, der Flow prüft nicht nach. Kontrolliert Wochentage, Turnus und Urlaub im Ergebnis. "
         "Kleine lokale Modelle verrechnen sich dabei deutlich; nehmt für diesen Flow den Cluster.\n\n"
         "## 💡 Ideen zum Weiterbauen\n"
@@ -551,11 +553,17 @@ def flow_schulungsplanung(lf: Langflow) -> Flow:
         "- Die Links zu Zoom und zur Anmeldung automatisch einsetzen\n"
         "- Den Plan als Excel speichern (**Write File**)",
         -120, -360, breite=520)
-    auftrag = f.baustein("ChatInput", 480, -300, "zeitraum", titel="Zeitraum (Chat)")
-    schulungen = f.baustein("File", 480, 60, "schulungen", titel="Schulungsliste (Excel/CSV)")
-    urlaub = f.baustein("File", 480, 440, "urlaub", titel="Urlaubstage (Excel/CSV)")
-    kalender = f.baustein("File", 480, 820, "kalender", titel="Kalender (CSV)")
-    heute = f.baustein("CurrentDate", 480, 1200, "heute", titel="Heutiges Datum")
+    auftrag = f.baustein("ChatInput", 480, -300, "zeitraum")
+    schulungen = f.baustein("File", 480, 60, "schulungen")
+    urlaub = f.baustein("File", 480, 560, "urlaub")
+    kalender = f.baustein("File", 480, 1060, "kalender")
+    heute = f.baustein("CurrentDate", 480, 1560, "heute")
+    f.notiz("**Schulungsliste** (Excel oder CSV)", 480, -90, breite=320, farbe="amber")
+    f.notiz("**Urlaubstage** (Excel oder CSV)", 480, 410, breite=320, farbe="amber")
+    f.notiz("**Kalender** (CSV)", 480, 910, breite=320, farbe="amber")
+    f.notiz("**1 Planen:** Termine als Tabelle", 920, -160, breite=380, farbe="amber")
+    f.notiz("**2 Lernplattform:** HTML-Tabelle", 1800, -170, breite=760, farbe="amber")
+    f.notiz("**3 Werbe-Mail**", 1800, 440, breite=380, farbe="amber")
     planung = f.baustein("Prompt Template", 920, 0, "planung", {"template": (
         "HEUTE: {heute}\n"
         "AUFTRAG: {zeitraum}\n\n"
@@ -583,31 +591,26 @@ def flow_schulungsplanung(lf: Langflow) -> Flow:
         "Die erste Zeile ist genau diese Kopfzeile:\n"
         "datum,wochentag,uhrzeit,veranstaltung,person\n"
         "Jede weitere Zeile ist ein Termin: datum (TT.MM.JJJJ), wochentag (Mo, Di, Mi, Do, Fr oder Sa), "
-        "uhrzeit (HH:MM), veranstaltung, person.")},
-        titel="Prompt: Planung")
+        "uhrzeit (HH:MM), veranstaltung, person.")})
     # max_tokens bremst kleine Modelle, die sonst endlos weitere Termine erzeugen
-    modell = f.baustein(KI_MODELL, 1360, -520, "planung", {"temperature": 0.2, "max_tokens": 2000},
-                        titel="KI-Modell (Planung)")
+    modell = f.baustein(KI_MODELL, 1360, -520, "planung", {"temperature": 0.2, "max_tokens": 2000})
     # CSV-Text statt Structured Output: kleine lokale Modelle scheitern an dessen erzwungenem Tool-Aufruf
-    plan = f.baustein("TypeConverterComponent", 1360, 0, "plan", {"output_type": "Table", "auto_parse": True},
-                      titel="Plan als Tabelle")
-    tabelle = f.baustein("ChatOutput", 1800, -420, "plan", titel="Schulungsplan")
-    zeilen = f.baustein("ParserComponent", 1800, 0, "zeilen", {"pattern": LERNPLATTFORM_ZEILE},
-                        titel="Tabellenzeilen für die Lernplattform")
-    seite = f.baustein("Prompt Template", 2240, 0, "lernplattform", {"template": LERNPLATTFORM_SEITE}, titel="HTML für die Lernplattform")
-    html = f.baustein("ChatOutput", 2680, 60, "html", titel="Quellcode Lernplattform")
-    termine = f.baustein("ParserComponent", 1800, 480, "termine",
-                         {"pattern": "- {wochentag}, {datum}, {uhrzeit} Uhr: {veranstaltung}"}, titel="Terminliste")
-    mail_prompt = f.baustein("Prompt Template", 2240, 440, "mail", {"template": (
+    plan = f.baustein("TypeConverterComponent", 1360, 0, "plan", {"output_type": "Table", "auto_parse": True})
+    tabelle = f.baustein("ChatOutput", 1800, -420, "plan", {"sender_name": "Schulungsplan"})
+    zeilen = f.baustein("ParserComponent", 1800, 0, "zeilen", {"pattern": LERNPLATTFORM_ZEILE})
+    seite = f.baustein("Prompt Template", 2240, 0, "lernplattform", {"template": LERNPLATTFORM_SEITE})
+    html = f.baustein("ChatOutput", 2680, 60, "html", {"sender_name": "Quellcode Lernplattform"})
+    termine = f.baustein("ParserComponent", 1800, 600, "termine",
+                         {"pattern": "- {wochentag}, {datum}, {uhrzeit} Uhr: {veranstaltung}"})
+    mail_prompt = f.baustein("Prompt Template", 2240, 560, "mail", {"template": (
         "TERMINE:\n{termine}\n\n---\n"
         "Schreibe mit den Terminen oben eine Mail an eine Abteilung der Hochschule, die für die Schulungen der "
         "Bibliothek wirbt. Halte dich genau an die Vorlage unten und setze nur die Termine ein. Verwende nur die "
         "Termine oben und erfinde nichts dazu.\n\n"
         "VORLAGE DER WERBE-MAIL:\n"
-        "(Hier die Vorlage der Bibliothek einfügen. Ohne Vorlage schreibt die KI einen eigenen Entwurf.)")},
-        titel="Prompt: Werbe-Mail")
-    mail_modell = f.baustein(KI_MODELL, 2680, 400, "mail", titel="KI-Modell (Mail)")
-    mail = f.baustein("ChatOutput", 3120, 480, "mail", titel="Werbe-Mail")
+        "(Hier die Vorlage der Bibliothek einfügen. Ohne Vorlage schreibt die KI einen eigenen Entwurf.)")})
+    mail_modell = f.baustein(KI_MODELL, 2680, 520, "mail")
+    mail = f.baustein("ChatOutput", 3120, 600, "mail", {"sender_name": "Werbe-Mail"})
     f.verbinden(auftrag, "message", planung, "zeitraum")
     f.verbinden(schulungen, "message", planung, "schulungen")
     f.verbinden(urlaub, "message", planung, "urlaub")

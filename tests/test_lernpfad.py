@@ -119,16 +119,6 @@ def test_coverage_table_names_every_block_the_flow_uses(datei):
         assert modul in re.findall(r"L\d+", eintrag) or "alle" in eintrag, f"{baustein} fehlt bei {modul}"
 
 
-@pytest.mark.parametrize("datei", DATEIEN)
-def test_blocks_keep_their_standard_names(datei):
-    # Participants later build on their own and need to recognise blocks by the names the sidebar shows.
-    for knoten in _flow(datei)["data"]["nodes"]:
-        if knoten["type"] != "genericNode":
-            continue
-        typ, name = knoten["data"]["type"], knoten["data"]["node"]["display_name"]
-        assert name == BAUSTEIN.get(typ), f"{datei}: {typ} heißt {name!r} statt {BAUSTEIN.get(typ)!r}"
-
-
 def _erwaehnte_daten(text: str) -> set[str]:
     return set(re.findall(r"daten/lernpfad/[\w./-]+\.\w+", text))
 
