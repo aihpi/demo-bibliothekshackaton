@@ -70,7 +70,6 @@ def bauen(lf) -> Flow:
         -380,
         "werkzeug",
         {"hl": "de", "gl": "DE", "ceid": "DE:de"},
-        titel="Websuche (Web Search)",
         werkzeug=True,
     )
     seite = f.baustein(
@@ -79,20 +78,16 @@ def bauen(lf) -> Flow:
         80,
         "werkzeug",
         {"headers": [{"key": "User-Agent", "value": USER_AGENT}]},
-        titel="Webseite holen (URL)",
         werkzeug=True,
     )
-    rechner = f.baustein("CalculatorComponent", 0, 520, "werkzeug", titel="Taschenrechner (Calculator)", werkzeug=True)
-    datum = f.baustein(
-        "CurrentDate", 0, 820, "werkzeug", {"timezone": "Europe/Berlin"}, titel="Datum (Current Date)", werkzeug=True
-    )
+    rechner = f.baustein("CalculatorComponent", 0, 520, "werkzeug", werkzeug=True)
+    datum = f.baustein("CurrentDate", 0, 820, "werkzeug", {"timezone": "Europe/Berlin"}, werkzeug=True)
     referenzen = f.baustein(
         "RunFlow",
         0,
         1120,
         "referenzen",
         {"flow_name_selected": ZIEL_FLOW},
-        titel="Referenz-Checker (Run Flow)",
         werkzeug=True,
     )
     modell = f.baustein(KI_MODELL, 460, -420, "agent")
@@ -108,9 +103,8 @@ def bauen(lf) -> Flow:
             "add_current_date_tool": False,
             "add_calculator_tool": False,
         },
-        titel="Recherche-Agent",
     )
-    ausgabe = f.baustein("ChatOutput", 1380, 120, "antwort", titel="Antwort")
+    ausgabe = f.baustein("ChatOutput", 1380, 120, "antwort")
     for werkzeug in (suche, seite, rechner, datum, referenzen):
         f.verbinden(werkzeug, "component_as_tool", agent, "tools")
     f.verbinden(modell, "model_output", agent, "model")

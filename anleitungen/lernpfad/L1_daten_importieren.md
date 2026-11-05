@@ -1,6 +1,6 @@
 # L1 Daten importieren
 
-Bevor ein Flow etwas prüfen, zusammenfassen oder sortieren kann, braucht er Daten. In Bibliotheken liegen sie an ganz verschiedenen Orten: in einer Excel-Liste der Erwerbung, auf einer Webseite, in einer Datenbank wie OpenAlex oder in den Nachrichten. Dieser Flow holt Daten auf fünf Wegen und zeigt jedes Ergebnis in einem eigenen Chat Output, damit ihr die Wege direkt vergleichen könnt.
+Bevor ein Flow etwas prüfen, zusammenfassen oder sortieren kann, braucht er Daten. In Bibliotheken liegen sie an ganz verschiedenen Orten: in einer Excel-Liste der Erwerbung, auf einer Webseite, in einer Datenbank wie OpenAlex oder in den Nachrichten. Dieser Flow holt Daten auf fünf Wegen und zeigt jedes Ergebnis in einem eigenen **Chat Output**, damit ihr die Wege direkt vergleichen könnt.
 
 | | |
 | --- | --- |
@@ -38,10 +38,10 @@ Achtet auf die **Typen** in der rechten Spalte: Message (Text), JSON (Datensatz 
 ## 2. Vorbereiten
 
 1. In der Übersicht von Langflow beim Flow **L1 Daten importieren** auf die drei Punkte klicken → *Duplicate*. Arbeitet in der Kopie.
-2. Die Kopie öffnen. Im Baustein **Datei lesen (Read File)** auf **Select files** klicken und `daten/lernpfad/neuerwerbungen.csv` aus dem Projektordner hochladen.
+2. Die Kopie öffnen. Im Baustein **Read File** (Zeile 1) auf **Select files** klicken und `daten/lernpfad/neuerwerbungen.csv` aus dem Projektordner hochladen.
 3. Oben rechts auf **Playground** klicken, irgendetwas eintippen (z. B. *los*) und abschicken. Nach einigen Sekunden erscheinen fünf Nachrichten, eine pro Zeile.
 
-Der Flow hat keinen Chat Input, darum ist es egal, was ihr eintippt: Die Nachricht startet nur den Lauf. Warum das wichtig ist, zeigt Übung 6.
+Der Flow hat keinen **Chat Input**, darum ist es egal, was ihr eintippt: Die Nachricht startet nur den Lauf. Warum das wichtig ist, zeigt Übung 6.
 
 **Einen Baustein einzeln ausführen.** Statt des Playgrounds könnt ihr jeden Baustein mit dem Knopf **▶** oben rechts am Baustein ausführen. Danach erscheint unten rechts am Ausgang ein kleines Symbol. Ein Klick darauf zeigt, was der Baustein weitergibt. So arbeitet ihr in diesem ganzen Modul: Einstellung ändern, ▶ drücken, Ausgabe ansehen.
 
@@ -49,7 +49,7 @@ Der Flow hat keinen Chat Input, darum ist es egal, was ihr eintippt: Die Nachric
 
 ### 3.1 Read File: Daten aus einer Datei
 
-*Read File* liest eine hochgeladene Datei und gibt ihren Text als **Message** weiter. Er versteht Text, CSV, Excel, PDF, Word und viele weitere Formate.
+**Read File** liest eine hochgeladene Datei und gibt ihren Text als **Message** weiter. Er versteht Text, CSV, Excel, PDF, Word und viele weitere Formate.
 
 | Einstellung | Wo | Was sie bewirkt |
 | --- | --- | --- |
@@ -61,7 +61,7 @@ Der Flow hat keinen Chat Input, darum ist es egal, was ihr eintippt: Die Nachric
 
 ### 3.2 URL: Daten von einer Webseite
 
-*URL* lädt eine oder mehrere Webseiten herunter und entfernt die HTML-Befehle, sodass der lesbare Text übrig bleibt.
+**URL** lädt eine oder mehrere Webseiten herunter und entfernt die HTML-Befehle, sodass der lesbare Text übrig bleibt.
 
 | Einstellung | Wo | Was sie bewirkt |
 | --- | --- | --- |
@@ -77,7 +77,7 @@ Der Baustein hat zwei Ausgänge: **Extracted Pages** (Table, eine Zeile pro Seit
 
 ### 3.3 API Request: Daten von einem Webdienst
 
-Ein **Webdienst** (eine *API*) ist eine Adresse, die keine Webseite für Menschen liefert, sondern Daten für Programme. Viele Bibliotheksdienste haben eine: OpenAlex, Crossref, lobid (der hbz-Verbundkatalog), die DNB. *API Request* ruft eine solche Adresse auf und gibt die Antwort als **JSON** weiter.
+Ein **Webdienst** (eine *API*) ist eine Adresse, die keine Webseite für Menschen liefert, sondern Daten für Programme. Viele Bibliotheksdienste haben eine: OpenAlex, Crossref, lobid (der hbz-Verbundkatalog), die DNB. **API Request** ruft eine solche Adresse auf und gibt die Antwort als **JSON** weiter.
 
 Die Adresse im Flow fragt OpenAlex nach Publikationen zu *academic libraries open access*:
 
@@ -100,7 +100,7 @@ Alles nach dem `?` sind **Parameter**, durch `&` getrennt: `search` (Suchbegriff
 
 ### 3.4 Web Search: Treffer aus Websuche, News oder RSS
 
-*Web Search* durchsucht das Web, ohne Konto und ohne Schlüssel, und gibt eine **Tabelle** mit Titel, Link und Textauszug zurück.
+**Web Search** durchsucht das Web, ohne Konto und ohne Schlüssel, und gibt eine **Tabelle** mit Titel, Link und Textauszug zurück.
 
 | Einstellung | Wo | Was sie bewirkt |
 | --- | --- | --- |
@@ -114,15 +114,15 @@ Ein **RSS-Feed** ist eine Liste der neuesten Beiträge einer Website, z. B. eine
 
 ### 3.5 Mock Data: Testdaten
 
-*Mock Data* erzeugt ausgedachte Daten: Kund:innen mit Namen, Alter, Stadt und Bestellungen. Er hat keine Eingänge und drei Ausgänge mit demselben Namen *Result*, je einer als **Table**, **Message** und **JSON**. Fahrt mit der Maus über die Punkte, um den Typ zu sehen.
+**Mock Data** erzeugt ausgedachte Daten: Kund:innen mit Namen, Alter, Stadt und Bestellungen. Er hat keine Eingänge und drei Ausgänge mit demselben Namen *Result*, je einer als **Table**, **Message** und **JSON**. Fahrt mit der Maus über die Punkte, um den Typ zu sehen.
 
 Wozu? Wenn ihr einen Flow baut, aber die echten Daten noch nicht habt oder sie nicht in einen Test geben wollt. Für Bibliotheksdaten passt er inhaltlich nicht, für das Ausprobieren von Tabellen-Bausteinen schon.
 
 ### 3.6 Chat Input: Text aus dem Playground
 
-Fast jeder andere Flow beginnt mit *Chat Input*: Er nimmt, was ihr im Playground eintippt, und gibt es als Message weiter. Ihr könnt dort auch Text einfügen, z. B. ein Literaturverzeichnis. Das ist der schnellste Weg, Daten in einen Flow zu bringen, aber nur für Text, den ihr kopieren könnt.
+Fast jeder andere Flow beginnt mit **Chat Input**: Er nimmt, was ihr im Playground eintippt, und gibt es als Message weiter. Ihr könnt dort auch Text einfügen, z. B. ein Literaturverzeichnis. Das ist der schnellste Weg, Daten in einen Flow zu bringen, aber nur für Text, den ihr kopieren könnt.
 
-In diesem Flow fehlt er mit Absicht. Hat ein Flow einen Chat Input, führt der Playground **nur die Bausteine aus, die von ihm abhängen**, und alles, was diese Bausteine brauchen. Die übrigen bleiben stehen. Das probiert ihr in Übung 6 aus.
+In diesem Flow fehlt er mit Absicht. Hat ein Flow einen **Chat Input**, führt der Playground **nur die Bausteine aus, die von ihm abhängen**, und alles, was diese Bausteine brauchen. Die übrigen bleiben stehen. Das probiert ihr in Übung 6 aus.
 
 ## 4. Übungen
 
@@ -130,7 +130,7 @@ In diesem Flow fehlt er mit Absicht. Hat ein Flow einen Chat Input, führt der P
 
 ### 🟢 1. Verschiedene Dateien lesen
 
-Ladet nacheinander diese Dateien in *Read File* hoch und drückt jeweils ▶ (vorher die alte Datei mit dem Papierkorb entfernen):
+Ladet nacheinander diese Dateien in **Read File** hoch und drückt jeweils ▶ (vorher die alte Datei mit dem Papierkorb entfernen):
 
 - `daten/lernpfad/benutzungsordnung.txt`
 - `daten/masterarbeit_quellenanalyse/beispiel_masterarbeit.pdf`
@@ -141,13 +141,13 @@ Was kommt jeweils heraus? Was steht bei zwei Dateien zwischen den Texten?
 <details>
 <summary>Lösung</summary>
 
-Die Textdatei kommt unverändert heraus. Aus dem PDF holt *Read File* den Text Seite für Seite; Kopfzeilen und Seitenzahlen stehen mitten im Text, die Gestaltung ist weg. Bei zwei Dateien kommt ein Text heraus, beide hintereinander, getrennt durch eine Leerzeile: Das ist der *Separator* (*Parameters*). Tragt dort z. B. `=====` ein und drückt noch einmal ▶: Jetzt ist die Grenze zwischen den Dateien gut zu sehen.
+Die Textdatei kommt unverändert heraus. Aus dem PDF holt **Read File** den Text Seite für Seite; Kopfzeilen und Seitenzahlen stehen mitten im Text, die Gestaltung ist weg. Bei zwei Dateien kommt ein Text heraus, beide hintereinander, getrennt durch eine Leerzeile: Das ist der *Separator* (*Parameters*). Tragt dort z. B. `=====` ein und drückt noch einmal ▶: Jetzt ist die Grenze zwischen den Dateien gut zu sehen.
 
 </details>
 
 ### 🟢 2. Tiefe und Format einer Webseite
 
-Im Baustein *Webseite holen (URL)*:
+Im Baustein **URL**:
 
 1. Unter *Parameters* das **Output Format** von *Text* auf *Markdown* und dann auf *HTML* stellen und jeweils ▶ drücken. Vergleicht die Länge des Ergebnisses.
 2. Zurück auf *Text*. Die Adresse durch `https://lobid.org/` ersetzen, **Depth** auf *2* stellen, ▶ drücken und den Ausgang **Extracted Pages** ansehen. Wie viele Zeilen hat die Tabelle? Wie lange hat es gedauert? Dann Depth und Adresse zurückstellen.
@@ -164,7 +164,7 @@ Im Baustein *Webseite holen (URL)*:
 
 ### 🟢 3. Einen Webdienst anders fragen
 
-Ändert im Baustein *Webdienst fragen (API Request)* die **URL** und drückt jeweils ▶:
+Ändert im Baustein **API Request** die **URL** und drückt jeweils ▶:
 
 1. Andere Suchbegriffe: `search=citizen%20science%20libraries`
 2. Mehr Treffer: `per-page=10`
@@ -180,7 +180,7 @@ Im Baustein *Webseite holen (URL)*:
 
 ### 🟢 4. Websuche, News und RSS
 
-Im Baustein *Im Web suchen (Web Search)*:
+Im Baustein **Web Search**:
 
 1. **Search Mode** auf *Web* stellen, ▶ drücken. Dann zurück auf *News*.
 2. **Search Mode** auf *RSS* stellen und als Adresse `https://bibliotheksportal.de/feed/` eintragen.
@@ -197,7 +197,7 @@ Worin unterscheiden sich die Treffer?
 
 ### 🟢 5. Ein Ausgang, drei Typen
 
-Zieht im Baustein *Testdaten erzeugen (Mock Data)* die Verbindung vom ersten Ausgang *Result* (Table) auf den zweiten (Message) und dann auf den dritten (JSON). Fahrt vorher mit der Maus über die Punkte, um den Typ zu sehen. Was zeigt der Playground jeweils?
+Zieht im Baustein **Mock Data** die Verbindung vom ersten Ausgang *Result* (Table) auf den zweiten (Message) und dann auf den dritten (JSON). Fahrt vorher mit der Maus über die Punkte, um den Typ zu sehen. Was zeigt der Playground jeweils?
 
 <details>
 <summary>Lösung</summary>
@@ -209,7 +209,7 @@ Zieht im Baustein *Testdaten erzeugen (Mock Data)* die Verbindung vom ersten Aus
 ### 🟡 6. Ein Chat Input kommt dazu
 
 1. Zieht einen **Chat Input** auf die Arbeitsfläche (Kategorie *Input & Output*).
-2. Verbindet seinen Ausgang *Chat Message* mit dem Eingang **Search Query** von *Web Search*. Im Feld steht jetzt *Receiving input*.
+2. Verbindet seinen Ausgang *Chat Message* mit dem Eingang **Search Query** von **Web Search**. Im Feld steht jetzt *Receiving input*.
 3. Öffnet den Playground und schickt `Fernleihe` ab.
 
 Wie viele Nachrichten erscheinen jetzt? Wie bekommt ihr die übrigen Ergebnisse?
@@ -217,21 +217,21 @@ Wie viele Nachrichten erscheinen jetzt? Wie bekommt ihr die übrigen Ergebnisse?
 <details>
 <summary>Lösung</summary>
 
-Nur noch eine: die der Websuche. Mit einem Chat Input führt der Playground nur die Bausteine aus, die von ihm abhängen. Die anderen Zeilen hängen nicht davon ab und bleiben stehen. Ihr startet sie mit ▶ an ihrem Chat Output.
+Nur noch eine: die der Websuche. Mit einem **Chat Input** führt der Playground nur die Bausteine aus, die von ihm abhängen. Die anderen Zeilen hängen nicht davon ab und bleiben stehen. Ihr startet sie mit ▶ an ihrem **Chat Output**.
 
-Merkt euch das für eigene Flows: Soll eine Datei *zusammen mit* einer Chat-Frage verarbeitet werden, müssen beide in denselben Baustein münden, z. B. in ein *Prompt Template* mit zwei Platzhaltern. So macht es Flow 02 mit der Masterarbeit und dem Auftrag.
+Merkt euch das für eigene Flows: Soll eine Datei *zusammen mit* einer Chat-Frage verarbeitet werden, müssen beide in denselben Baustein münden, z. B. in ein **Prompt Template** mit zwei Platzhaltern. So macht es Flow 02 mit der Masterarbeit und dem Auftrag.
 
 </details>
 
 ### 🟡 7. Ein zweiter Webdienst: Crossref
 
-Setzt einen zweiten *API Request* auf die Arbeitsfläche und fragt Crossref nach einer bestimmten Publikation, über ihre DOI:
+Setzt einen zweiten **API Request** auf die Arbeitsfläche und fragt Crossref nach einer bestimmten Publikation, über ihre DOI:
 
 ```text
 https://api.crossref.org/works/10.1136/bmj.n71
 ```
 
-Verbindet den Ausgang mit einem neuen *Chat Output*. Probiert dann den **Mode** *cURL* aus und fügt diesen Befehl ein:
+Verbindet den Ausgang mit einem neuen **Chat Output**. Probiert dann den **Mode** *cURL* aus und fügt diesen Befehl ein:
 
 ```text
 curl "https://api.crossref.org/works?query.bibliographic=PRISMA+2020+statement&rows=2"
@@ -252,16 +252,16 @@ Baut einen kleinen Flow, der im hbz-Verbundkatalog sucht. Der Webdienst lobid ni
 https://lobid.org/resources/search?q=SUCHBEGRIFFE&size=3&format=json
 ```
 
-Die Suchbegriffe sollen aus dem Playground kommen. Tipp: Ein *Prompt Template* setzt Text in Platzhalter ein, auch ganz ohne KI.
+Die Suchbegriffe sollen aus dem Playground kommen. Tipp: Ein **Prompt Template** setzt Text in Platzhalter ein, auch ganz ohne KI.
 
 <details>
 <summary>Lösung</summary>
 
 **Chat Input** → **Prompt Template** mit dem Template `https://lobid.org/resources/search?q={suchbegriff}&size=3&format=json` → Ausgang *Prompt* an den Eingang **URL** von **API Request** → **Chat Output**.
 
-Im Playground die Begriffe mit `+` statt Leerzeichen eintippen, z. B. `Umberto+Eco+Abschlussarbeit`. Mit Leerzeichen meldet *API Request* *Invalid URL provided*, weil Webadressen keine Leerzeichen enthalten dürfen. Wie ihr Leerzeichen automatisch ersetzt, zeigt [L2](L2_texte_aufbereiten.md) (*Text Replace*); wie ihr Parameter ohne Basteln an der Adresse übergebt, [L3](L3_tabellen_und_json.md) (*Query Parameters*).
+Im Playground die Begriffe mit `+` statt Leerzeichen eintippen, z. B. `Umberto+Eco+Abschlussarbeit`. Mit Leerzeichen meldet **API Request** *Invalid URL provided*, weil Webadressen keine Leerzeichen enthalten dürfen. Wie ihr Leerzeichen automatisch ersetzt, zeigt [L2](L2_texte_aufbereiten.md) (*Text Replace*); wie ihr Parameter ohne Basteln an der Adresse übergebt, [L3](L3_tabellen_und_json.md) (*Query Parameters*).
 
-Der Bibliotheks-Baustein *Katalogsuche* macht dasselbe und bereitet die Antwort zusätzlich als Tabelle auf.
+Der Bibliotheks-Baustein **Katalogsuche** macht dasselbe und bereitet die Antwort zusätzlich als Tabelle auf.
 
 </details>
 
@@ -282,12 +282,12 @@ Der Bibliotheks-Baustein *Katalogsuche* macht dasselbe und bereitet die Antwort 
 
 | Meldung oder Problem | Ursache und Lösung |
 | --- | --- |
-| *No files to process* | In *Read File* ist keine Datei hochgeladen. Mit *Select files* eine Datei wählen. Ohne Datei bricht der ganze Lauf im Playground ab. |
+| *No files to process* | In **Read File** ist keine Datei hochgeladen. Mit *Select files* eine Datei wählen. Ohne Datei bricht der ganze Lauf im Playground ab. |
 | *Access to local file paths … is disabled* | Ihr habt einen Pfad eingetippt. Langflow liest nur hochgeladene Dateien. |
 | *Invalid URL provided* | Die Adresse enthält Leerzeichen. Sie durch `+` oder `%20` ersetzen. |
 | *SSRF Protection: … blocked IP address* | Langflow sperrt Adressen auf dem Laptop und im lokalen Netz. Nur öffentliche Adressen funktionieren. |
 | `status_code` 429 bei OpenAlex oder Crossref | Zu viele Anfragen. Kurz warten. Für OpenAlex hilft ein API-Schlüssel (siehe [Anleitung für Teilnehmende](../01_teilnehmende.md#23-zugangsdaten-eintragen)). |
 | Die Websuche liefert eine leere Tabelle | Die Suchmaschine hat die Anfrage abgelehnt, oder der RSS-Feed hat eine falsche Adresse. Später noch einmal versuchen oder den Modus wechseln. |
-| Im Playground fehlen Ergebnisse | Der Flow hat einen Chat Input (siehe Übung 6). Die übrigen Zweige mit ▶ starten. |
+| Im Playground fehlen Ergebnisse | Der Flow hat einen **Chat Input** (siehe Übung 6). Die übrigen Zweige mit ▶ starten. |
 
 **Weiter:** [L2 Texte aufbereiten](L2_texte_aufbereiten.md) zeigt, wie ihr den Text, den ihr hier geholt habt, säubert und zerlegt.

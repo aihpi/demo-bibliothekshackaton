@@ -46,8 +46,8 @@ def bauen(lf) -> Flow:
     )
 
     y = 0
-    datei = f.baustein("File", 520, y, "datei", titel="Datei lesen (Read File)")
-    aus_datei = f.baustein("ChatOutput", 960, y + 40, "datei", {"sender_name": "Datei"}, titel="Aus einer Datei")
+    datei = f.baustein("File", 520, y, "datei")
+    aus_datei = f.baustein("ChatOutput", 960, y + 40, "datei", {"sender_name": "Datei"})
     f.verbinden(datei, "message", aus_datei, "input_value")
 
     y += 460
@@ -60,16 +60,13 @@ def bauen(lf) -> Flow:
             "urls": ["https://de.wikipedia.org/wiki/Open_Access"],
             "headers": [{"key": "User-Agent", "value": USER_AGENT}],
         },
-        titel="Webseite holen (URL)",
     )
-    aus_seite = f.baustein("ChatOutput", 960, y + 40, "seite", {"sender_name": "Webseite"}, titel="Von einer Webseite")
+    aus_seite = f.baustein("ChatOutput", 960, y + 40, "seite", {"sender_name": "Webseite"})
     f.verbinden(seite, "raw_results", aus_seite, "input_value")
 
     y += 520
-    api = f.baustein(
-        "APIRequest", 520, y, "openalex", {"url_input": OPENALEX_URL}, titel="Webdienst fragen (API Request)"
-    )
-    aus_api = f.baustein("ChatOutput", 960, y + 40, "api", {"sender_name": "Webdienst"}, titel="Von einem Webdienst")
+    api = f.baustein("APIRequest", 520, y, "openalex", {"url_input": OPENALEX_URL})
+    aus_api = f.baustein("ChatOutput", 960, y + 40, "api", {"sender_name": "Webdienst"})
     f.verbinden(api, "data", aus_api, "input_value")
 
     y += 460
@@ -86,15 +83,12 @@ def bauen(lf) -> Flow:
             "ceid": "DE:de",
             "max_results": 5,
         },
-        titel="Im Web suchen (Web Search)",
     )
-    aus_suche = f.baustein("ChatOutput", 960, y + 40, "suche", {"sender_name": "Websuche"}, titel="Aus der Websuche")
+    aus_suche = f.baustein("ChatOutput", 960, y + 40, "suche", {"sender_name": "Websuche"})
     f.verbinden(suche, "results", aus_suche, "input_value")
 
     y += 460
-    beispiel = f.baustein("MockDataGenerator", 520, y, "beispiel", titel="Testdaten erzeugen (Mock Data)")
-    aus_beispiel = f.baustein(
-        "ChatOutput", 960, y + 40, "beispiel", {"sender_name": "Testdaten"}, titel="Ausgedachte Testdaten"
-    )
+    beispiel = f.baustein("MockDataGenerator", 520, y, "beispiel")
+    aus_beispiel = f.baustein("ChatOutput", 960, y + 40, "beispiel", {"sender_name": "Testdaten"})
     f.verbinden(beispiel, "dataframe_output", aus_beispiel, "input_value")
     return f

@@ -27,11 +27,11 @@ Der Flow hat drei Teile:
 
 | Teil | Bausteine | Was passiert |
 | --- | --- | --- |
-| Vorher | **DOI-Liste (Chat)**, **Eine DOI pro Zeile** (Split Text) | Die eingefügte Liste wird zu einer Tabelle mit einer Zeile pro DOI. |
-| Die Schleife (gelber Bereich) | **DOI als Text** (Parser), **Adresse bauen** (Prompt Template), **Crossref fragen** (API Request), **Felder auslesen** (Data Operations) | Läuft einmal pro DOI: Adresse bauen, Crossref fragen, die wichtigen Felder als Datensatz ausgeben. |
-| Nachher | **Ergebnistabelle** (Chat Output), **Als Liste** (Parser), **Ergebnisliste** (Chat Output) | Bekommt alle Datensätze auf einmal, als Tabelle und als Textliste. |
+| Vorher | **Chat Input**, **Split Text** | Die eingefügte Liste wird zu einer Tabelle mit einer Zeile pro DOI. |
+| Die Schleife (gelber Bereich) | **Parser**, **Prompt Template**, **API Request**, **Data Operations** | Läuft einmal pro DOI: Adresse bauen, Crossref fragen, die wichtigen Felder als Datensatz ausgeben. |
+| Nachher (gelbe Notiz *Nach der Schleife*) | oben ein **Chat Output**, darunter ein zweiter **Parser** mit einem zweiten **Chat Output** | Bekommt alle Datensätze auf einmal, als Tabelle und als Textliste. |
 
-In der Mitte steht die **Loop** (*Jede DOI einzeln*). Sie hat zwei Ausgänge:
+In der Mitte steht die **Loop**. Sie hat zwei Ausgänge:
 
 - **Item** führt in die Schleife. Hier kommt in jeder Runde ein Eintrag heraus.
 - **Done** führt nach draußen. Hier kommen alle Ergebnisse heraus, wenn jeder Eintrag bearbeitet ist.
@@ -83,9 +83,9 @@ Die Loop hat keine Einstellungen. Was sie tut, bestimmt ihr durch die Verbindung
 
 ### 3.3 Parser und Prompt Template: die Adresse bauen
 
-Der Eintrag aus *Item* ist ein Datensatz mit dem Feld `text`. **DOI als Text** (Parser mit der Vorlage `{text}`) macht daraus einen einfachen Text, denn ein Prompt Template nimmt nur Text an.
+Der Eintrag aus *Item* ist ein Datensatz mit dem Feld `text`. Der **Parser** in der Schleife (mit der Vorlage `{text}`) macht daraus einen einfachen Text, denn ein Prompt Template nimmt nur Text an.
 
-**Adresse bauen** (Prompt Template) setzt die DOI in die Adresse ein, ganz ohne KI:
+Das **Prompt Template** setzt die DOI in die Adresse ein, ganz ohne KI:
 
 ```text
 https://api.crossref.org/works?filter=doi:{doi}&rows=1&select=DOI,title,issued,container-title,is-referenced-by-count,updated-by
@@ -99,13 +99,13 @@ https://api.crossref.org/works?filter=doi:{doi}&rows=1&select=DOI,title,issued,c
 
 Warum nicht einfach `https://api.crossref.org/works/{doi}`? Diese kürzere Adresse gibt es auch. Kennt Crossref die DOI aber nicht, antwortet sie mit einem kurzen Text statt mit JSON, und daran scheitert der nächste Schritt (siehe Übung 5). Die Suche mit `filter` antwortet immer mit JSON, notfalls mit einer leeren Trefferliste.
 
-### 3.4 API Request: Crossref fragen
+### 3.4 API Request: bei Crossref nachfragen
 
 Derselbe Baustein wie in [L1](L1_daten_importieren.md), nur kommt die Adresse jetzt aus dem Prompt Template: Im Feld **URL** steht *Receiving input*.
 
 | Einstellung | Wo | Was sie bewirkt |
 | --- | --- | --- |
-| **URL** | am Baustein | Kommt in jeder Runde neu aus *Adresse bauen* |
+| **URL** | am Baustein | Kommt in jeder Runde neu aus dem **Prompt Template** |
 | **Headers** | *Parameters* | Ein *User-Agent* mit Name und Webadresse. Crossref bittet darum, damit es bei Problemen Kontakt aufnehmen kann. Ergänzt ihr eure E-Mail-Adresse, z. B. `Bibliothekshackathon/1.0 (https://github.com/aihpi/demo-bibliothekshackaton; mailto:name@bibliothek.de)`, landet die Anfrage im *Polite Pool* von Crossref, der seltener gebremst wird. |
 | **Timeout** | *Parameters* | Sekunden bis zum Abbruch einer Anfrage, Standard 30 |
 
@@ -113,7 +113,7 @@ Derselbe Baustein wie in [L1](L1_daten_importieren.md), nur kommt die Adresse je
 
 ### 3.5 Data Operations: die Felder auslesen
 
-**Felder auslesen** steht auf *Input Type* **JSON** und *Operation* **JQ Expression**. JQ ist eine kleine Abfragesprache für JSON. Der Ausdruck im Feld *JQ Expression* macht aus der langen Antwort von Crossref einen Datensatz mit sechs Feldern: `doi`, `jahr`, `titel`, `zeitschrift`, `zitiert` und `status`. Ihr müsst ihn nicht im Detail verstehen; diese Teile genügen:
+**Data Operations** steht auf *Input Type* **JSON** und *Operation* **JQ Expression**. JQ ist eine kleine Abfragesprache für JSON. Der Ausdruck im Feld *JQ Expression* macht aus der langen Antwort von Crossref einen Datensatz mit sechs Feldern: `doi`, `jahr`, `titel`, `zeitschrift`, `zitiert` und `status`. Ihr müsst ihn nicht im Detail verstehen; diese Teile genügen:
 
 | Teil des Ausdrucks | Bedeutung |
 | --- | --- |
@@ -130,8 +130,8 @@ Der Ausgang dieses Bausteins ist das Ergebnis einer Runde. Darum führt von ihm 
 
 *Done* liefert eine ganz normale Tabelle. Alles, was ihr in [L3](L3_tabellen_und_json.md) und [L4](L4_ergebnisse_ausgeben.md) mit Tabellen macht, geht auch hier:
 
-- **Ergebnistabelle** (Chat Output) zeigt sie direkt an.
-- **Als Liste** (Parser) macht aus jeder Zeile eine Textzeile mit der Vorlage `- {doi}: {titel} ({jahr}), {zeitschrift}. {status}`. Die Namen in Klammern sind die Spalten aus *Felder auslesen*.
+- Der obere **Chat Output** zeigt sie direkt an.
+- Der **Parser** nach der Schleife macht aus jeder Zeile eine Textzeile mit der Vorlage `- {doi}: {titel} ({jahr}), {zeitschrift}. {status}`. Die Namen in Klammern sind die Spalten, die **Data Operations** in der Schleife anlegt. Der zweite **Chat Output** zeigt die Liste an.
 
 ## 4. Übungen
 
@@ -139,12 +139,12 @@ Der Ausgang dieses Bausteins ist das Ergebnis einer Runde. Darum führt von ihm 
 
 ### 🟢 1. Was eine Runde sieht
 
-Führt den Flow mit `dois.txt` aus. Klickt danach nacheinander auf die Ausgabe-Symbole von **DOI als Text**, **Crossref fragen** und **Felder auslesen**. Welche DOI seht ihr dort? Vergleicht mit dem Ausgang **Done** der Loop.
+Führt den Flow mit `dois.txt` aus. Klickt danach nacheinander auf die Ausgabe-Symbole von **Parser**, **API Request** und **Data Operations** in der Schleife. Welche DOI seht ihr dort? Vergleicht mit dem Ausgang **Done** der Loop.
 
 <details>
 <summary>Lösung</summary>
 
-Die Bausteine in der Schleife zeigen nur die **letzte Runde**, hier die letzte DOI der Liste (`10.1515/bfp-2021-9917`): Crossref hat keinen Treffer, *Felder auslesen* gibt einen Datensatz mit `status: nicht bei Crossref` aus. *Done* dagegen enthält alle neun Ergebnisse. Wollt ihr eine bestimmte Runde genauer ansehen, setzt die DOI ans Ende der Liste oder lasst den Flow mit nur dieser DOI laufen.
+Die Bausteine in der Schleife zeigen nur die **letzte Runde**, hier die letzte DOI der Liste (`10.1515/bfp-2021-9917`): Crossref hat keinen Treffer, **Data Operations** gibt einen Datensatz mit `status: nicht bei Crossref` aus. *Done* dagegen enthält alle neun Ergebnisse. Wollt ihr eine bestimmte Runde genauer ansehen, setzt die DOI ans Ende der Liste oder lasst den Flow mit nur dieser DOI laufen.
 
 </details>
 
@@ -170,7 +170,7 @@ Die Bausteine in der Schleife zeigen nur die **letzte Runde**, hier die letzte D
 
 ### 🟢 3. Ohne Rücklinie
 
-Klickt die gestrichelte Linie von **Felder auslesen** zur Loop an und löscht sie (`Entf` bzw. `Backspace`). Führt den Flow aus. Zieht die Linie danach wieder: vom Ausgang von *Felder auslesen* zum Ausgang **Item** der Loop.
+Klickt die gestrichelte Linie von **Data Operations** zur Loop an und löscht sie (`Entf` bzw. `Backspace`). Führt den Flow aus. Zieht die Linie danach wieder: vom Ausgang von **Data Operations** zum Ausgang **Item** der Loop.
 
 <details>
 <summary>Lösung</summary>
@@ -183,14 +183,14 @@ Ohne Rücklinie gibt es keine Schleife: Die Bausteine dazwischen laufen gar nich
 
 Crossref kennt auch den Verlag, im Feld `publisher`. Nehmt ihn in die Ergebnisse auf:
 
-1. In **Felder auslesen** im Ausdruck vor `status: (if` den Text `verlag: $w.publisher, ` einfügen.
-2. In **Als Liste** die Vorlage auf `- {doi}: {titel}, Verlag: {verlag}` ändern.
+1. In **Data Operations** in der Schleife im Ausdruck vor `status: (if` den Text `verlag: $w.publisher, ` einfügen.
+2. Im **Parser** nach der Schleife die Vorlage auf `- {doi}: {titel}, Verlag: {verlag}` ändern.
 3. Ausführen. Was steht beim Verlag?
 
 <details>
 <summary>Lösung</summary>
 
-Beim Verlag steht `nan` (*not a number*, so zeigt eine Tabelle ein leeres Feld). Die Adresse holt mit `select` nur die Felder, die dort aufgezählt sind, und `publisher` gehört nicht dazu. Ergänzt in **Adresse bauen** am Ende `,publisher`. Dann steht z. B. bei `10.1136/bmj.n71` *BMJ*. Bei den DOIs, die Crossref nicht kennt, bleibt es bei `nan`, weil ihr Datensatz kein Feld `verlag` hat.
+Beim Verlag steht `nan` (*not a number*, so zeigt eine Tabelle ein leeres Feld). Die Adresse holt mit `select` nur die Felder, die dort aufgezählt sind, und `publisher` gehört nicht dazu. Ergänzt im **Prompt Template** am Ende `,publisher`. Dann steht z. B. bei `10.1136/bmj.n71` *BMJ*. Bei den DOIs, die Crossref nicht kennt, bleibt es bei `nan`, weil ihr Datensatz kein Feld `verlag` hat.
 
 Merkt euch: Ein Feld muss an zwei Stellen stehen, in der Anfrage und in der Auswertung.
 
@@ -207,13 +207,13 @@ Oft stehen DOIs als Link in einer Liste, z. B. `https://doi.org/10.1136/bmj.n71`
    10.7717/peerj.4375
    ```
 
-2. Repariert den Flow, sodass beide Schreibweisen funktionieren. Tipp: ein Baustein zwischen *DOI-Liste (Chat)* und *Eine DOI pro Zeile*.
+2. Repariert den Flow, sodass beide Schreibweisen funktionieren. Tipp: ein Baustein zwischen **Chat Input** und **Split Text**.
 
 <details>
 <summary>Lösung</summary>
 
 1. Der Lauf bricht ab mit *JSON Query error: Object of type bytes is not JSON serializable*. Crossref versteht `doi:https://doi.org/…` nicht und antwortet mit einer Fehlermeldung als Text statt mit JSON. *API Request* reicht den Text weiter, und *Data Operations* kann ihn nicht als JSON lesen.
-2. Einen **Data Operations** einfügen: *Input Type* **Text**, *Operation* **Text Replace**, *Search Pattern* `https://doi.org/`, *Replacement Text* leer lassen. Die Verbindung vom Chat Input an seinen Eingang *Text* legen und seinen Ausgang *Message* mit dem Eingang von *Eine DOI pro Zeile* verbinden. Jetzt kommen beide DOIs durch.
+2. Einen **Data Operations** einfügen: *Input Type* **Text**, *Operation* **Text Replace**, *Search Pattern* `https://doi.org/`, *Replacement Text* leer lassen. Die Verbindung vom Chat Input an seinen Eingang *Text* legen und seinen Ausgang *Message* mit dem Eingang von **Split Text** verbinden. Jetzt kommen beide DOIs durch.
 
 </details>
 
@@ -265,9 +265,9 @@ Unpaywall verlangt eine echte E-Mail-Adresse. In der Antwort stehen unter `resul
 
 Dieselbe Bauweise wie im Flow, mit drei Änderungen:
 
-1. **Adresse bauen**: `https://api.unpaywall.org/v2/{doi}?email=EURE-E-MAIL-ADRESSE`
-2. **Felder auslesen**: `{doi: .result.doi, frei: .result.is_oa, art: (.result.oa_status // "–"), link: (.result.best_oa_location.url // "–")}`
-3. **Als Liste**: `- {doi}: frei zugänglich {frei} ({art}) {link}`
+1. **Prompt Template**: `https://api.unpaywall.org/v2/{doi}?email=EURE-E-MAIL-ADRESSE`
+2. **Data Operations** in der Schleife: `{doi: .result.doi, frei: .result.is_oa, art: (.result.oa_status // "–"), link: (.result.best_oa_location.url // "–")}`
+3. **Parser** nach der Schleife: `- {doi}: frei zugänglich {frei} ({art}) {link}`
 
 Mit `10.1136/bmj.n71`, `10.7717/peerj.4375` und `10.1016/S0140-6736(97)11096-0` kommt heraus: *True (hybrid)* mit einem Link zum PDF beim BMJ, *True (gold)* bei PeerJ, *False (closed)* beim zurückgezogenen Lancet-Artikel.
 
@@ -293,7 +293,7 @@ Faustregel: Erst prüfen, ob ein Baustein die ganze Tabelle auf einmal bearbeite
 | --- | --- |
 | Die Chat Outputs bleiben leer, keine Fehlermeldung | Die Rücklinie fehlt oder endet nicht am Ausgang *Item* der Loop (Übung 3). Oder die Liste war leer. |
 | *Invalid URL provided* | Ein Eintrag enthält Leerzeichen oder ist keine DOI (Übung 2). Die Liste säubern. |
-| *JSON Query error: Object of type bytes is not JSON serializable* | Der Webdienst hat nicht mit JSON geantwortet: Er versteht die Adresse nicht (Übung 5), kennt den Eintrag nicht (Übung 8), oder er bremst gerade, weil zu viele Anfragen kommen (Status 429, oft wenn viele Gruppen gleichzeitig fragen). Dann einige Sekunden warten und noch einmal ausführen; eine E-Mail-Adresse im *User-Agent* hilft (siehe [3.4](#34-api-request-crossref-fragen)). |
+| *JSON Query error: Object of type bytes is not JSON serializable* | Der Webdienst hat nicht mit JSON geantwortet: Er versteht die Adresse nicht (Übung 5), kennt den Eintrag nicht (Übung 8), oder er bremst gerade, weil zu viele Anfragen kommen (Status 429, oft wenn viele Gruppen gleichzeitig fragen). Dann einige Sekunden warten und noch einmal ausführen; eine E-Mail-Adresse im *User-Agent* hilft (siehe [3.4](#34-api-request-bei-crossref-nachfragen)). |
 | Es gibt gar kein Ergebnis, obwohl nur ein Eintrag falsch ist | So arbeitet die Loop: Ein Fehler in einer Runde beendet die ganze Schleife. Fehlerhafte Einträge vorher aussortieren. |
 | In der Liste steht `nan` | Das Feld fehlt im Datensatz: nicht mit `select` angefragt (Übung 4) oder für diesen Eintrag nicht vorhanden. |
 | Die Bausteine in der Schleife zeigen nur eine DOI | Richtig so: Sie zeigen die letzte Runde. Alle Ergebnisse stehen bei *Done*. |

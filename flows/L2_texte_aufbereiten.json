@@ -18,16 +18,16 @@
           "y": -260
         },
         "width": 520,
-        "height": 1134,
+        "height": 1168,
         "measured": {
           "width": 520,
-          "height": 1134
+          "height": 1168
         },
         "data": {
           "id": "note-0",
           "type": "note",
           "node": {
-            "description": "# ✂️ L2 Texte aufbereiten\n\nText aus PDFs, Webseiten oder Katalogen ist selten sauber. Hier wird er **gesäubert**, **durchsucht** und **zerlegt**. Keine KI.\n\n1. **Oben:** ein Text, wie er aus einem PDF kommt. Vier **Data Operations** nacheinander entfernen Silbentrennung, Zeilenumbrüche, Kopfzeilen und doppelte Leerzeichen. Daneben: DOIs herausziehen, Wörter zählen.\n2. **Mitte:** **Split Text** zerlegt die Benutzungsordnung in Abschnitte. **Type Convert** macht aus der Tabelle wieder Text.\n3. **Unten:** **Data Operations** macht aus einer kopierten Liste eine Tabelle.\n\n## ▶ So startet ihr\n1. Kopie anlegen (*Duplicate*).\n2. In **Text aus dem PDF** die Datei `daten/lernpfad/text_aus_pdf.txt` hochladen, in **Benutzungsordnung** die Datei `daten/lernpfad/benutzungsordnung.txt`.\n3. **Playground** öffnen und irgendetwas abschicken.\n4. Besser noch: jeden Baustein mit **▶** einzeln ausführen und die Ausgabe ansehen.\n\nAnleitung mit Übungen: `anleitungen/lernpfad/L2_texte_aufbereiten.md`",
+            "description": "# ✂️ L2 Texte aufbereiten\n\nText aus PDFs, Webseiten oder Katalogen ist selten sauber. Hier wird er **gesäubert**, **durchsucht** und **zerlegt**. Keine KI.\n\n1. **Oben:** ein Text, wie er aus einem PDF kommt. Vier **Data Operations** (Schritt 1 bis 4) entfernen nacheinander Silbentrennung, Kopfzeilen, Zeilenumbrüche und doppelte Leerzeichen. Darunter zwei weitere: DOIs herausziehen (*Text Extract*), Wörter zählen (*Word Count*).\n2. **Mitte:** **Split Text** zerlegt die Benutzungsordnung in Abschnitte. **Type Convert** macht aus der Tabelle wieder Text.\n3. **Unten:** **Data Operations** macht aus einer kopierten Liste eine Tabelle.\n\n## ▶ So startet ihr\n1. Kopie anlegen (*Duplicate*).\n2. Im oberen **Read File** die Datei `daten/lernpfad/text_aus_pdf.txt` hochladen, im **Read File** in der Mitte die Datei `daten/lernpfad/benutzungsordnung.txt`.\n3. **Playground** öffnen und irgendetwas abschicken.\n4. Besser noch: jeden Baustein mit **▶** einzeln ausführen und die Ausgabe ansehen.\n\nAnleitung mit Übungen: `anleitungen/lernpfad/L2_texte_aufbereiten.md`",
             "display_name": "",
             "documentation": "",
             "template": {
@@ -54,7 +54,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Loads and returns the content from uploaded files.",
-            "display_name": "Text aus dem PDF (Read File)",
+            "display_name": "Read File",
             "documentation": "https://docs.langflow.org/read-file",
             "edited": false,
             "field_order": [
@@ -781,6 +781,110 @@
           },
           "showNode": true,
           "selected_output": "message"
+        }
+      },
+      {
+        "id": "note-2",
+        "type": "noteNode",
+        "position": {
+          "x": 860,
+          "y": -180
+        },
+        "width": 320,
+        "height": 148,
+        "measured": {
+          "width": 320,
+          "height": 148
+        },
+        "data": {
+          "id": "note-2",
+          "type": "note",
+          "node": {
+            "description": "**Schritt 1:** Silbentrennung entfernen",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
+        }
+      },
+      {
+        "id": "note-3",
+        "type": "noteNode",
+        "position": {
+          "x": 1300,
+          "y": -180
+        },
+        "width": 320,
+        "height": 114,
+        "measured": {
+          "width": 320,
+          "height": 114
+        },
+        "data": {
+          "id": "note-3",
+          "type": "note",
+          "node": {
+            "description": "**Schritt 2:** Kopfzeilen entfernen",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
+        }
+      },
+      {
+        "id": "note-4",
+        "type": "noteNode",
+        "position": {
+          "x": 1740,
+          "y": -180
+        },
+        "width": 320,
+        "height": 148,
+        "measured": {
+          "width": 320,
+          "height": 148
+        },
+        "data": {
+          "id": "note-4",
+          "type": "note",
+          "node": {
+            "description": "**Schritt 3:** Zeilen zusammenführen",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
+        }
+      },
+      {
+        "id": "note-5",
+        "type": "noteNode",
+        "position": {
+          "x": 2180,
+          "y": -180
+        },
+        "width": 320,
+        "height": 114,
+        "measured": {
+          "width": 320,
+          "height": 114
+        },
+        "data": {
+          "id": "note-5",
+          "type": "note",
+          "node": {
+            "description": "**Schritt 4:** Leerzeichen säubern",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
         }
       },
       {
@@ -1970,7 +2074,7 @@
             "base_classes": [
               "Message"
             ],
-            "display_name": "1 Silbentrennung entfernen",
+            "display_name": "Data Operations",
             "documentation": "https://docs.langflow.org/components-processing#operations",
             "minimized": false,
             "custom_fields": {},
@@ -3308,7 +3412,7 @@
             "base_classes": [
               "Message"
             ],
-            "display_name": "2 Kopfzeilen entfernen",
+            "display_name": "Data Operations",
             "documentation": "https://docs.langflow.org/components-processing#operations",
             "minimized": false,
             "custom_fields": {},
@@ -4646,7 +4750,7 @@
             "base_classes": [
               "Message"
             ],
-            "display_name": "3 Zeilen zusammenführen",
+            "display_name": "Data Operations",
             "documentation": "https://docs.langflow.org/components-processing#operations",
             "minimized": false,
             "custom_fields": {},
@@ -5984,7 +6088,7 @@
             "base_classes": [
               "Message"
             ],
-            "display_name": "4 Leerzeichen säubern",
+            "display_name": "Data Operations",
             "documentation": "https://docs.langflow.org/components-processing#operations",
             "minimized": false,
             "custom_fields": {},
@@ -6153,7 +6257,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Gesäuberter Text",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -7624,7 +7728,7 @@
             "base_classes": [
               "Message"
             ],
-            "display_name": "DOIs herausziehen",
+            "display_name": "Data Operations",
             "documentation": "https://docs.langflow.org/components-processing#operations",
             "minimized": false,
             "custom_fields": {},
@@ -7793,7 +7897,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Gefundene DOIs",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -9264,7 +9368,7 @@
             "base_classes": [
               "Message"
             ],
-            "display_name": "Wörter zählen",
+            "display_name": "Data Operations",
             "documentation": "https://docs.langflow.org/components-processing#operations",
             "minimized": false,
             "custom_fields": {},
@@ -9433,7 +9537,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Zählung",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -9735,7 +9839,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Loads and returns the content from uploaded files.",
-            "display_name": "Benutzungsordnung (Read File)",
+            "display_name": "Read File",
             "documentation": "https://docs.langflow.org/read-file",
             "edited": false,
             "field_order": [
@@ -10482,7 +10586,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Split text into chunks based on specified criteria.",
-            "display_name": "In Abschnitte zerlegen (Split Text)",
+            "display_name": "Split Text",
             "documentation": "https://docs.langflow.org/split-text",
             "edited": false,
             "field_order": [
@@ -10751,7 +10855,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Abschnitte als Tabelle",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -11055,7 +11159,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Convert between different types (Message, JSON, Table)",
-            "display_name": "Tabelle zu Text (Type Convert)",
+            "display_name": "Type Convert",
             "documentation": "https://docs.langflow.org/type-convert",
             "edited": false,
             "field_order": [
@@ -11249,7 +11353,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Abschnitte als Text",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -12720,7 +12824,7 @@
             "base_classes": [
               "Message"
             ],
-            "display_name": "Liste zu Tabelle",
+            "display_name": "Data Operations",
             "documentation": "https://docs.langflow.org/components-processing#operations",
             "minimized": false,
             "custom_fields": {},
@@ -12889,7 +12993,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Zeitschriften als Tabelle",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [

@@ -27,20 +27,20 @@ Der Flow hat drei Bereiche:
 | Bereich | Was passiert | Bausteine |
 | --- | --- | --- |
 | **Oben: einen Text säubern** | Ein Text, wie er aus einem PDF kopiert wurde, läuft durch vier Schritte: Silbentrennung entfernen, Kopfzeilen entfernen, Zeilen zusammenführen, Leerzeichen säubern. Zwei Abzweige ziehen die DOIs heraus und zählen die Wörter. | Read File, sechsmal Data Operations |
-| **Mitte: einen Text zerlegen** | Die Benutzungsordnung wird an den Leerzeilen in Abschnitte zerlegt. Das Ergebnis ist eine Tabelle; Type Convert macht daraus wieder Text. | Read File, Split Text, Type Convert |
+| **Mitte: einen Text zerlegen** | Die Benutzungsordnung wird an den Leerzeilen in Abschnitte zerlegt. Das Ergebnis ist eine Tabelle; **Type Convert** macht daraus wieder Text. | Read File, Split Text, Type Convert |
 | **Unten: aus Text eine Tabelle machen** | Eine Liste von Zeitschriften, wie sie aus einer E-Mail kopiert wird, Spalten durch `\|` getrennt, wird zur echten Tabelle. Der Text steht direkt im Baustein, hier braucht ihr keine Datei. | Data Operations |
 
-Die meiste Arbeit erledigt **Data Operations**. Er ist ein Werkzeugkasten: Ihr wählt, welche Art von Daten ihr habt (*Input Type*), und dann eine Operation. In diesem Modul ist der Input Type immer *Text*; die Operationen für JSON und Tabellen kommen in [L3](L3_tabellen_und_json.md). Jeder Data-Operations-Baustein im Flow trägt einen Titel, der sagt, welche Operation er ausführt.
+Die meiste Arbeit erledigt **Data Operations**. Er ist ein Werkzeugkasten: Ihr wählt, welche Art von Daten ihr habt (*Input Type*), und dann eine Operation. In diesem Modul ist der Input Type immer *Text*; die Operationen für JSON und Tabellen kommen in [L3](L3_tabellen_und_json.md). Auf der Arbeitsfläche heißen alle diese Bausteine gleich, **Data Operations**. Welche Operation einer ausführt, steht in seinem Feld **Operation**. Über den vier Säuberungsschritten oben steht zusätzlich eine Notiz, *Schritt 1* bis *Schritt 4*.
 
 ## 2. Vorbereiten
 
 1. In der Übersicht beim Flow **L2 Texte aufbereiten** auf die drei Punkte klicken → *Duplicate*. Arbeitet in der Kopie.
-2. Im Baustein **Text aus dem PDF (Read File)** die Datei `daten/lernpfad/text_aus_pdf.txt` hochladen, im Baustein **Benutzungsordnung (Read File)** die Datei `daten/lernpfad/benutzungsordnung.txt`.
+2. Im oberen **Read File** die Datei `daten/lernpfad/text_aus_pdf.txt` hochladen, im **Read File** in der Mitte die Datei `daten/lernpfad/benutzungsordnung.txt`.
 3. **Playground** öffnen, irgendetwas abschicken. Es erscheinen sechs Nachrichten.
 
 Öffnet die Datei `text_aus_pdf.txt` auch einmal in einem Texteditor. Dann seht ihr, womit der Flow es zu tun hat: getrennte Wörter wie `Biblio-` / `theken`, Zeilen, die mitten im Satz enden, die Kopfzeile *Bibliotheksforum 12 (2025) … Seite 15* mitten im Text, doppelte Leerzeichen.
 
-Am meisten lernt ihr, wenn ihr die Kette **Schritt für Schritt** ausführt: ▶ an *1 Silbentrennung entfernen*, Ausgabe ansehen, dann ▶ an *2 Kopfzeilen entfernen* und so weiter.
+Am meisten lernt ihr, wenn ihr die Kette **Schritt für Schritt** ausführt: ▶ am **Data Operations** in Schritt 1 (*Silbentrennung entfernen*), Ausgabe ansehen, dann ▶ in Schritt 2 (*Kopfzeilen entfernen*) und so weiter.
 
 ## 3. Schritt für Schritt
 
@@ -94,7 +94,7 @@ Die **Reihenfolge** zählt: Würde Schritt 3 vor Schritt 1 laufen, stünde aus *
 
 ### 3.3 Data Operations: Muster herausziehen (Text Extract)
 
-*Text Extract* gibt alles zurück, was zu einem Suchmuster passt, eine Fundstelle pro Zeile. Der Abzweig *DOIs herausziehen* findet so die drei DOIs im Text.
+*Text Extract* gibt alles zurück, was zu einem Suchmuster passt, eine Fundstelle pro Zeile. Im Flow findet so der **Data Operations** unter Schritt 1 die drei DOIs im Text; sein Ergebnis zeigt der **Chat Output** *DOIs*.
 
 | Einstellung | Wo | Was sie bewirkt |
 | --- | --- | --- |
@@ -109,7 +109,7 @@ Diese Operationen kommen im Flow nur einmal oder gar nicht vor; ihr probiert sie
 
 | Operation | Einstellungen | Was herauskommt |
 | --- | --- | --- |
-| **Word Count** | *Count Words*, *Count Characters*, *Count Lines* (*Parameters*, alle an) | Ein **JSON** mit Wörtern, verschiedenen Wörtern, Zeichen mit und ohne Leerzeichen, Zeilen und nicht leeren Zeilen. Im Flow: *Wörter zählen*. |
+| **Word Count** | *Count Words*, *Count Characters*, *Count Lines* (*Parameters*, alle an) | Ein **JSON** mit Wörtern, verschiedenen Wörtern, Zeichen mit und ohne Leerzeichen, Zeilen und nicht leeren Zeilen. Im Flow: der **Data Operations** vor dem **Chat Output** *Zählung*. |
 | **Text Head** | *Characters from Start* (Standard: 100) | Die ersten so vielen Zeichen, z. B. für eine Vorschau |
 | **Text Tail** | *Characters from End* (Standard: 100) | Die letzten so vielen Zeichen |
 | **Text Strip** | *Characters to Strip*, *Strip Mode* (*both*, *left*, *right*) | Entfernt am Anfang und Ende des Textes Leerzeichen oder, falls angegeben, die genannten **Zeichen**, jedes einzeln (siehe Übung 6) |
@@ -120,7 +120,7 @@ Fast alle Text-Operationen geben eine **Message** weiter; nur *Word Count* gibt 
 
 ### 3.5 Split Text: Text in Stücke zerlegen
 
-*Split Text* zerlegt einen Text in Stücke (*Chunks*) und gibt sie als **Tabelle** aus, ein Stück pro Zeile in der Spalte `text`. Wozu? Um eine Liste Eintrag für Eintrag zu bearbeiten ([L8](L8_wiederholen_mit_loop.md)), um jeden Abschnitt einzeln von einem Sprachmodell bearbeiten zu lassen ([L6](L6_strukturierte_antworten.md)) oder weil ein langer Text für ein Modell zu lang ist.
+**Split Text** zerlegt einen Text in Stücke (*Chunks*) und gibt sie als **Tabelle** aus, ein Stück pro Zeile in der Spalte `text`. Wozu? Um eine Liste Eintrag für Eintrag zu bearbeiten ([L8](L8_wiederholen_mit_loop.md)), um jeden Abschnitt einzeln von einem Sprachmodell bearbeiten zu lassen ([L6](L6_strukturierte_antworten.md)) oder weil ein langer Text für ein Modell zu lang ist.
 
 | Einstellung | Wo | Was sie bewirkt |
 | --- | --- | --- |
@@ -138,7 +138,7 @@ Im Flow: *Separator* `\n\n`, *Chunk Size* `1`, *Chunk Overlap* `0`, *Clean Outpu
 
 ### 3.6 Type Convert: Tabelle, Text oder JSON
 
-*Type Convert* wandelt zwischen **Message**, **JSON** und **Table** um, wenn zwei Bausteine nicht zusammenpassen. Im Flow macht er aus der Tabelle der Abschnitte wieder Text.
+**Type Convert** wandelt zwischen **Message**, **JSON** und **Table** um, wenn zwei Bausteine nicht zusammenpassen. Im Flow macht er aus der Tabelle der Abschnitte wieder Text.
 
 | Einstellung | Wo | Was sie bewirkt |
 | --- | --- | --- |
@@ -149,14 +149,14 @@ Aus einer Tabelle wird mit *Message* eine Text-Tabelle mit senkrechten Strichen 
 
 ### 3.7 Data Operations: aus Text eine Tabelle (Text to DataFrame)
 
-*Text to DataFrame* macht aus Text mit einem Trennzeichen zwischen den Spalten eine Tabelle. Im Flow steht eine kleine Zeitschriftenliste direkt im Feld **Text** des Bausteins *Liste zu Tabelle*.
+*Text to DataFrame* macht aus Text mit einem Trennzeichen zwischen den Spalten eine Tabelle. Im Flow steht eine kleine Zeitschriftenliste direkt im Feld **Text** des **Data Operations** unten.
 
 | Einstellung | Wo | Was sie bewirkt |
 | --- | --- | --- |
 | **Table Separator** | am Baustein | Das Zeichen zwischen den Spalten. Standard: `\|`. |
 | **Has Header** | *Parameters* | Die erste Zeile enthält die Spaltennamen. Standard: an. |
 
-Er trennt stur an jedem Trennzeichen. Für echte CSV-Dateien, in denen ein Komma auch in Anführungszeichen stehen kann, ist *Type Convert* mit *Auto Parse* der richtige Weg (Übung 8).
+Er trennt stur an jedem Trennzeichen. Für echte CSV-Dateien, in denen ein Komma auch in Anführungszeichen stehen kann, ist **Type Convert** mit *Auto Parse* der richtige Weg (Übung 8).
 
 ## 4. Übungen
 
@@ -164,7 +164,7 @@ Er trennt stur an jedem Trennzeichen. Für echte CSV-Dateien, in denen ein Komma
 
 ### 🟢 1. Die Kette Schritt für Schritt
 
-Drückt nacheinander ▶ an *1 Silbentrennung entfernen*, *2 Kopfzeilen entfernen*, *3 Zeilen zusammenführen* und *4 Leerzeichen säubern* und seht euch jedes Mal die Ausgabe an. Was hat sich in jedem Schritt verändert? Was ist am Ende noch nicht in Ordnung?
+Drückt nacheinander ▶ an den vier **Data Operations** der Kette, Schritt 1 (*Silbentrennung entfernen*) bis Schritt 4 (*Leerzeichen säubern*), und seht euch jedes Mal die Ausgabe an. Was hat sich in jedem Schritt verändert? Was ist am Ende noch nicht in Ordnung?
 
 <details>
 <summary>Lösung</summary>
@@ -180,18 +180,18 @@ Nicht in Ordnung: Titel und Autor:innen stehen in derselben Zeile. Für die Rege
 
 ### 🟢 2. Die Reihenfolge zählt
 
-Verbindet *Text aus dem PDF* direkt mit *3 Zeilen zusammenführen* (die Linie in dessen Eingang *Text* wird dabei ersetzt) und drückt ▶. Sucht im Ergebnis nach *Biblio*.
+Verbindet den oberen **Read File** direkt mit dem **Data Operations** in Schritt 3 (*Zeilen zusammenführen*; die Linie in dessen Eingang *Text* wird dabei ersetzt) und drückt ▶. Sucht im Ergebnis nach *Biblio*.
 
 <details>
 <summary>Lösung</summary>
 
-Dort steht jetzt *Biblio- theken*: Der Zeilenumbruch nach dem Bindestrich ist schon zum Leerzeichen geworden, und eine Silbentrennung erkennt man nicht mehr am Muster `-\n`. Wer Text mit Regeln säubert, muss sich die Reihenfolge überlegen: zuerst das, was Zeilenumbrüche als Merkmal braucht, dann die Zeilenumbrüche selbst. Verbindet die Kette danach wieder wie vorher (*Text aus dem PDF* → *1 Silbentrennung entfernen* … *2 Kopfzeilen entfernen* → *3 Zeilen zusammenführen*).
+Dort steht jetzt *Biblio- theken*: Der Zeilenumbruch nach dem Bindestrich ist schon zum Leerzeichen geworden, und eine Silbentrennung erkennt man nicht mehr am Muster `-\n`. Wer Text mit Regeln säubert, muss sich die Reihenfolge überlegen: zuerst das, was Zeilenumbrüche als Merkmal braucht, dann die Zeilenumbrüche selbst. Verbindet die Kette danach wieder wie vorher (oberer **Read File** → Schritt 1 … Schritt 2 → Schritt 3).
 
 </details>
 
 ### 🟢 3. Wie gründlich darf es sein?
 
-Schaltet im Baustein *4 Leerzeichen säubern* nacheinander **Remove Empty Lines** und **Remove Special Characters** an und drückt jeweils ▶. Was geht verloren?
+Schaltet im **Data Operations** in Schritt 4 (*Leerzeichen säubern*) nacheinander **Remove Empty Lines** und **Remove Special Characters** an und drückt jeweils ▶. Was geht verloren?
 
 <details>
 <summary>Lösung</summary>
@@ -202,7 +202,7 @@ Schaltet im Baustein *4 Leerzeichen säubern* nacheinander **Remove Empty Lines*
 
 ### 🟢 4. Bessere und schlechtere Suchmuster
 
-Im Baustein *DOIs herausziehen*:
+Im **Data Operations** mit der Operation *Text Extract*:
 
 1. Ersetzt das **Extract Pattern** durch das einfachere `10\.\d{4,9}/\S+` (`\S` heißt: alles außer Leerzeichen) und drückt ▶.
 2. Zieht stattdessen E-Mail-Adressen heraus: `[\w.-]+@[\w.-]+\.\w+`. Setzt dann **Max Matches** auf `1`.
@@ -217,7 +217,7 @@ Im Baustein *DOIs herausziehen*:
 
 ### 🟢 5. Zerlegen auf fünf Arten
 
-Ändert im Baustein *In Abschnitte zerlegen (Split Text)* die Einstellungen und drückt jeweils ▶. Zählt die Zeilen im Ausgang *Chunks*. Stellt danach immer wieder auf `\n\n`, `1`, `0` zurück.
+Ändert im Baustein **Split Text** die Einstellungen und drückt jeweils ▶. Zählt die Zeilen im Ausgang *Chunks*. Stellt danach immer wieder auf `\n\n`, `1`, `0` zurück.
 
 1. **Separator** `\n`
 2. **Separator** `§`. Dann zusätzlich unter *Parameters* **Keep Separator** auf *Start*.
@@ -230,7 +230,7 @@ Im Baustein *DOIs herausziehen*:
 
 1. 17 Zeilen: Jede Überschrift (*§ 1 Geltungsbereich*) ist jetzt von ihrem Text getrennt.
 2. 9 Zeilen wie mit `\n\n`, aber das `§` fehlt: Die Zeilen beginnen mit *1 Geltungsbereich*. Mit *Keep Separator* *Start* steht es wieder vorn.
-3. Dieselben 9 Zeilen, aber mit gut einem Dutzend zusätzlicher Spalten: Dateiname, Pfad, Größe, Zeitstempel und anderes, das *Read File* mitgegeben hat. Für die Weiterarbeit stört das meist; darum ist *Clean Output* im Flow an.
+3. Dieselben 9 Zeilen, aber mit gut einem Dutzend zusätzlicher Spalten: Dateiname, Pfad, Größe, Zeitstempel und anderes, das **Read File** mitgegeben hat. Für die Weiterarbeit stört das meist; darum ist *Clean Output* im Flow an.
 4. 7 Stücke von knapp 300 Zeichen. Sie enden mitten im Satz, z. B. *… alle Mitglieder der Hochschule sowie*, und das nächste beginnt mit *externe Personen ab 16 Jahren*.
 5. 8 Stücke. Das zweite beginnt jetzt mit *2 Zulassung …*, also mit dem Ende des ersten. So geht an den Schnittstellen kein Zusammenhang verloren; der Preis ist, dass Text doppelt vorkommt.
 
@@ -238,7 +238,7 @@ Im Baustein *DOIs herausziehen*:
 
 ### 🟢 6. Kürzen, zählen, Groß und klein
 
-Wechselt im Baustein *Wörter zählen* die **Operation** und drückt jeweils ▶. Mit der Operation ändert sich der Ausgang (von JSON zu Message), und die Linie zum Chat Output *Zählung* verschwindet. Für ▶ braucht ihr sie nicht; seht euch das Ergebnis mit dem Ausgabe-Symbol am Baustein an.
+Wechselt im **Data Operations** mit *Word Count* die **Operation** und drückt jeweils ▶. Mit der Operation ändert sich der Ausgang (von JSON zu Message), und die Linie zum **Chat Output** *Zählung* verschwindet. Für ▶ braucht ihr sie nicht; seht euch das Ergebnis mit dem Ausgabe-Symbol am Baustein an.
 
 1. *Text Head* mit *Characters from Start* `120`, dann *Text Tail*
 2. *Case Conversion* mit *Case Type* *uppercase*
@@ -251,7 +251,7 @@ Wechselt im Baustein *Wörter zählen* die **Operation** und drückt jeweils ▶
 2. Der ganze Text in Großbuchstaben, sogar die DOIs.
 3. Überraschung: Aus *Bibliotheksforum* wird *bliotheksforum*. *Text Strip* entfernt nicht das Wort *Bie*, sondern die Buchstaben *B*, *i* und *e*, jeden einzeln, so lange einer davon am Rand steht. Das kleine *b* steht nicht in der Liste, dort hört es auf. Ohne *Characters to Strip* entfernt *Text Strip* Leerzeichen und Leerzeilen am Anfang und Ende; dafür ist es gedacht.
 
-Stellt die Operation danach wieder auf *Word Count* und verbindet den Ausgang *JSON* wieder mit *Zählung*.
+Stellt die Operation danach wieder auf *Word Count* und verbindet den Ausgang *JSON* wieder mit dem **Chat Output** *Zählung*.
 
 </details>
 
@@ -262,7 +262,7 @@ In [L1, Übung 8](L1_daten_importieren.md#4-übungen) musstet ihr die Suchbegrif
 <details>
 <summary>Lösung</summary>
 
-Zwischen **Chat Input** und **Prompt Template** einen **Data Operations** mit *Input Type* *Text* und der Operation **Text Replace** setzen: *Search Pattern* ` ` (ein Leerzeichen), *Replacement Text* `+`, *Use Regex* aus. Seinen Ausgang mit dem Platzhalter `{suchbegriff}` des Prompt Templates verbinden.
+Zwischen **Chat Input** und **Prompt Template** einen **Data Operations** mit *Input Type* *Text* und der Operation **Text Replace** setzen: *Search Pattern* ` ` (ein Leerzeichen), *Replacement Text* `+`, *Use Regex* aus. Seinen Ausgang mit dem Platzhalter `{suchbegriff}` im **Prompt Template** verbinden.
 
 ```text
 Chat Input → Data Operations (Text Replace " " → "+") → Prompt Template (URL) → API Request → Chat Output
@@ -270,13 +270,13 @@ Chat Input → Data Operations (Text Replace " " → "+") → Prompt Template (U
 
 Aus *Umberto Eco Abschlussarbeit* wird *Umberto+Eco+Abschlussarbeit*, und lobid findet *Wie man eine wissenschaftliche Abschlußarbeit schreibt*. Umlaute wie in *Müller* dürft ihr übrigens stehen lassen, die nimmt die Adresse an.
 
-Den Flow könnt ihr in eurer Kopie von L2 bauen. Weil er einen Chat Input hat, führt der Playground danach nur noch diesen Zweig aus (siehe [L1](L1_daten_importieren.md#36-chat-input-text-aus-dem-playground)); die übrigen startet ihr mit ▶.
+Den Flow könnt ihr in eurer Kopie von L2 bauen. Weil er einen **Chat Input** hat, führt der Playground danach nur noch diesen Zweig aus (siehe [L1](L1_daten_importieren.md#36-chat-input-text-aus-dem-playground)); die übrigen startet ihr mit ▶.
 
 </details>
 
 ### 🟡 8. CSV-Text in eine Tabelle: zwei Wege
 
-Ihr kennt aus L1, dass *Read File* eine CSV-Datei als Text weitergibt. Setzt einen dritten **Read File** auf die Arbeitsfläche und ladet `daten/lernpfad/neuerwerbungen.csv` hoch.
+Ihr kennt aus L1, dass **Read File** eine CSV-Datei als Text weitergibt. Setzt einen dritten **Read File** auf die Arbeitsfläche und ladet `daten/lernpfad/neuerwerbungen.csv` hoch.
 
 1. Verbindet ihn mit einem neuen **Data Operations** (*Input Type* *Text*, Operation *Text to DataFrame*, **Table Separator** `,`) und drückt ▶.
 2. Verbindet ihn stattdessen mit einem neuen **Type Convert**, **Output Type** *Table*, und drückt ▶. Schaltet dann unter *Parameters* **Auto Parse** an und drückt noch einmal ▶.
@@ -285,13 +285,13 @@ Ihr kennt aus L1, dass *Read File* eine CSV-Datei als Text weitergibt. Setzt ein
 <summary>Lösung</summary>
 
 1. Fehler: *Header mismatch: 9 column(s) in header vs 10 column(s) in data row 1.* Die Autor:innen stehen als *"Berger, Anna"* in Anführungszeichen, weil der Name selbst ein Komma enthält. *Text to DataFrame* trennt stur an jedem Komma und zählt eine Spalte zu viel.
-2. Ohne *Auto Parse* entsteht eine Tabelle mit **einer** Zeile und **einer** Spalte `text`, in der die ganze Datei steht. Mit *Auto Parse* erkennt Type Convert das CSV-Format, Anführungszeichen eingeschlossen: 15 Zeilen, 9 Spalten. Schaut euch die Spalte `jahr` an: Dort steht *2024.0* statt *2024*, weil ein Jahr fehlt und die Spalte deshalb als Kommazahl gelesen wird. Mit genau dieser Tabelle geht es in [L3](L3_tabellen_und_json.md) weiter.
+2. Ohne *Auto Parse* entsteht eine Tabelle mit **einer** Zeile und **einer** Spalte `text`, in der die ganze Datei steht. Mit *Auto Parse* erkennt **Type Convert** das CSV-Format, Anführungszeichen eingeschlossen: 15 Zeilen, 9 Spalten. Schaut euch die Spalte `jahr` an: Dort steht *2024.0* statt *2024*, weil ein Jahr fehlt und die Spalte deshalb als Kommazahl gelesen wird. Mit genau dieser Tabelle geht es in [L3](L3_tabellen_und_json.md) weiter.
 
 </details>
 
 ### 🔴 9. Aus DOIs im Text eine Linkliste machen
 
-Baut aus dem Abzweig *DOIs herausziehen* eine Tabelle mit klickbaren Links, eine pro Zeile: `https://doi.org/10.1371/journal.pone.0127502` und so weiter. Darüber soll im Playground als Text die Überschrift *Gefundene DOIs:* stehen, gefolgt von der Liste.
+Baut aus dem Abzweig mit *Text Extract* eine Tabelle mit klickbaren Links, eine pro Zeile: `https://doi.org/10.1371/journal.pone.0127502` und so weiter. Darüber soll im Playground als Text die Überschrift *Gefundene DOIs:* stehen, gefolgt von der Liste.
 
 Tipp: Im Suchmuster steht `^` für den Anfang einer Zeile, wenn ihr das Muster mit `(?m)` beginnt.
 
@@ -301,11 +301,11 @@ Tipp: Im Suchmuster steht `^` für den Anfang einer Zeile, wenn ihr das Muster m
 Für die Tabelle:
 
 ```text
-DOIs herausziehen → Data Operations (Text Replace) → Split Text → Chat Output
+Data Operations (Text Extract) → Data Operations (Text Replace) → Split Text → Chat Output
 ```
 
 - *Text Replace*: *Search Pattern* `(?m)^`, *Replacement Text* `https://doi.org/`, *Use Regex* an. Vor jede Zeile kommt die Adresse.
-- *Split Text*: *Separator* `\n`, *Chunk Size* `1`, *Chunk Overlap* `0`, *Clean Output* an. Ergibt drei Zeilen.
+- **Split Text**: *Separator* `\n`, *Chunk Size* `1`, *Chunk Overlap* `0`, *Clean Output* an. Ergibt drei Zeilen.
 
 Für die Überschrift einen weiteren **Data Operations** mit **Text Join**: in sein Feld *Text* `Gefundene DOIs:` tippen und den Ausgang von *Text Replace* mit *Second Text Input* verbinden. Er gibt beides untereinander aus. Diese Linkliste ist schon fast die Eingabe für eine Schleife, die jede DOI einzeln nachschlägt: Das kommt in [L8](L8_wiederholen_mit_loop.md).
 
@@ -321,24 +321,24 @@ Für die Überschrift einen weiteren **Data Operations** mit **Text Join**: in s
 | bestimmte Angaben herausziehen (DOIs, ISBNs, E-Mail-Adressen) | **Data Operations** → *Text Extract* | Eine Fundstelle pro Zeile |
 | einen Text kürzen | **Data Operations** → *Text Head* / *Text Tail* | Zählt Zeichen, nicht Wörter |
 | wissen, wie lang ein Text ist | **Data Operations** → *Word Count* | Gibt JSON aus |
-| zwei Texte aneinanderhängen | **Data Operations** → *Text Join* | Für mehr als zwei Texte ist ein *Prompt Template* mit Platzhaltern bequemer ([L4](L4_ergebnisse_ausgeben.md)) |
+| zwei Texte aneinanderhängen | **Data Operations** → *Text Join* | Für mehr als zwei Texte ist ein **Prompt Template** mit Platzhaltern bequemer ([L4](L4_ergebnisse_ausgeben.md)) |
 | einen Text in Absätze, Zeilen oder Paragrafen zerlegen | **Split Text**, *Chunk Size* `1`, *Chunk Overlap* `0` | *Clean Output* an |
 | einen langen Text in gleich große Stücke für ein Modell schneiden | **Split Text**, *Chunk Size* z. B. `1000`, *Chunk Overlap* z. B. `200` | Separator ` ` oder `\n`, damit nicht mitten im Wort geschnitten wird |
 | eine kopierte Liste mit `\|` oder Tabulator in eine Tabelle verwandeln | **Data Operations** → *Text to DataFrame* | Trennt an jedem Trennzeichen |
 | eine CSV-Datei in eine Tabelle verwandeln | **Type Convert**, *Table*, *Auto Parse* an | Versteht Anführungszeichen |
-| eine Tabelle wieder als Text weitergeben | **Type Convert**, *Message* | Für eine eigene Form pro Zeile ist der *Parser* besser ([L3](L3_tabellen_und_json.md)) |
+| eine Tabelle wieder als Text weitergeben | **Type Convert**, *Message* | Für eine eigene Form pro Zeile ist der **Parser** besser ([L3](L3_tabellen_und_json.md)) |
 | Text verstehen statt nach Regeln behandeln (Titel von Namen unterscheiden, zusammenfassen) | ein Sprachmodell | [L5](L5_prompts_und_modelle.md) und [L6](L6_strukturierte_antworten.md) |
 
 ## 6. Wenn etwas nicht klappt
 
 | Meldung oder Problem | Ursache und Lösung |
 | --- | --- |
-| *No files to process* | In einem der beiden *Read File* fehlt die Datei. Beide müssen eine haben, sonst bricht der ganze Lauf im Playground ab. |
-| Ein Data Operations zeigt keine Felder und keinen Ausgang | Es ist noch keine **Operation** gewählt. Erst *Input Type*, dann *Operation* wählen. |
+| *No files to process* | In einem der beiden **Read File** fehlt die Datei. Beide müssen eine haben, sonst bricht der ganze Lauf im Playground ab. |
+| Ein **Data Operations** zeigt keine Felder und keinen Ausgang | Es ist noch keine **Operation** gewählt. Erst *Input Type*, dann *Operation* wählen. |
 | *Text Replace* ändert nichts | Das Suchmuster passt nicht. Steht *Use Regex* an, haben Zeichen wie `.`, `(` und `+` eine besondere Bedeutung; schreibt `\.`, `\(` und `\+`, wenn ihr das Zeichen selbst meint. |
 | Fehler mit *regex* oder *pattern* | Das Suchmuster ist unvollständig, z. B. eine Klammer fehlt |
-| *Header mismatch: … column(s)* | *Text to DataFrame* zählt in einer Zeile mehr oder weniger Spalten als in der Kopfzeile. Bei CSV *Type Convert* mit *Auto Parse* nehmen. |
-| Die Tabelle aus *Split Text* hat viel mehr Spalten als `text` | *Clean Output* (*Parameters*) einschalten |
+| *Header mismatch: … column(s)* | *Text to DataFrame* zählt in einer Zeile mehr oder weniger Spalten als in der Kopfzeile. Bei CSV **Type Convert** mit *Auto Parse* nehmen. |
+| Die Tabelle aus **Split Text** hat viel mehr Spalten als `text` | *Clean Output* (*Parameters*) einschalten |
 | Die Tabelle im Playground hat mehr Zeilen als erwartet | Zeilenumbrüche innerhalb eines Stücks sehen dort wie neue Zeilen aus. Mit dem Ausgabe-Symbol am Baustein nachzählen. |
 
 **Weiter:** [L3 Tabellen und JSON](L3_tabellen_und_json.md) zeigt, wie ihr Tabellen filtert, sortiert und zusammenführt und die Antwort eines Webdienstes in eine Tabelle verwandelt.

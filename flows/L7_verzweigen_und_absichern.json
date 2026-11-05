@@ -54,7 +54,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Get chat inputs from the Playground.",
-            "display_name": "Anfrage (Chat)",
+            "display_name": "Chat Input",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -350,7 +350,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Routes an input message to a corresponding output based on text comparison.",
-            "display_name": "Regel: Fernleihe? (If-Else)",
+            "display_name": "If-Else",
             "documentation": "https://docs.langflow.org/if-else",
             "edited": false,
             "field_order": [
@@ -652,6 +652,32 @@
         }
       },
       {
+        "id": "note-3",
+        "type": "noteNode",
+        "position": {
+          "x": 850,
+          "y": -700
+        },
+        "width": 320,
+        "height": 114,
+        "measured": {
+          "width": 320,
+          "height": 114
+        },
+        "data": {
+          "id": "note-3",
+          "type": "note",
+          "node": {
+            "description": "**Regel**: Fernleihe?",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
+        }
+      },
+      {
         "id": "ChatOutput-regel_ja",
         "type": "genericNode",
         "position": {
@@ -669,7 +695,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Regel: Ja",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -971,7 +997,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Regel: Nein",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -2244,7 +2270,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Gestoppt von Guardrails",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -2838,7 +2864,7 @@
               "LanguageModel",
               "Message"
             ],
-            "display_name": "KI-Modell (Weiche)",
+            "display_name": "KI-Modell",
             "documentation": "",
             "minimized": false,
             "custom_fields": {},
@@ -2936,6 +2962,32 @@
           },
           "showNode": true,
           "selected_output": "model_output"
+        }
+      },
+      {
+        "id": "note-9",
+        "type": "noteNode",
+        "position": {
+          "x": 850,
+          "y": 960
+        },
+        "width": 320,
+        "height": 114,
+        "measured": {
+          "width": 320,
+          "height": 114
+        },
+        "data": {
+          "id": "note-9",
+          "type": "note",
+          "node": {
+            "description": "**Modell für die Weiche**",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
         }
       },
       {
@@ -3339,7 +3391,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Weg: Ausleihe",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -3641,7 +3693,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Weg: Technik",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -3943,7 +3995,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Weg: Sonstiges",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -4361,7 +4413,7 @@
               "Message"
             ],
             "name": "",
-            "display_name": "Prompt: Antwortentwurf",
+            "display_name": "Prompt Template",
             "priority": null,
             "documentation": "https://docs.langflow.org/components-prompts",
             "minimized": false,
@@ -4735,7 +4787,7 @@
               "LanguageModel",
               "Message"
             ],
-            "display_name": "KI-Modell (Antwortentwurf)",
+            "display_name": "KI-Modell",
             "documentation": "",
             "minimized": false,
             "custom_fields": {},
@@ -4833,6 +4885,32 @@
           },
           "showNode": true,
           "selected_output": "text_output"
+        }
+      },
+      {
+        "id": "note-16",
+        "type": "noteNode",
+        "position": {
+          "x": 2220,
+          "y": 720
+        },
+        "width": 320,
+        "height": 114,
+        "measured": {
+          "width": 320,
+          "height": 114
+        },
+        "data": {
+          "id": "note-16",
+          "type": "note",
+          "node": {
+            "description": "**Modell für den Antwortentwurf**",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
         }
       },
       {
@@ -5077,7 +5155,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Freigegebene Antwort",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -5379,7 +5457,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Abgelehnter Entwurf",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -5664,7 +5742,7 @@
         }
       },
       {
-        "id": "note-17",
+        "id": "note-20",
         "type": "noteNode",
         "position": {
           "x": 2620,
@@ -5677,7 +5755,7 @@
           "height": 318
         },
         "data": {
-          "id": "note-17",
+          "id": "note-20",
           "type": "note",
           "node": {
             "description": "## ✋ Hier hält der Flow an\n**Human Input** zeigt den Entwurf im Playground und wartet, bis ein Mensch *Freigeben* oder *Ablehnen* wählt. Erst dann geht es auf dem gewählten Weg weiter.",

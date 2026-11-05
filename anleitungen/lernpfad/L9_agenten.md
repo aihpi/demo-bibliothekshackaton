@@ -138,7 +138,7 @@ Faustregel: Wenn ihr den Weg aufschreiben könnt, baut einen Workflow. Ein Agent
 Der Agent sieht von jedem Werkzeug nur den Namen und eine kurze Beschreibung, dazu eure Anweisungen. Ob er ein Werkzeug nimmt, hängt also davon ab, wie gut Frage, Anweisungen und Beschreibung zusammenpassen. Was wir in Tests beobachtet haben:
 
 - Gleiche Frage, andere Schritte: Mal rechnet der Agent `18400/1275` und dann `14*1275`, mal gleich `18400 - 14*1275`. Das Ergebnis war gleich, der Weg nicht.
-- Fehlt ein Werkzeug, behilft er sich: Ohne Websuche las er den RSS-Feed mit *Webseite holen*.
+- Fehlt ein Werkzeug, behilft er sich: Ohne **Web Search** las er den RSS-Feed mit **URL**.
 - Er behauptet manchmal Dinge, die er nicht nachgeschlagen hat, z. B. eine Uhrzeit, zu der er den Feed „abgerufen“ habe, ohne das Datum abzufragen. Die Schritte zeigen das.
 
 ### 3.7 Welches Modell?
@@ -172,14 +172,14 @@ Lokal dauerte Frage 1 in unserem Test etwa 50 Sekunden statt 15, mit demselben W
 
 ### 🟢 2. Ein Werkzeug fehlt
 
-Löscht die Verbindung von **Websuche (Web Search)** zum Agenten (Linie anklicken, `Entf`). Stellt dann Frage 1 aus Übung 1 noch einmal. Was macht der Agent, und stimmt alles in seiner Antwort?
+Löscht die Verbindung von **Web Search** zum Agenten (Linie anklicken, `Entf`). Stellt dann Frage 1 aus Übung 1 noch einmal. Was macht der Agent, und stimmt alles in seiner Antwort?
 
 <details>
 <summary>Lösung</summary>
 
-In unseren Tests las der Agent den Feed stattdessen mit *fetch_content* (Webseite holen): Ein RSS-Feed ist auch nur eine Webadresse. Die Antwort war richtig, enthielt aber einmal eine erfundene Angabe, wann der Feed „abgerufen“ worden sei, ohne dass der Agent das Datum abgefragt hatte. Agenten finden oft einen anderen Weg, wenn ein Werkzeug fehlt. Ob alles in der Antwort belegt ist, zeigen nur die Schritte.
+In unseren Tests las der Agent den Feed stattdessen mit *fetch_content* (Baustein **URL**): Ein RSS-Feed ist auch nur eine Webadresse. Die Antwort war richtig, enthielt aber einmal eine erfundene Angabe, wann der Feed „abgerufen“ worden sei, ohne dass der Agent das Datum abgefragt hatte. Agenten finden oft einen anderen Weg, wenn ein Werkzeug fehlt. Ob alles in der Antwort belegt ist, zeigen nur die Schritte.
 
-Verbindet die Websuche danach wieder.
+Verbindet **Web Search** danach wieder.
 
 </details>
 
@@ -209,7 +209,7 @@ Die Antwort lautet *Model call limits exceeded: run limit (1/1)*. Der Agent durf
 
 ### 🟡 5. Eingebaute Werkzeuge statt Bausteine
 
-1. Löscht die Bausteine **Taschenrechner (Calculator)** und **Datum (Current Date)**.
+1. Löscht die Bausteine **Calculator** und **Current Date**.
 2. Schaltet im Agenten unter *Parameters* die eingebauten Werkzeuge **Current Date** und **Calculator** ein.
 3. Fragt: *Wie viele Tage sind es von heute bis zum 24.12.2026?*
 

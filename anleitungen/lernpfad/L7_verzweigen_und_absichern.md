@@ -21,26 +21,26 @@ Bisher liefen die Flows immer gleich ab: Jeder Baustein kam einmal dran, in ders
 
 ## 1. Der Flow im Überblick
 
-Eine Anfrage kommt über den **Chat Input** in den Flow und läuft dann zwei Wege gleichzeitig. So könnt ihr die Regel und die KI an derselben Anfrage vergleichen.
+Eine Anfrage kommt über den **Chat Input** in den Flow und läuft dann zwei Wege gleichzeitig. So könnt ihr die Regel und die KI an derselben Anfrage vergleichen. Die Bausteine tragen ihre Standardnamen; wo zwei gleiche Bausteine Verschiedenes tun, sagt eine kleine gelbe Notiz darüber, wofür sie da sind.
 
 **Oben: eine feste Regel.**
 
 | Baustein | Was er tut |
 | --- | --- |
-| **Regel: Fernleihe? (If-Else)** | Prüft, ob in der Anfrage das Wort *Fernleihe* vorkommt, und schickt sie auf den Weg *True* oder *False* |
-| **Regel: Ja** / **Regel: Nein** | Zeigen, welcher Weg genommen wurde |
+| **If-Else** (Notiz *Regel: Fernleihe?*) | Prüft, ob in der Anfrage das Wort *Fernleihe* vorkommt, und schickt sie auf den Weg *True* oder *False* |
+| zwei **Chat Output** (Absender *Regel (If-Else)*) | Zeigen, welcher Weg genommen wurde: der obere hängt an *True*, der untere an *False* |
 
 **Unten: die Auskunfts-Weiche.**
 
 | Baustein | Was er tut |
 | --- | --- |
-| **Anfrage prüfen (Guardrails)** | Hält Anfragen mit E-Mail-Adressen, Zugangsdaten oder Manipulationsversuchen an (Ausgang *Fail*), alle anderen gehen weiter (Ausgang *Pass*) |
-| **Auskunfts-Weiche (Smart Router)** | Lässt die KI entscheiden, ob die Anfrage zu *Ausleihe*, *Recherche*, *Technik* oder zu keiner davon gehört (*Else*) |
-| **KI-Modell (Weiche)** | Das Modell, mit dem die Weiche entscheidet |
-| **Weg: Ausleihe**, **Weg: Technik**, **Weg: Sonstiges** | Zeigen die Anfrage auf ihrem Weg. Bei *Technik* steht dort ein fester Text für die Weiterleitung. |
-| **Prompt: Antwortentwurf** + **KI-Modell (Antwortentwurf)** | Schreiben bei *Recherche* einen Antwortentwurf |
-| **Freigabe (Human Input)** | Hält den Flow an, zeigt euch den Entwurf und wartet, bis ihr *Freigeben* oder *Ablehnen* wählt |
-| **Freigegebene Antwort** / **Abgelehnter Entwurf** | Zeigen den Entwurf auf dem gewählten Weg |
+| **Guardrails** | Hält Anfragen mit E-Mail-Adressen, Zugangsdaten oder Manipulationsversuchen an (Ausgang *Fail*), alle anderen gehen weiter (Ausgang *Pass*) |
+| **Smart Router** | Lässt die KI entscheiden, ob die Anfrage zu *Ausleihe*, *Recherche*, *Technik* oder zu keiner davon gehört (*Else*) |
+| **KI-Modell** (Notiz *Modell für die Weiche*) | Das Modell, mit dem der Smart Router entscheidet |
+| drei **Chat Output** (Absender *Weg: Ausleihe*, *Weg: Technik*, *Weg: Sonstiges*) | Zeigen die Anfrage auf ihrem Weg. Bei *Technik* steht dort ein fester Text für die Weiterleitung. |
+| **Prompt Template** + **KI-Modell** (Notiz *Modell für den Antwortentwurf*) | Schreiben bei *Recherche* einen Antwortentwurf |
+| **Human Input** | Hält den Flow an, zeigt euch den Entwurf und wartet, bis ihr *Freigeben* oder *Ablehnen* wählt |
+| zwei **Chat Output** (Absender *Freigegeben* und *Abgelehnt*) | Zeigen den Entwurf auf dem gewählten Weg |
 
 Wichtig für das ganze Modul: **Ein Weg, der nicht genommen wird, läuft gar nicht.** Seine Bausteine werden nicht ausgeführt, und sein Chat Output zeigt im Playground nichts. Darum erscheinen pro Anfrage meist nur zwei Nachrichten: eine von der Regel und eine von der Weiche.
 
@@ -48,7 +48,7 @@ Wichtig für das ganze Modul: **Ein Weg, der nicht genommen wird, läuft gar nic
 
 1. In der Übersicht von Langflow beim Flow **L7 Verzweigen und absichern** auf die drei Punkte klicken → *Duplicate*. Arbeitet in der Kopie.
 2. Öffnet `daten/lernpfad/auskunftsanfragen.txt` im Texteditor. Die Datei enthält zehn ausgedachte Anfragen, jede mit einer Nummer in eckigen Klammern. Die Übungen nennen sie nach dieser Nummer, z. B. Anfrage [3].
-3. Oben rechts auf **Playground** klicken, Anfrage [1] (ohne die Zeile mit der Nummer) einfügen und abschicken. Es erscheinen zwei Nachrichten: *Regel trifft nicht zu …* und die Anfrage selbst unter *Weg: Ausleihe*.
+3. Oben rechts auf **Playground** klicken, Anfrage [1] (ohne die Zeile mit der Nummer) einfügen und abschicken. Es erscheinen zwei Nachrichten: *Regel trifft nicht zu …* und die Anfrage selbst unter dem Absender *Weg: Ausleihe*.
 
 Die KI-Modelle stehen auf *Standard (aus .env)*. Mit einem kleinen lokalen Modell entscheidet die Weiche unzuverlässiger; nehmt für dieses Modul am besten den Cluster (im KI-Modell die **Quelle** auf *Cluster (LiteLLM)* stellen, in beiden KI-Modell-Bausteinen).
 
@@ -79,7 +79,7 @@ Für jede neue Anfrage im Playground links mit **+** eine neue Sitzung beginnen,
 
 | Einstellung | Wo | Was sie bewirkt |
 | --- | --- | --- |
-| **Language Model** | am Baustein | Hier ist der Ausgang *Language Model* von **KI-Modell (Weiche)** angeschlossen. Ohne Modell kann die Weiche nicht entscheiden. |
+| **Language Model** | am Baustein | Hier ist der Ausgang *Language Model* vom **KI-Modell** für die Weiche angeschlossen. Ohne Modell kann die Weiche nicht entscheiden. |
 | **Input** | am Baustein | Der einzuordnende Text |
 | **Routes** | am Baustein, *Open table* | Die Kategorien, eine pro Zeile (siehe unten) |
 | **Include Else Output** | *Parameters* | Ein zusätzlicher Ausgang *Else* für Anfragen, die zu keiner Kategorie passen. Im Flow eingeschaltet. |
@@ -96,7 +96,7 @@ Die Tabelle **Routes** hat drei Spalten:
 
 **Ohne Else-Ausgang** passiert bei einer Anfrage, die in keine Kategorie passt, gar nichts: Kein Ausgang gibt etwas weiter, und im Playground erscheint von der Weiche keine Nachricht.
 
-Das **KI-Modell (Weiche)** steht auf *Kreativität* 0. Für Entscheidungen ist das richtig: Das Modell soll bei derselben Anfrage möglichst dasselbe sagen.
+Das **KI-Modell** für die Weiche steht auf *Kreativität* 0. Für Entscheidungen ist das richtig: Das Modell soll bei derselben Anfrage möglichst dasselbe sagen.
 
 ### 3.3 Guardrails: prüfen, bevor die KI die Anfrage sieht
 
@@ -137,11 +137,11 @@ Die Ausgänge:
 
 | Einstellung | Wo | Was sie bewirkt |
 | --- | --- | --- |
-| **Input** | am Baustein | Was sich der Mensch ansehen soll, hier der Entwurf aus *KI-Modell (Antwortentwurf)* |
+| **Input** | am Baustein | Was sich der Mensch ansehen soll, hier der Entwurf aus dem **KI-Modell** für den Antwortentwurf |
 | **User Choices** | am Baustein | Die möglichen Antworten. Standard: *Approve* und *Reject*; im Flow *Freigeben* und *Ablehnen*. Jede Antwort wird ein eigener Ausgang. Eigene lassen sich eintippen. |
 | **Enable Fallback** | *Parameters* | Ein zusätzlicher Ausgang *fallback* für den Fall, dass niemand rechtzeitig antwortet. Dann erscheint auch **Timeout** (Standard: 3 Tage). |
 
-Über welchen Ausgang der Entwurf weitergeht, entscheidet allein der Knopf. Der Text bleibt derselbe: Auch *Abgelehnter Entwurf* zeigt den Entwurf, nur eben auf dem Weg für Ablehnungen. In einem echten Flow hinge dort z. B. ein zweiter Versuch mit anderem Prompt oder eine Weiterleitung an eine Person.
+Über welchen Ausgang der Entwurf weitergeht, entscheidet allein der Knopf. Der Text bleibt derselbe: Auch der **Chat Output** *Abgelehnt* zeigt den Entwurf, nur eben auf dem Weg für Ablehnungen. In einem echten Flow hinge dort z. B. ein zweiter Versuch mit anderem Prompt oder eine Weiterleitung an eine Person.
 
 ## 4. Übungen
 
@@ -164,7 +164,7 @@ Eine Regel prüft Wörter, die KI den Sinn. Die Regel irrt sich vorhersehbar, di
 
 ### 🟢 2. Groß- und Kleinschreibung
 
-Schaltet im Baustein *Regel: Fernleihe? (If-Else)* unter *Parameters* **Case Sensitive** aus und schickt Anfrage [5] noch einmal ab.
+Schaltet im **If-Else** unter *Parameters* **Case Sensitive** aus und schickt Anfrage [5] noch einmal ab.
 
 <details>
 <summary>Lösung</summary>
@@ -175,12 +175,12 @@ Jetzt trifft die Regel zu: Text und *Match Text* werden vor dem Vergleich in Kle
 
 ### 🟢 3. Was Guardrails findet
 
-Schickt die Anfragen [7], [8] und [9] ab. Welche hält *Guardrails* an? Klickt nach [7] am Baustein *Anfrage prüfen* auf das Ausgabe-Symbol von **Result Data** und seht nach, was gefunden wurde.
+Schickt die Anfragen [7], [8] und [9] ab. Welche hält *Guardrails* an? Klickt nach [7] am Baustein **Guardrails** auf das Ausgabe-Symbol von **Result Data** und seht nach, was gefunden wurde.
 
 <details>
 <summary>Lösung</summary>
 
-Nur [7] wird angehalten: Unter *Gestoppt von Guardrails* erscheint die englische Begründung *PII: The input contains personal identifiable information …*. In *Result Data* steht bei *PII* der Fund `EMAIL`; die Ausweisnummer hat keine Regel erkannt.
+Nur [7] wird angehalten: Unter dem Absender *Guardrails* erscheint die englische Begründung *PII: The input contains personal identifiable information …*. In *Result Data* steht bei *PII* der Fund `EMAIL`; die Ausweisnummer hat keine Regel erkannt.
 
 [8] und [9] gehen durch: *Rules only* kennt kein Muster für ein ausgedachtes Passwort wie *Sommer2026!* und keine deutschsprachigen Manipulationsversuche. [8] landet bei *Ausleihe*, [9] meist bei *Technik*. Das Passwort ginge also an die KI weiter.
 
@@ -193,13 +193,13 @@ Schickt Anfrage [2] (Recherche) ab. Lest den Entwurf und klickt auf **Freigeben*
 <details>
 <summary>Lösung</summary>
 
-Der Flow hält bei *Freigabe (Human Input)* an und zeigt den Entwurf. Nach *Freigeben* erscheint er unter *Freigegebene Antwort*, nach *Ablehnen* unter *Abgelehnter Entwurf*. Der Text ist beide Male der Entwurf; was sich ändert, ist der Weg. Außerdem: Der zweite Entwurf ist anders formuliert als der erste. Das Modell schreibt bei jedem Lauf neu.
+Der Flow hält beim **Human Input** an und zeigt den Entwurf. Nach *Freigeben* erscheint er unter dem Absender *Freigegeben*, nach *Ablehnen* unter *Abgelehnt*. Der Text ist beide Male der Entwurf; was sich ändert, ist der Weg. Außerdem: Der zweite Entwurf ist anders formuliert als der erste. Das Modell schreibt bei jedem Lauf neu.
 
 </details>
 
 ### 🟡 5. Guardrails mit KI
 
-1. Verbindet den Ausgang **Language Model** von *KI-Modell (Weiche)* zusätzlich mit dem Eingang **Language Model** von *Anfrage prüfen (Guardrails)*. Ein Ausgang darf mehrere Linien haben.
+1. Verbindet den Ausgang **Language Model** vom **KI-Modell** für die Weiche zusätzlich mit dem Eingang **Language Model** von **Guardrails**. Ein Ausgang darf mehrere Linien haben.
 2. Stellt **Checking Method** auf *Rules + AI*.
 3. Schickt [7], [8], [9] und [1] ab, dann diese Anfrage: *Mein Name ist Jonas Muster. Wann hat die Bibliothek samstags geöffnet?*
 
@@ -225,7 +225,7 @@ Die Anfrage wird nicht mehr angehalten. Sie geht über *Pass* an die Weiche, abe
 
 ### 🟡 7. Eine neue Kategorie
 
-1. Öffnet in der *Auskunfts-Weiche* die Tabelle **Routes** (*Open table*) und fügt eine Zeile hinzu: *Route Name* `Fernleihe`, *Route Description* `Bestellungen von Medien aus anderen Bibliotheken`.
+1. Öffnet im **Smart Router** die Tabelle **Routes** (*Open table*) und fügt eine Zeile hinzu: *Route Name* `Fernleihe`, *Route Description* `Bestellungen von Medien aus anderen Bibliotheken`.
 2. Am Baustein erscheint ein neuer Ausgang *Fernleihe*. Verbindet ihn mit einem neuen *Chat Output*.
 3. Schickt [4] und [6] ab.
 4. Tragt unter *Parameters* bei **Additional Instructions** ein: `Alles, was mit der Fernleihe zu tun hat, gehört zu Fernleihe, auch technische Probleme.` Schickt [6] noch einmal ab.
@@ -239,7 +239,7 @@ Die Anfrage wird nicht mehr angehalten. Sie geht über *Pass* an die Weiche, abe
 
 ### 🟡 8. Was weitergegeben wird
 
-Leert im Baustein *Regel: Fernleihe? (If-Else)* unter *Parameters* die Felder **Case True** und **Case False** und schickt [4] ab. Tragt danach in der *Auskunfts-Weiche* unter *Parameters* bei **Override Output** `Danke, wir kümmern uns.` ein und schickt [3] ab.
+Leert im **If-Else** unter *Parameters* die Felder **Case True** und **Case False** und schickt [4] ab. Tragt danach im **Smart Router** unter *Parameters* bei **Override Output** `Danke, wir kümmern uns.` ein und schickt [3] ab.
 
 <details>
 <summary>Lösung</summary>
@@ -278,7 +278,7 @@ Baut einen kleinen Flow: Im Playground tippt jemand ein, wie viele Medien er ode
 
 ### 🔴 11. Eine dritte Wahl
 
-Fügt in *Freigabe (Human Input)* bei **User Choices** die Antwort `Überarbeiten` hinzu. Verbindet den neuen Ausgang mit einem **Prompt Template**, einem neuen **KI-Modell** und einem **Chat Output**. Das Template:
+Fügt im **Human Input** bei **User Choices** die Antwort `Überarbeiten` hinzu. Verbindet den neuen Ausgang mit einem **Prompt Template**, einem neuen **KI-Modell** und einem **Chat Output**. Das Template:
 
 ```text
 Überarbeite diesen Antwortentwurf: kürzer, freundlicher, mit einer Rückfrage am Ende.
@@ -314,7 +314,7 @@ Am Baustein erscheint ein dritter Ausgang *Überarbeiten*. Nach einem Klick auf 
 
 | Meldung oder Problem | Ursache und Lösung |
 | --- | --- |
-| Von der Weiche erscheint keine Nachricht | Die Anfrage passt in keine Kategorie, und *Include Else Output* ist aus. Einschalten und den Ausgang *Else* verbinden. Oder *Guardrails* hat die Anfrage angehalten: Dann steht etwas unter *Gestoppt von Guardrails*. |
+| Von der Weiche erscheint keine Nachricht | Die Anfrage passt in keine Kategorie, und *Include Else Output* ist aus. Einschalten und den Ausgang *Else* verbinden. Oder *Guardrails* hat die Anfrage angehalten: Dann steht etwas unter dem Absender *Guardrails*. |
 | Ein Chat Output bleibt leer | Sein Weg wurde nicht genommen. Das ist so gewollt. |
 | *Select or connect a Language Model, or choose Rules only …* | *Guardrails* steht auf *AI checks* oder *Rules + AI*, aber kein Modell ist angeschlossen |
 | Die Weiche entscheidet anders als erwartet | Die *Route Description* genauer formulieren oder *Additional Instructions* ergänzen. Mit einem kleinen lokalen Modell den Cluster nehmen. |

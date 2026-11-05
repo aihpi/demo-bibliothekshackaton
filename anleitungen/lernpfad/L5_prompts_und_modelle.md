@@ -25,12 +25,12 @@ Eine Nutzerin fragt im Playground etwas zur Bibliothek, z. B. *Wie lange darf ic
 
 | Schritt | Baustein | Was er tut |
 | --- | --- | --- |
-| 1 | **Frage (Chat)** – Chat Input | nimmt die Frage aus dem Playground |
-| 2 | **Heutiges Datum** – Current Date | liefert Datum und Uhrzeit |
-| 3 | **Bisheriges Gespräch** – Message History | liefert die letzten Nachrichten dieser Sitzung |
-| 4 | **Prompt: Auskunft** – Prompt Template | setzt Benutzungsordnung, Datum, Gespräch, Zielgruppe und Frage zu einem Text zusammen |
-| 5 | **KI-Modell (Auskunft)** – KI-Modell | beantwortet den Prompt; die Antwort erscheint oben im Playground |
-| 6 | **Language Model (Leichte Sprache)** – Language Model | beantwortet denselben Prompt mit demselben Modell, aber mit einer eigenen Anweisung: in Leichter Sprache |
+| 1 | **Chat Input** | nimmt die Frage aus dem Playground |
+| 2 | **Current Date** | liefert Datum und Uhrzeit |
+| 3 | **Message History** | liefert die letzten Nachrichten dieser Sitzung |
+| 4 | **Prompt Template** | setzt Benutzungsordnung, Datum, Gespräch, Zielgruppe und Frage zu einem Text zusammen |
+| 5 | **KI-Modell** | beantwortet den Prompt; die Antwort erscheint oben im Playground, mit dem Sender Name *KI-Modell* |
+| 6 | **Language Model** | beantwortet denselben Prompt mit demselben Modell, aber mit einer eigenen Anweisung: in Leichter Sprache. Die Antwort erscheint darunter, mit dem Sender Name *Language Model*. |
 
 Alle Bausteine hängen am Chat Input oder liefern etwas an einen Baustein, der daran hängt. Darum läuft im Playground der ganze Flow (siehe [L1](L1_daten_importieren.md), Übung 6).
 
@@ -43,7 +43,7 @@ Alle Bausteine hängen am Chat Input oder liefern etwas an einen Baustein, der d
 
 **Welches Modell antwortet?** Der Baustein *KI-Modell* steht auf *Standard (aus .env)*. Was das heißt, legt die Orga in der Datei `.env` fest: den Cluster oder ein lokales Modell auf dem Laptop. Für dieses Modul empfehlen wir den **Cluster**: Stellt im KI-Modell die **Quelle** auf *Cluster (LiteLLM)*. Ein kleines lokales Modell braucht für jede Antwort deutlich länger, und die Übungen dauern dann sehr lange.
 
-**Nach jeder Änderung neu fragen.** Ein Baustein lässt sich auch hier mit ▶ einzeln ausführen. Für das Modell braucht er aber eine Frage aus dem Playground. Am einfachsten ist es, nach jeder Änderung im Playground eine Frage abzuschicken. Den fertigen Prompt seht ihr danach am Ausgang des Bausteins *Prompt: Auskunft*: Klickt auf das kleine Symbol rechts unten am Baustein.
+**Nach jeder Änderung neu fragen.** Ein Baustein lässt sich auch hier mit ▶ einzeln ausführen. Für das Modell braucht er aber eine Frage aus dem Playground. Am einfachsten ist es, nach jeder Änderung im Playground eine Frage abzuschicken. Den fertigen Prompt seht ihr danach am Ausgang des Bausteins **Prompt Template**: Klickt auf das kleine Symbol rechts unten am Baustein.
 
 ## 3. Schritt für Schritt
 
@@ -54,10 +54,10 @@ Der Prompt ist alles, was das Modell über die Aufgabe weiß. *Prompt Template* 
 | Platzhalter | Woher der Inhalt kommt |
 | --- | --- |
 | `{ordnung}` | fester Text, direkt im Feld eingetragen: die Benutzungsordnung |
-| `{heute}` | verbunden mit *Heutiges Datum* |
-| `{verlauf}` | verbunden mit *Bisheriges Gespräch* |
+| `{heute}` | verbunden mit **Current Date** |
+| `{verlauf}` | verbunden mit **Message History** |
 | `{zielgruppe}` | fester Text: *Studierende im ersten Semester* |
-| `{frage}` | verbunden mit *Frage (Chat)* |
+| `{frage}` | verbunden mit **Chat Input** |
 
 Ein Platzhalter kann also **verbunden** sein oder einen **festen Text** haben, den ihr direkt in sein Feld tippt. Ist eine Linie angeschlossen, zählt nur die Linie; das Feld zeigt dann *Receiving input*.
 
@@ -95,7 +95,7 @@ Der Baustein hat zwei Ausgänge: **Model Response** ist die Antwort als Text. **
 
 *Language Model* (Kategorie *Models & Agents*) ist Langflows eigener Baustein für Sprachmodelle. Er hat dieselben Ausgänge wie KI-Modell. Seine Anbieter (OpenAI, Anthropic, Google und andere) brauchen aber jeweils ein eigenes Konto und einen Schlüssel, und die sind in diesem Projekt **nicht eingerichtet**.
 
-Trotzdem könnt ihr ihn nutzen: Sein Feld **Language Model** nimmt auch eine Verbindung an. Im Flow ist dort der Ausgang *Language Model* von **KI-Modell (Auskunft)** angeschlossen. Wählt ihr das Feld in einem neuen Language Model aus, findet ihr dafür in der Liste den Eintrag *Connect other models*.
+Trotzdem könnt ihr ihn nutzen: Sein Feld **Language Model** nimmt auch eine Verbindung an. Im Flow ist dort der Ausgang *Language Model* vom **KI-Modell** angeschlossen. Wählt ihr das Feld in einem neuen Language Model aus, findet ihr dafür in der Liste den Eintrag *Connect other models*.
 
 | Einstellung | Wo | Was sie bewirkt |
 | --- | --- | --- |
@@ -126,7 +126,7 @@ Ein Sprachmodell erinnert sich an nichts: Jede Anfrage beginnt bei null. Damit e
 
 Zwei Ausgänge: **Messages** (Text, z. B. `User: …` und `KI-Modell: …` untereinander, für den Prompt) und **Table**.
 
-**Was wird gespeichert?** Chat Input und Chat Output speichern jede Nachricht (*Store Messages* in ihren *Parameters*, standardmäßig an). Message History liest sie wieder aus. Im Flow speichert *Antwort (Leichte Sprache)* nicht, sonst stünde jede Antwort doppelt im Gespräch. Die aktuelle Frage steht übrigens schon im Verlauf, weil der Chat Input sie speichert, bevor Message History liest.
+**Was wird gespeichert?** Chat Input und Chat Output speichern jede Nachricht (*Store Messages* in ihren *Parameters*, standardmäßig an). Message History liest sie wieder aus. Im Flow speichert der untere **Chat Output** (Sender Name *Language Model*) nicht, sonst stünde jede Antwort doppelt im Gespräch. Die aktuelle Frage steht übrigens schon im Verlauf, weil der Chat Input sie speichert, bevor Message History liest.
 
 **Sitzungen.** Der Verlauf gehört zu einer **Sitzung** (*Session*). Im Playground startet ihr mit **+** links eine neue Sitzung: Der Verlauf ist dann leer.
 
@@ -170,7 +170,7 @@ Die Antwortlänge ist also eine Notbremse, z. B. gegen ein kleines Modell, das e
 
 ### 🟢 3. Eine andere Zielgruppe
 
-Ändert im *Prompt: Auskunft* das Feld **zielgruppe** und fragt jeweils: *Darf ich in der Bibliothek etwas essen?*
+Ändert im **Prompt Template** das Feld **zielgruppe** und fragt jeweils: *Darf ich in der Bibliothek etwas essen?*
 
 1. `Kinder im Grundschulalter`
 2. `internationale Gastwissenschaftler:innen, auf Englisch`
@@ -204,18 +204,18 @@ Darum gehört in jeden Prompt, der mit eigenen Daten arbeitet, eine Grenze: *Ver
 2. Dann: *Und was kostet das?*
 3. Startet mit **+** eine neue Sitzung und fragt nur *Und was kostet das?*
 
-Seht euch nach Schritt 2 den Ausgang von *Bisheriges Gespräch* an.
+Seht euch nach Schritt 2 den Ausgang von **Message History** an.
 
 <details>
 <summary>Lösung</summary>
 
-In Schritt 2 weiß das Modell, dass „das“ die Fernleihe ist, und nennt 1,50 Euro. Am Ausgang von *Bisheriges Gespräch* steht das ganze Gespräch, die aktuelle Frage eingeschlossen. In der neuen Sitzung ist der Verlauf leer: Das Modell rät, was gemeint ist, und zählt alle Gebühren der Benutzungsordnung auf.
+In Schritt 2 weiß das Modell, dass „das“ die Fernleihe ist, und nennt 1,50 Euro. Am Ausgang von **Message History** steht das ganze Gespräch, die aktuelle Frage eingeschlossen. In der neuen Sitzung ist der Verlauf leer: Das Modell rät, was gemeint ist, und zählt alle Gebühren der Benutzungsordnung auf.
 
 </details>
 
 ### 🟡 6. System Message gegen Prompt
 
-Tragt im **KI-Modell (Auskunft)** in das Feld **System Message** ein: `Antworte immer als Gedicht in vier Zeilen.` Fragt: *Wie lange darf ich ein Buch behalten?* Löscht die System Message danach wieder.
+Tragt im **KI-Modell** in das Feld **System Message** ein: `Antworte immer als Gedicht in vier Zeilen.` Fragt: *Wie lange darf ich ein Buch behalten?* Löscht die System Message danach wieder.
 
 Probiert auch das Umgekehrte: Schreibt die Rolle (*Du bist Auskunftsperson der Musterbibliothek.*) aus dem Prompt in die System Message.
 
@@ -230,7 +230,7 @@ Die Rolle in der System Message wirkt wie im Prompt. Eine gute Aufteilung für e
 
 ### 🟡 7. Wer bestimmt die Einstellungen?
 
-Öffnet im **Language Model (Leichte Sprache)** *Parameters* und setzt **Temperature** auf `1`. Fragt etwas. Setzt dann stattdessen im **KI-Modell (Auskunft)** die **Kreativität** auf `1`.
+Öffnet im **Language Model** *Parameters* und setzt **Temperature** auf `1`. Fragt etwas. Setzt dann stattdessen im **KI-Modell** die **Kreativität** auf `1`.
 
 Wie findet ihr heraus, welche Temperatur wirklich gilt? Tipp: Seht euch nach dem Lauf den Ausgang *Language Model* des Language Model an.
 
@@ -273,7 +273,7 @@ Mit einfachen Klammern hält Langflow `{"paragraf": "§ 3", "antwort": "..."}` f
 
 ### 🟡 10. Ohne Datum
 
-Löscht die Linie von *Heutiges Datum* zum Prompt und tragt in das Feld **heute** nichts ein. Fragt in einer neuen Sitzung: *Ich leihe heute ein Buch aus. An welchem Datum muss ich es spätestens zurückgeben?* Wenn ihr ein lokales Modell habt, stellt die **Quelle** auf *Lokal (Ollama)* und fragt noch einmal.
+Löscht die Linie von **Current Date** zum Prompt und tragt in das Feld **heute** nichts ein. Fragt in einer neuen Sitzung: *Ich leihe heute ein Buch aus. An welchem Datum muss ich es spätestens zurückgeben?* Wenn ihr ein lokales Modell habt, stellt die **Quelle** auf *Lokal (Ollama)* und fragt noch einmal.
 
 <details>
 <summary>Lösung</summary>

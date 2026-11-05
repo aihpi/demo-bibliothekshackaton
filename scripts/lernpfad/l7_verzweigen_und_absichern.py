@@ -77,7 +77,7 @@ def bauen(lf) -> Flow:
         breite=520,
     )
 
-    anfrage = f.baustein("ChatInput", 400, 200, "anfrage", titel="Anfrage (Chat)")
+    anfrage = f.baustein("ChatInput", 400, 200, "anfrage")
 
     # Oben: die feste Regel
     regel = f.baustein(
@@ -91,10 +91,10 @@ def bauen(lf) -> Flow:
             "true_case_message": "Regel trifft zu: Die Anfrage geht an die Fernleihstelle.",
             "false_case_message": "Regel trifft nicht zu: Die Anfrage geht an die allgemeine Auskunft.",
         },
-        titel="Regel: Fernleihe? (If-Else)",
     )
-    ja = f.baustein("ChatOutput", 1300, -640, "regel_ja", {"sender_name": "Regel (If-Else)"}, titel="Regel: Ja")
-    nein = f.baustein("ChatOutput", 1300, -300, "regel_nein", {"sender_name": "Regel (If-Else)"}, titel="Regel: Nein")
+    f.notiz("**Regel**: Fernleihe?", 850, -700, breite=320, farbe="amber")
+    ja = f.baustein("ChatOutput", 1300, -640, "regel_ja", {"sender_name": "Regel (If-Else)"})
+    nein = f.baustein("ChatOutput", 1300, -300, "regel_nein", {"sender_name": "Regel (If-Else)"})
     f.verbinden(anfrage, "message", regel, "input_text")
     f.verbinden(regel, "true_result", ja, "input_value")
     f.verbinden(regel, "false_result", nein, "input_value")
@@ -105,29 +105,27 @@ def bauen(lf) -> Flow:
         850,
         160,
         "pruefen",
-        titel="Anfrage prüfen (Guardrails)",
         auswahl={"checking_method": "Rules only"},
     )
     _live(f, pruefen, "enabled_guardrails", ["PII", "Tokens/Passwords", "Jailbreak", "Prompt Injection"])
-    gestoppt = f.baustein(
-        "ChatOutput", 1300, 760, "gestoppt", {"sender_name": "Guardrails"}, titel="Gestoppt von Guardrails"
-    )
+    gestoppt = f.baustein("ChatOutput", 1300, 760, "gestoppt", {"sender_name": "Guardrails"})
     f.verbinden(anfrage, "message", pruefen, "input_text")
     f.verbinden(pruefen, "failed_result", gestoppt, "input_value")
 
-    weiche_modell = f.baustein(KI_MODELL, 850, 1100, "weiche", {"temperature": 0.0}, titel="KI-Modell (Weiche)")
-    weiche = f.baustein("SmartRouter", 1300, 120, "weiche", titel="Auskunfts-Weiche (Smart Router)")
+    weiche_modell = f.baustein(KI_MODELL, 850, 1100, "weiche", {"temperature": 0.0})
+    f.notiz("**Modell für die Weiche**", 850, 960, breite=320, farbe="amber")
+    weiche = f.baustein("SmartRouter", 1300, 120, "weiche")
     _live(f, weiche, "routes", ROUTEN)
     _live(f, weiche, "enable_else_output", True)
     f.verbinden(pruefen, "pass_result", weiche, "input_text")
     f.verbinden(weiche_modell, "model_output", weiche, "model")
 
-    for ausgang, kurz, titel, y in (
+    for ausgang, kurz, absender, y in (
         ("category_1_result", "ausleihe", "Weg: Ausleihe", -200),
         ("category_3_result", "technik", "Weg: Technik", 160),
         ("default_result", "sonstiges", "Weg: Sonstiges", 520),
     ):
-        ziel = f.baustein("ChatOutput", 1780, y, kurz, {"sender_name": titel}, titel=titel)
+        ziel = f.baustein("ChatOutput", 1780, y, kurz, {"sender_name": absender})
         f.verbinden(weiche, ausgang, ziel, "input_value")
 
     entwurf_prompt = f.baustein(
@@ -144,17 +142,13 @@ def bauen(lf) -> Flow:
                 "Nenne keine bestimmten Titel und erfinde nichts. Höchstens 120 Wörter."
             )
         },
-        titel="Prompt: Antwortentwurf",
     )
-    entwurf_modell = f.baustein(KI_MODELL, 2220, 860, "entwurf", titel="KI-Modell (Antwortentwurf)")
-    freigabe = f.baustein("HumanInput", 2660, 900, "freigabe", titel="Freigabe (Human Input)")
+    entwurf_modell = f.baustein(KI_MODELL, 2220, 860, "entwurf")
+    f.notiz("**Modell für den Antwortentwurf**", 2220, 720, breite=320, farbe="amber")
+    freigabe = f.baustein("HumanInput", 2660, 900, "freigabe")
     _live(f, freigabe, "decisions", ["Freigeben", "Ablehnen"])
-    freigegeben = f.baustein(
-        "ChatOutput", 3100, 780, "freigegeben", {"sender_name": "Freigegeben"}, titel="Freigegebene Antwort"
-    )
-    abgelehnt = f.baustein(
-        "ChatOutput", 3100, 1140, "abgelehnt", {"sender_name": "Abgelehnt"}, titel="Abgelehnter Entwurf"
-    )
+    freigegeben = f.baustein("ChatOutput", 3100, 780, "freigegeben", {"sender_name": "Freigegeben"})
+    abgelehnt = f.baustein("ChatOutput", 3100, 1140, "abgelehnt", {"sender_name": "Abgelehnt"})
     f.verbinden(weiche, "category_2_result", entwurf_prompt, "anfrage")
     f.verbinden(entwurf_prompt, "prompt", entwurf_modell, "input_value")
     f.verbinden(entwurf_modell, "text_output", freigabe, "prompt")

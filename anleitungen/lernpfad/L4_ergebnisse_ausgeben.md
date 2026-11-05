@@ -25,27 +25,29 @@ Links wird die Tabelle vorbereitet, rechts wird sie ausgegeben.
 
 **Vorbereiten** (links, drei Bausteine):
 
-1. **Neuerwerbungen lesen (Read File)** liest die CSV-Datei als Text.
-2. **Leere Felder füllen (Data Operations)** ersetzt ein leeres Feld durch `o. J.` (ohne Jahr). Warum das nötig ist, steht in [Abschnitt 3.1](#31-vorbereiten-aus-der-datei-wird-eine-tabelle).
-3. **Als Tabelle (Type Convert)** macht aus dem Text eine echte Tabelle mit Zeilen und Spalten.
+1. **Read File** liest die CSV-Datei als Text.
+2. **Data Operations** ersetzt ein leeres Feld durch `o. J.` (ohne Jahr). Warum das nötig ist, steht in [Abschnitt 3.1](#31-vorbereiten-aus-der-datei-wird-eine-tabelle).
+3. **Type Convert** macht aus dem Text eine echte Tabelle mit Zeilen und Spalten.
 
 **Ausgeben** (rechts, sechs Zeilen):
 
-| Zeile | Bausteine | Was herauskommt |
-| --- | --- | --- |
-| 1 | Chat Output | die Tabelle, wie sie ist |
-| 2 | Parser → Chat Output | eine Zitierliste: `Berger, Anna (2024). Grundlagen der Informationskompetenz. Verlag Lesezeichen.` |
-| 3 | Parser → Chat Output | eine Markdown-Liste mit fetten Titeln |
-| 4 | Parser → Prompt Template → Chat Output | eine HTML-Tabelle mit Überschrift, fertig für den Editor einer Webseite |
-| 5 | Parser (Stringify) → Chat Output | die ganze Tabelle als Text |
-| 6 | Write File → Chat Output | eine Excel-Datei und die Meldung, wo sie liegt |
+| Zeile | Bausteine | Label | Sender Name | Was herauskommt |
+| --- | --- | --- | --- | --- |
+| 1 | Chat Output | | Tabelle | die Tabelle, wie sie ist |
+| 2 | Parser → Chat Output | Zitierliste | Zitierliste | eine Zitierliste: `Berger, Anna (2024). Grundlagen der Informationskompetenz. Verlag Lesezeichen.` |
+| 3 | Parser → Chat Output | Markdown-Liste | Markdown-Liste | eine Markdown-Liste mit fetten Titeln |
+| 4 | Parser → Prompt Template → Chat Output | HTML-Seite | HTML | eine HTML-Tabelle mit Überschrift, fertig für den Editor einer Webseite |
+| 5 | Parser (Stringify) → Chat Output | Alles als Text | Text | die ganze Tabelle als Text |
+| 6 | Write File → Chat Output | | Write File | eine Excel-Datei und die Meldung, wo sie liegt |
 
 Alle sechs Zeilen hängen an derselben Tabelle. Ein Ausgang darf mit beliebig vielen Eingängen verbunden sein.
+
+Weil in vier Zeilen ein **Parser** steht, trägt jede dieser Zeilen ein gelbes **Label**: eine kleine Notiz zwischen den Bausteinen, z. B. *Zitierliste*. Die Bausteine selbst behalten ihren Standardnamen, so wie ihr sie auch in der Bausteinliste links findet. Den **Sender Name** jedes Chat Outputs seht ihr im Playground über der Nachricht.
 
 ## 2. Vorbereiten
 
 1. In der Übersicht von Langflow beim Flow **L4 Ergebnisse ausgeben** auf die drei Punkte klicken → *Duplicate*. Arbeitet in der Kopie.
-2. Im Baustein **Neuerwerbungen lesen (Read File)** auf **Select files** klicken und `daten/lernpfad/neuerwerbungen.csv` hochladen.
+2. Im Baustein **Read File** auf **Select files** klicken und `daten/lernpfad/neuerwerbungen.csv` hochladen.
 3. Oben rechts auf **Playground** klicken, irgendetwas eintippen (z. B. *los*) und abschicken. Es erscheinen sechs Nachrichten; der Name über jeder Nachricht sagt, aus welcher Zeile sie kommt.
 
 Wie in [L1](L1_daten_importieren.md) könnt ihr jeden Baustein auch einzeln mit **▶** ausführen und am Ausgang nachsehen, was er weitergibt. Bei den Parsern ist das der schnellste Weg, eine Vorlage auszuprobieren.
@@ -58,7 +60,7 @@ Wie eine CSV-Datei zur Tabelle wird, zeigt [L3](L3_tabellen_und_json.md) ausfüh
 
 **Type Convert** mit *Output Type* **Table** und eingeschaltetem *Auto Parse* (*Parameters*) erkennt, dass der Text eine CSV-Tabelle ist, und macht Zeilen und Spalten daraus.
 
-**Leere Felder füllen** ist ein *Data Operations* mit der Operation **Text Replace**: Er ersetzt im Text `,,` durch `,o. J.,`. In der Datei fehlt bei einem Buch das Jahr; dort stehen zwei Kommas direkt nebeneinander. Ohne diesen Schritt passiert Folgendes: Type Convert sieht in der Spalte *jahr* lauter Zahlen und eine Lücke, und behandelt die ganze Spalte als Kommazahlen. Aus *2024* wird `2024.0`, aus der Lücke `nan` (*not a number*). In einer Zitierliste sieht das so aus:
+Der Baustein **Data Operations** arbeitet hier mit der Operation **Text Replace**: Er ersetzt im Text `,,` durch `,o. J.,`. In der Datei fehlt bei einem Buch das Jahr; dort stehen zwei Kommas direkt nebeneinander. Ohne diesen Schritt passiert Folgendes: Type Convert sieht in der Spalte *jahr* lauter Zahlen und eine Lücke, und behandelt die ganze Spalte als Kommazahlen. Aus *2024* wird `2024.0`, aus der Lücke `nan` (*not a number*). In einer Zitierliste sieht das so aus:
 
 ```text
 Berger, Anna (2024.0). Grundlagen der Informationskompetenz. Verlag Lesezeichen.
@@ -77,23 +79,23 @@ Steht in der Spalte dagegen ein Wort wie `o. J.`, bleibt die ganze Spalte Text, 
 | **Template** | am Baustein | Die Vorlage. Namen in geschweiften Klammern müssen genau so heißen wie die Spalten, auch bei Groß- und Kleinschreibung. |
 | **Separator** | *Parameters* | Was zwischen den Zeilen steht. Standard: ein Zeilenumbruch. `\n\n` ergibt eine Leerzeile zwischen den Einträgen, ` \| ` alles in einer Zeile. |
 
-Die drei Parser im Flow nutzen diese Vorlagen:
+Die drei Parser mit Vorlage erkennt ihr am Label ihrer Zeile:
 
-| Parser | Vorlage | Ergebnis (erste Zeile) |
+| Label der Zeile | Vorlage im Parser | Ergebnis (erste Zeile) |
 | --- | --- | --- |
 | Zitierliste | `{autor} ({jahr}). {titel}. {verlag}.` | `Berger, Anna (2024). Grundlagen der Informationskompetenz. Verlag Lesezeichen.` |
 | Markdown-Liste | `- **{titel}** von {autor} ({fach}, {status})` | `- **Grundlagen der Informationskompetenz** von Berger, Anna (Bibliothekswissenschaft, bestellt)` |
-| HTML-Tabellenzeilen | `<tr><td>{titel}</td><td>{autor}</td><td>{jahr}</td><td>{status}</td></tr>` | `<tr><td>Grundlagen der Informationskompetenz</td>…</tr>` |
+| HTML-Seite | `<tr><td>{titel}</td><td>{autor}</td><td>{jahr}</td><td>{status}</td></tr>` | `<tr><td>Grundlagen der Informationskompetenz</td>…</tr>` |
 
 Im Playground erscheint die Markdown-Liste als echte Liste mit fetten Titeln: Der Chat versteht Markdown. In ein Word-Dokument oder eine E-Mail könnt ihr den Text kopieren; dort braucht ihr die `**` dann nicht.
 
 **Zahlen formatieren.** In der Vorlage dürft ihr hinter den Spaltennamen ein Format schreiben: `{preis_eur:.2f}` zeigt einen Preis immer mit zwei Nachkommastellen (`29.90`), `{jahr:.0f}` eine Kommazahl ohne Nachkommastellen (`2024` statt `2024.0`). Das funktioniert nur, wenn die Spalte wirklich Zahlen enthält; steht dort Text, meldet der Parser einen Fehler.
 
-**Stringify.** Der Parser *Alles als Text* steht im Mode *Stringify*. Er braucht keine Vorlage und gibt die ganze Tabelle als Text in Tabellenform aus, mit Kopfzeile. Das ist praktisch, wenn ihr eine kleine Tabelle vollständig an einen Prompt weitergeben wollt ([L5](L5_prompts_und_modelle.md)). Bei großen Tabellen wird der Text sehr lang.
+**Stringify.** Der **Parser** in der Zeile *Alles als Text* steht im Mode *Stringify*. Er braucht keine Vorlage und gibt die ganze Tabelle als Text in Tabellenform aus, mit Kopfzeile. Das ist praktisch, wenn ihr eine kleine Tabelle vollständig an einen Prompt weitergeben wollt ([L5](L5_prompts_und_modelle.md)). Bei großen Tabellen wird der Text sehr lang.
 
 ### 3.3 Prompt Template ohne Modell: Zeilen zu einer Seite zusammensetzen
 
-Der Parser macht aus jeder Zeile eine Tabellenzeile in HTML. Für eine fertige Seite fehlen Überschrift, Tabellenkopf und der Rahmen `<table>…</table>`. Das erledigt ein **Prompt Template**, obwohl kein Sprachmodell im Spiel ist.
+Der **Parser** in der Zeile *HTML-Seite* macht aus jeder Zeile eine Tabellenzeile in HTML. Für eine fertige Seite fehlen Überschrift, Tabellenkopf und der Rahmen `<table>…</table>`. Das erledigt ein **Prompt Template**, obwohl kein Sprachmodell im Spiel ist.
 
 Ein Prompt Template tut nichts anderes, als Text in Platzhalter einzusetzen. Sein Ausgang ist eine ganz normale Message. Ob sie an ein Modell geht oder direkt an einen Chat Output, ist ihm egal. Die Vorlage im Flow:
 
@@ -165,7 +167,7 @@ docker compose cp "langflow:/app/langflow/…/neuerwerbungen_aufbereitet.xlsx" .
 
 ### 🟢 1. Ein anderer Zitierstil
 
-Ändert die Vorlage im Parser *Zitierliste* so, dass der Titel kursiv erscheint und der Verlag vor dem Jahr steht:
+Ändert die Vorlage im **Parser** der Zeile *Zitierliste* so, dass der Titel kursiv erscheint und der Verlag vor dem Jahr steht:
 
 ```text
 {autor}: *{titel}*. {verlag}, {jahr}.
@@ -178,13 +180,13 @@ Schreibt dann absichtlich `{Titel}` mit großem T und drückt ▶. Was meldet de
 
 Die Liste sieht jetzt so aus: `Berger, Anna: *Grundlagen der Informationskompetenz*. Verlag Lesezeichen, 2024.` Im Playground erscheint der Titel kursiv, weil `*…*` in Markdown kursiv bedeutet (`**…**` fett).
 
-Mit `{Titel}` bricht der Parser ab, und als Fehlermeldung steht nur das Wort `Titel`. Gemeint ist: Eine Spalte mit diesem Namen gibt es nicht. Spaltennamen müssen genau stimmen, auch bei der Groß- und Kleinschreibung. Die Spaltennamen stehen in der ersten Zeile der CSV-Datei, oder ihr seht sie in der Tabelle am Ausgang von *Als Tabelle*.
+Mit `{Titel}` bricht der Parser ab, und als Fehlermeldung steht nur das Wort `Titel`. Gemeint ist: Eine Spalte mit diesem Namen gibt es nicht. Spaltennamen müssen genau stimmen, auch bei der Groß- und Kleinschreibung. Die Spaltennamen stehen in der ersten Zeile der CSV-Datei, oder ihr seht sie in der Tabelle am Ausgang von **Type Convert**.
 
 </details>
 
 ### 🟢 2. Ohne Lückenfüller
 
-Verbindet den Ausgang von *Neuerwerbungen lesen* direkt mit dem Eingang von *Als Tabelle*, sodass *Leere Felder füllen* übersprungen wird. Seht euch die Zitierliste und die HTML-Zeilen an. Stellt die Verbindung danach wieder her.
+Verbindet den Ausgang von **Read File** direkt mit dem Eingang von **Type Convert**, sodass **Data Operations** übersprungen wird. Seht euch die Zitierliste und die HTML-Zeilen an. Stellt die Verbindung danach wieder her.
 
 <details>
 <summary>Lösung</summary>
@@ -197,7 +199,7 @@ Zwei Wege führen zu sauberen Jahren: die Lücke vorher mit Text füllen, wie im
 
 ### 🟢 3. Trennzeichen zwischen den Einträgen
 
-Öffnet beim Parser *Zitierliste* die *Parameters* und setzt den **Separator** nacheinander auf:
+Öffnet beim **Parser** der Zeile *Zitierliste* die *Parameters* und setzt den **Separator** nacheinander auf:
 
 - `\n\n`
 - ` | ` (Leerzeichen, senkrechter Strich, Leerzeichen)
@@ -212,7 +214,7 @@ Zwei Wege führen zu sauberen Jahren: die Lücke vorher mit Text füllen, wie im
 
 ### 🟢 4. Andere Dateiformate
 
-Ändert im Baustein *Als Excel speichern (Write File)* das **File Format** nacheinander auf *csv*, *json* und *markdown*, und dann auf *txt*. Drückt jeweils ▶ und schaut in **My Files** nach.
+Ändert im Baustein **Write File** das **File Format** nacheinander auf *csv*, *json* und *markdown*, und dann auf *txt*. Drückt jeweils ▶ und schaut in **My Files** nach.
 
 <details>
 <summary>Lösung</summary>
@@ -225,7 +227,7 @@ Bei *txt* bricht der Baustein ab: *Invalid file format 'txt' for DataFrame. Allo
 
 ### 🟢 5. Eine Literaturliste als Textdatei, Stück für Stück
 
-1. Zieht einen zweiten **Write File** auf die Arbeitsfläche und verbindet den Ausgang des Parsers *Zitierliste* mit seinem Eingang *File Content*.
+1. Zieht einen zweiten **Write File** auf die Arbeitsfläche und verbindet den Ausgang des **Parsers** der Zeile *Zitierliste* mit seinem Eingang *File Content*.
 2. *File Name* `literaturliste`, *File Format* *txt*, **Append** an.
 3. Drückt zweimal hintereinander ▶ und schaut euch in *My Files* die Einträge an.
 
@@ -242,7 +244,7 @@ Speichert ihr einen Text als *markdown*, schreibt Write File in Langflow 1.12.3 
 
 ### 🟢 6. Namen und Gedächtnis des Chat Outputs
 
-Öffnet beim Chat Output *Zitierliste* die *Parameters*:
+Öffnet beim **Chat Output** *Zitierliste* (rechts in der Zeile *Zitierliste*) die *Parameters*:
 
 1. Setzt **Sender Name** auf `Literaturliste für das Handout` und startet den Playground neu.
 2. Schaltet **Store Messages** aus. Wozu könnte das gut sein?
@@ -268,7 +270,7 @@ Probiert zuerst `{preis_eur} EUR` und dann `{preis_eur:.2f} EUR`. Was ändert si
 <details>
 <summary>Lösung</summary>
 
-Vorlage: `{titel} ({verlag}): {preis_eur:.2f} EUR, {seiten} Seiten`, Eingang an den Ausgang von *Als Tabelle*.
+Vorlage: `{titel} ({verlag}): {preis_eur:.2f} EUR, {seiten} Seiten`, Eingang an den Ausgang von **Type Convert**.
 
 Ohne Format zeigt der Parser die Zahl so, wie Type Convert sie gelesen hat: `29.9` statt `29.90` und `0.0` statt `0.00`. Mit `:.2f` stehen immer zwei Nachkommastellen da. Das Format schreibt einen Punkt, kein Komma; für deutsche Preise müsstet ihr den Punkt danach ersetzen (*Text Replace*, siehe [L2](L2_texte_aufbereiten.md)).
 
@@ -281,8 +283,8 @@ Die HTML-Tabelle soll zusätzlich den **Verlag** zeigen. Was müsst ihr an welch
 <details>
 <summary>Lösung</summary>
 
-1. Im Prompt Template *HTML-Seite* den Tabellenkopf ergänzen: `<th>Verlag</th>`.
-2. Im Parser *HTML-Tabellenzeilen* an derselben Stelle `<td>{verlag}</td>` einfügen.
+1. Im **Prompt Template** den Tabellenkopf ergänzen: `<th>Verlag</th>`.
+2. Im **Parser** der Zeile *HTML-Seite* an derselben Stelle `<td>{verlag}</td>` einfügen.
 
 Kopf und Zeilen müssen dieselbe Zahl Spalten in derselben Reihenfolge haben, sonst verrutscht die Tabelle.
 

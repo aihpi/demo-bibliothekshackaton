@@ -51,17 +51,17 @@ def bauen(lf) -> Flow:
         breite=500,
     )
 
-    frage = f.baustein("ChatInput", 420, 0, "frage", titel="Frage (Chat)")
-    heute = f.baustein("CurrentDate", 420, 360, "heute", {"timezone": "Europe/Berlin"}, titel="Heutiges Datum")
-    verlauf = f.baustein("Memory", 420, 640, "verlauf", {"n_messages": 10}, titel="Bisheriges Gespräch")
-    prompt = f.baustein("Prompt Template", 860, 60, "auskunft", {"template": AUSKUNFT}, titel="Prompt: Auskunft")
+    frage = f.baustein("ChatInput", 420, 0, "frage")
+    heute = f.baustein("CurrentDate", 420, 360, "heute", {"timezone": "Europe/Berlin"})
+    verlauf = f.baustein("Memory", 420, 640, "verlauf", {"n_messages": 10})
+    prompt = f.baustein("Prompt Template", 860, 60, "auskunft", {"template": AUSKUNFT})
     # Feste Werte direkt im Platzhalter: So läuft der Flow ohne Datei-Upload
     vorlage = f._knoten(prompt)["node"]["template"]
     vorlage["ordnung"]["value"] = (WURZEL / "daten/lernpfad/benutzungsordnung.txt").read_text(encoding="utf-8")
     vorlage["zielgruppe"]["value"] = "Studierende im ersten Semester"
 
-    modell = f.baustein(KI_MODELL, 1300, -40, "auskunft", titel="KI-Modell (Auskunft)")
-    antwort = f.baustein("ChatOutput", 1740, 40, "antwort", {"sender_name": "KI-Modell"}, titel="Antwort (KI-Modell)")
+    modell = f.baustein(KI_MODELL, 1300, -40, "auskunft")
+    antwort = f.baustein("ChatOutput", 1740, 40, "antwort", {"sender_name": "KI-Modell"})
 
     leicht = f.baustein(
         "LanguageModelComponent",
@@ -74,7 +74,6 @@ def bauen(lf) -> Flow:
                 "ohne Erklärung, Zahlen als Ziffern."
             ),
         },
-        titel="Language Model (Leichte Sprache)",
     )
     # Nicht speichern: Sonst stünde jede Antwort doppelt im Gesprächsverlauf
     antwort_leicht = f.baustein(
@@ -83,7 +82,6 @@ def bauen(lf) -> Flow:
         600,
         "leicht",
         {"sender_name": "Language Model", "should_store_message": False},
-        titel="Antwort (Leichte Sprache)",
     )
 
     f.verbinden(frage, "message", prompt, "frage")

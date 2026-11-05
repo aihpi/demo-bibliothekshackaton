@@ -2198,7 +2198,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Define the agent's instructions, then enter a task to complete using tools.",
-            "display_name": "Recherche-Agent",
+            "display_name": "Agent",
             "documentation": "https://docs.langflow.org/agents",
             "edited": false,
             "field_order": [
@@ -2808,7 +2808,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Antwort",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [

@@ -18,16 +18,16 @@
           "y": -200
         },
         "width": 480,
-        "height": 1202,
+        "height": 1304,
         "measured": {
           "width": 480,
-          "height": 1202
+          "height": 1304
         },
         "data": {
           "id": "note-0",
           "type": "note",
           "node": {
-            "description": "# 📤 L4 Ergebnisse ausgeben\n\nAm Ende eines Flows steht ein Ergebnis, das Menschen weiterverwenden: eine Literaturliste, ein Stück HTML für die Webseite, eine Excel-Datei. Hier wird **eine Tabelle** auf sechs Wegen ausgegeben. Keine KI.\n\n**Links:** die Neuerwerbungen lesen, die Lücke im Jahr füllen, eine Tabelle daraus machen.\n\n**Rechts, von oben nach unten:**\n1. **Chat Output** – die Tabelle, wie sie ist\n2. **Parser** – eine Zitierliste\n3. **Parser** – eine Markdown-Liste\n4. **Parser** + **Prompt Template** – eine HTML-Seite\n5. **Parser** (Stringify) – alles als Text\n6. **Write File** – eine Excel-Datei\n\n## ▶ So startet ihr\n1. Kopie anlegen (*Duplicate*).\n2. In **Read File** die Datei `daten/lernpfad/neuerwerbungen.csv` hochladen.\n3. **Playground** öffnen und irgendetwas abschicken.\n\nDie Excel-Datei findet ihr danach in der Übersicht von Langflow unter **My Files**.\n\nAnleitung mit Übungen: `anleitungen/lernpfad/L4_ergebnisse_ausgeben.md`",
+            "description": "# 📤 L4 Ergebnisse ausgeben\n\nAm Ende eines Flows steht ein Ergebnis, das Menschen weiterverwenden: eine Literaturliste, ein Stück HTML für die Webseite, eine Excel-Datei. Hier wird **eine Tabelle** auf sechs Wegen ausgegeben. Keine KI.\n\n**Links:** die Neuerwerbungen lesen, die Lücke im Jahr füllen, eine Tabelle daraus machen.\n\n**Rechts, von oben nach unten:**\n1. **Chat Output** – die Tabelle, wie sie ist\n2. **Parser** – eine Zitierliste\n3. **Parser** – eine Markdown-Liste\n4. **Parser** + **Prompt Template** – eine HTML-Seite\n5. **Parser** (Stringify) – alles als Text\n6. **Write File** – eine Excel-Datei\n\nDie gelben Notizen zwischen den Bausteinen sagen, was in welcher Zeile entsteht.\n\n## ▶ So startet ihr\n1. Kopie anlegen (*Duplicate*).\n2. In **Read File** die Datei `daten/lernpfad/neuerwerbungen.csv` hochladen.\n3. **Playground** öffnen und irgendetwas abschicken.\n\nDie Excel-Datei findet ihr danach in der Übersicht von Langflow unter **My Files**.\n\nAnleitung mit Übungen: `anleitungen/lernpfad/L4_ergebnisse_ausgeben.md`",
             "display_name": "",
             "documentation": "",
             "template": {
@@ -54,7 +54,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Loads and returns the content from uploaded files.",
-            "display_name": "Neuerwerbungen lesen (Read File)",
+            "display_name": "Read File",
             "documentation": "https://docs.langflow.org/read-file",
             "edited": false,
             "field_order": [
@@ -1970,7 +1970,7 @@
             "base_classes": [
               "Message"
             ],
-            "display_name": "Leere Felder füllen",
+            "display_name": "Data Operations",
             "documentation": "https://docs.langflow.org/components-processing#operations",
             "minimized": false,
             "custom_fields": {},
@@ -2234,7 +2234,7 @@
               "Message",
               "Table"
             ],
-            "display_name": "Als Tabelle",
+            "display_name": "Type Convert",
             "documentation": "https://docs.langflow.org/type-convert",
             "minimized": false,
             "custom_fields": {},
@@ -2311,7 +2311,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Die Tabelle",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -2613,7 +2613,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Extracts text using a template.",
-            "display_name": "Zitierliste",
+            "display_name": "Parser",
             "documentation": "https://docs.langflow.org/parser",
             "edited": false,
             "field_order": [
@@ -2809,7 +2809,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Zitierliste",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -3094,6 +3094,32 @@
         }
       },
       {
+        "id": "note-7",
+        "type": "noteNode",
+        "position": {
+          "x": 1740,
+          "y": 0
+        },
+        "width": 320,
+        "height": 114,
+        "measured": {
+          "width": 320,
+          "height": 114
+        },
+        "data": {
+          "id": "note-7",
+          "type": "note",
+          "node": {
+            "description": "**Zitierliste**",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
+        }
+      },
+      {
         "id": "ParserComponent-liste",
         "type": "genericNode",
         "position": {
@@ -3111,7 +3137,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Extracts text using a template.",
-            "display_name": "Markdown-Liste",
+            "display_name": "Parser",
             "documentation": "https://docs.langflow.org/parser",
             "edited": false,
             "field_order": [
@@ -3307,7 +3333,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Markdown-Liste",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -3592,6 +3618,32 @@
         }
       },
       {
+        "id": "note-10",
+        "type": "noteNode",
+        "position": {
+          "x": 1740,
+          "y": 400
+        },
+        "width": 320,
+        "height": 114,
+        "measured": {
+          "width": 320,
+          "height": 114
+        },
+        "data": {
+          "id": "note-10",
+          "type": "note",
+          "node": {
+            "description": "**Markdown-Liste**",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
+        }
+      },
+      {
         "id": "ParserComponent-html",
         "type": "genericNode",
         "position": {
@@ -3609,7 +3661,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Extracts text using a template.",
-            "display_name": "HTML-Tabellenzeilen",
+            "display_name": "Parser",
             "documentation": "https://docs.langflow.org/parser",
             "edited": false,
             "field_order": [
@@ -3921,7 +3973,7 @@
               "Message"
             ],
             "name": "",
-            "display_name": "HTML-Seite (ohne KI)",
+            "display_name": "Prompt Template",
             "priority": null,
             "documentation": "https://docs.langflow.org/components-prompts",
             "minimized": false,
@@ -4003,7 +4055,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "HTML für die Webseite",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -4288,6 +4340,32 @@
         }
       },
       {
+        "id": "note-14",
+        "type": "noteNode",
+        "position": {
+          "x": 1740,
+          "y": 640
+        },
+        "width": 320,
+        "height": 114,
+        "measured": {
+          "width": 320,
+          "height": 114
+        },
+        "data": {
+          "id": "note-14",
+          "type": "note",
+          "node": {
+            "description": "**HTML-Seite**",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
+        }
+      },
+      {
         "id": "ParserComponent-text",
         "type": "genericNode",
         "position": {
@@ -4452,7 +4530,7 @@
             "base_classes": [
               "Message"
             ],
-            "display_name": "Alles als Text (Stringify)",
+            "display_name": "Parser",
             "documentation": "https://docs.langflow.org/parser",
             "minimized": false,
             "custom_fields": {},
@@ -4526,7 +4604,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Alles als Text",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -4811,6 +4889,32 @@
         }
       },
       {
+        "id": "note-17",
+        "type": "noteNode",
+        "position": {
+          "x": 1740,
+          "y": 1260
+        },
+        "width": 320,
+        "height": 114,
+        "measured": {
+          "width": 320,
+          "height": 114
+        },
+        "data": {
+          "id": "note-17",
+          "type": "note",
+          "node": {
+            "description": "**Alles als Text**",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
+        }
+      },
+      {
         "id": "SaveToFile-excel",
         "type": "genericNode",
         "position": {
@@ -4828,7 +4932,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Save content to a file in the specified format and return its path.",
-            "display_name": "Als Excel speichern (Write File)",
+            "display_name": "Write File",
             "documentation": "https://docs.langflow.org/write-file",
             "edited": false,
             "field_order": [
@@ -5342,7 +5446,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Gespeichert",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [

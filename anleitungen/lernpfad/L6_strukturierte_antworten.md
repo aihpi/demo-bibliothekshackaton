@@ -32,18 +32,20 @@ Die Erwerbung bekommt Anschaffungsvorschläge per E-Mail, jede anders geschriebe
 | **C** | die Liste | **Batch Run**: ein Aufruf des Modells pro Zeile | die Liste mit einer neuen Spalte *fachgruppe* |
 | **D** | die Liste | **Smart Transform**: eine Anweisung in eigenen Worten | eine gefilterte, sortierte Liste |
 
-Der Baustein **KI-Modell (für B, C, D)** liefert über seinen Ausgang *Language Model* das Modell an die drei Bausteine, die eines brauchen. Weg A hat ein eigenes KI-Modell, weil dort dessen Antworttext gebraucht wird.
+Das untere **KI-Modell** (Label *Modell für Weg B, C und D*) liefert über seinen Ausgang *Language Model* das Modell an die drei Bausteine, die eines brauchen. Weg A hat oben ein eigenes **KI-Modell**, weil dort dessen Antworttext gebraucht wird.
+
+Im Flow kommen **Read File**, **KI-Modell**, **Type Convert** und **Chat Output** mehrfach vor. Die Bausteine tragen ihren Standardnamen, so wie ihr sie auch in der Bausteinliste links findet. Gelbe **Labels**, kleine Notizen auf der Arbeitsfläche, zeigen, welcher **Read File** die E-Mails und welcher die Liste liest, welche Bausteine zu Weg A gehören und welches **KI-Modell** die Wege B, C und D versorgt. Die fünf **Chat Outputs** unterscheidet ihr am **Sender Name**, der im Playground über der Nachricht steht: *A: Antwort des Modells*, *A: Prompt + Type Convert*, *B: Structured Output*, *C: Batch Run* und *D: Smart Transform*.
 
 Die Wege A und B lesen dieselben E-Mails. Vergleicht ihre Tabellen: Das ist der Kern dieses Moduls.
 
 ## 2. Vorbereiten
 
 1. In der Übersicht beim Flow **L6 Strukturierte Antworten** auf die drei Punkte → *Duplicate*. Arbeitet in der Kopie.
-2. Im Baustein **E-Mails (Read File)** `daten/lernpfad/anschaffungsvorschlaege.txt` hochladen, im Baustein **Liste (Read File)** `daten/lernpfad/neuerwerbungen.csv`.
+2. Im oberen **Read File** (Label *E-Mails*) `daten/lernpfad/anschaffungsvorschlaege.txt` hochladen, im unteren **Read File** (Label *Liste*) `daten/lernpfad/neuerwerbungen.csv`.
 3. In **beiden** KI-Modellen die **Quelle** auf *Cluster (LiteLLM)* stellen. Mit einem lokalen Modell funktionieren A und D, B wird unzuverlässig und C dauert sehr lange (siehe Übung 2).
 4. **Playground** öffnen, irgendetwas abschicken. Nach ein bis drei Minuten erscheinen fünf Nachrichten: die Antwort des Modells aus A und die Tabellen von A bis D.
 
-Der Flow hat keinen Chat Input, darum laufen alle Wege. Einzelne Wege startet ihr mit **▶** an ihrem Chat Output, z. B. an *B: Tabelle*. Das spart Zeit, wenn ihr nur an einem Weg arbeitet.
+Der Flow hat keinen Chat Input, darum laufen alle Wege. Einzelne Wege startet ihr mit **▶** an ihrem **Chat Output**, z. B. an *B: Structured Output*. Das spart Zeit, wenn ihr nur an einem Weg arbeitet.
 
 ## 3. Schritt für Schritt
 
@@ -61,9 +63,9 @@ Das Modell schreibt dann Text, der wie eine Tabelle aussieht. Für Langflow ist 
 
 | Einstellung | Wo | Was sie bewirkt |
 | --- | --- | --- |
-| **Kreativität (Temperatur)** | KI-Modell, am Baustein | Steht auf *0*. Je niedriger, desto eher hält sich das Modell an das Format und antwortet beim nächsten Lauf gleich. |
-| **Output Type** | Type Convert, am Baustein | *Table*: Der Baustein hat dann den Ausgang *Table Output*. |
-| **Auto Parse** | Type Convert, *Parameters* | Erkennt CSV oder JSON im Text und macht Spalten daraus. Ohne Auto Parse wird jede Zeile des Texts eine Zeile in einer einzigen Spalte `text`. |
+| **Kreativität (Temperatur)** | oberes KI-Modell, am Baustein | Steht auf *0*. Je niedriger, desto eher hält sich das Modell an das Format und antwortet beim nächsten Lauf gleich. |
+| **Output Type** | oberes Type Convert, am Baustein | *Table*: Der Baustein hat dann den Ausgang *Table Output*. |
+| **Auto Parse** | oberes Type Convert, *Parameters* | Erkennt CSV oder JSON im Text und macht Spalten daraus. Ohne Auto Parse wird jede Zeile des Texts eine Zeile in einer einzigen Spalte `text`. |
 
 **Was Auto Parse versteht und was nicht** (ausprobiert mit Text, der direkt in Type Convert ging):
 
@@ -86,7 +88,7 @@ Darum steht im Prompt „ohne Erklärung und ohne ```“ und die Kopfzeile wört
 
 | Einstellung | Wo | Was sie bewirkt |
 | --- | --- | --- |
-| **Language Model** | am Baustein | Hier ist der Ausgang *Language Model* von **KI-Modell** angeschlossen. |
+| **Language Model** | am Baustein | Hier ist der Ausgang *Language Model* vom unteren **KI-Modell** angeschlossen. |
 | **Input Message** | am Baustein | Der Text, aus dem herausgezogen wird; hier die E-Mails |
 | **Output Schema** | am Baustein, öffnet sich als Tabelle | Die Felder, eines pro Zeile: **Name** (wird zum Spaltennamen), **Description** (was in das Feld gehört; das liest das Modell), **Type** (*str* Text, *int* ganze Zahl, *float* Zahl mit Komma, *bool* ja/nein, *dict* verschachtelte Angaben) und **As List** (mehrere Werte pro Feld, z. B. mehrere Autor:innen) |
 | **Schema Name** | *Parameters* | Der Name dessen, was herausgezogen wird, hier *Anschaffungsvorschlag*. Das Modell sieht ihn als Namen der Funktion. Ein guter Name hilft spürbar (Übung 9). |
@@ -100,7 +102,7 @@ Der Baustein hat zwei Ausgänge mit dem Namen *Structured Output*: einen als **J
 
 *Batch Run* nimmt eine **Tabelle** und fragt das Modell **für jede Zeile einmal**, mit derselben Anweisung. Die Antworten kommen als neue Spalte an die Tabelle. Hier ordnet das Modell jedes Buch der Liste einer Fachgruppe zu.
 
-Die Liste kommt als CSV-Text aus *Read File*; ein **Type Convert** mit *Auto Parse* macht daraus erst eine Tabelle, wie in Weg A.
+Die Liste kommt als CSV-Text aus dem unteren **Read File**; das **Type Convert** daneben macht mit *Auto Parse* daraus erst eine Tabelle, wie in Weg A.
 
 | Einstellung | Wo | Was sie bewirkt |
 | --- | --- | --- |
@@ -160,7 +162,7 @@ Die Lehre: Keiner der Wege prüft, ob der Inhalt stimmt. Structured Output garan
 
 ### 🟢 2. Ein kleines Modell
 
-Stellt in beiden KI-Modellen die **Quelle** auf *Lokal (Ollama)* und drückt **▶** an *A: Antwort des Modells*, *A: Tabelle* und *B: Tabelle*. Startet nicht den ganzen Flow: Batch Run (C) braucht mit dem lokalen Modell sehr lange.
+Stellt in beiden KI-Modellen die **Quelle** auf *Lokal (Ollama)* und drückt **▶** an den **Chat Outputs** *A: Antwort des Modells*, *A: Prompt + Type Convert* und *B: Structured Output*. Startet nicht den ganzen Flow: Batch Run (C) braucht mit dem lokalen Modell sehr lange.
 
 <details>
 <summary>Lösung</summary>
@@ -176,8 +178,8 @@ Der Unterschied zeigt, was Structured Output leistet: Die Form ist sicher, der I
 
 ### 🟢 3. Ohne Auto Parse
 
-1. Im Baustein *A: Text → Tabelle (Type Convert)* unter *Parameters* **Auto Parse** ausschalten und ▶ an *A: Tabelle* drücken.
-2. Auto Parse wieder einschalten. Ergänzt im Prompt *A: Prompt verlangt CSV* am Ende: `Beginne deine Antwort mit dem Satz: Hier ist die Tabelle.` Drückt ▶ an *A: Tabelle*.
+1. Im oberen **Type Convert** (Weg A) unter *Parameters* **Auto Parse** ausschalten und ▶ am **Chat Output** *A: Prompt + Type Convert* drücken.
+2. Auto Parse wieder einschalten. Ergänzt im **Prompt Template** am Ende: `Beginne deine Antwort mit dem Satz: Hier ist die Tabelle.` Drückt ▶ am **Chat Output** *A: Prompt + Type Convert*.
 
 <details>
 <summary>Lösung</summary>
@@ -189,12 +191,12 @@ Der Unterschied zeigt, was Structured Output leistet: Die Form ist sicher, der I
 
 ### 🟢 4. Bessere Feldbeschreibungen
 
-Öffnet im Baustein *B: Structured Output* das **Output Schema** und ändert die **Description**:
+Öffnet im Baustein **Structured Output** das **Output Schema** und ändert die **Description**:
 
 - bei *wer*: `Vor- und Nachname der Person, die das Buch vorschlägt, ohne Titel und E-Mail-Adresse`
 - bei *jahr*: `Erscheinungsjahr, nur wenn es ausdrücklich genannt ist; sonst 0`
 
-Drückt zwei- oder dreimal ▶ an *B: Tabelle*.
+Drückt zwei- oder dreimal ▶ am **Chat Output** *B: Structured Output*.
 
 <details>
 <summary>Lösung</summary>
@@ -211,7 +213,7 @@ Schreibt den Prompt von Weg A so um, dass das Modell JSON liefert. Ersetzt alles
 Antworte nur mit einem JSON-Array: ein Objekt pro Buch mit den Schlüsseln autor, titel, jahr, verlag, isbn und wer. Fehlt eine Angabe, nimm null. Keine Erklärung. Erfinde nichts.
 ```
 
-Drückt ▶ an *A: Antwort des Modells* und *A: Tabelle*. Probiert dann, ein Beispiel mit geschweiften Klammern in den Prompt zu schreiben, z. B. `{"autor": "Nachname, Vorname"}`. Was passiert am Baustein?
+Drückt ▶ an den **Chat Outputs** *A: Antwort des Modells* und *A: Prompt + Type Convert*. Probiert dann, ein Beispiel mit geschweiften Klammern in den Prompt zu schreiben, z. B. `{"autor": "Nachname, Vorname"}`. Was passiert am Baustein?
 
 <details>
 <summary>Lösung</summary>
@@ -224,7 +226,7 @@ Mit dem Beispiel in geschweiften Klammern bekommt das Prompt Template einen neue
 
 ### 🟡 6. Ein neues Feld
 
-Ergänzt im **Output Schema** von *B: Structured Output* eine neue Zeile:
+Ergänzt im **Output Schema** von **Structured Output** eine neue Zeile:
 
 | Name | Description | Type | As List |
 | --- | --- | --- | --- |
@@ -241,13 +243,13 @@ B lieferte eine neue Spalte *exemplare*: 2 bei Jana Petersen („zwei Exemplare 
 
 ### 🟡 7. Batch Run sieht die ganze Zeile
 
-Im Baustein *C: Batch Run*:
+Im Baustein **Batch Run**:
 
 1. **Column Name** leeren.
 2. Unter *Parameters* **Enable Metadata** einschalten.
 3. Unter *Parameters* den **Output Column Name** auf `gruppe` ändern.
 
-Drückt ▶ an *C: Tabelle*. Was ändert sich?
+Drückt ▶ am **Chat Output** *C: Batch Run*. Was ändert sich?
 
 <details>
 <summary>Lösung</summary>
@@ -258,7 +260,7 @@ Mit leerem *Column Name* bekommt das Modell die ganze Zeile als Liste „spalte 
 
 ### 🟡 8. Was Smart Transform kann und was nicht
 
-Gebt *D: Smart Transform* nacheinander diese **Instructions** und drückt jeweils ▶ an *D: Tabelle*:
+Gebt **Smart Transform** nacheinander diese **Instructions** und drückt jeweils ▶ am **Chat Output** *D: Smart Transform*:
 
 1. `Füge eine Spalte preis_mit_rabatt hinzu: preis_eur minus 10 Prozent, auf zwei Stellen gerundet. Behalte nur titel, preis_eur und preis_mit_rabatt.`
 2. `Zähle für jedes Fach, wie viele Bücher es gibt.`

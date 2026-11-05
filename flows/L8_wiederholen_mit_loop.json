@@ -18,16 +18,16 @@
           "y": -260
         },
         "width": 480,
-        "height": 1168,
+        "height": 1236,
         "measured": {
           "width": 480,
-          "height": 1168
+          "height": 1236
         },
         "data": {
           "id": "note-0",
           "type": "note",
           "node": {
-            "description": "# 🔁 L8 Wiederholen mit Loop\n\nEine Liste von DOIs wird **Eintrag für Eintrag** bei **Crossref** nachgeschlagen. Keine KI.\n\n1. **Split Text** macht aus der eingefügten Liste eine Tabelle: eine Zeile pro DOI.\n2. **Loop** gibt die Zeilen einzeln an die Schleife (oben):\n   - **Parser** holt die DOI als Text,\n   - **Prompt Template** baut daraus die Adresse,\n   - **API Request** fragt Crossref,\n   - **Data Operations** liest Titel, Jahr, Zeitschrift, Zitationen und Rückzug aus.\n   Die gestrichelte Linie führt zurück in die Loop: Dann kommt die nächste DOI dran.\n3. Wenn alle DOIs durch sind, gibt **Done** alle Ergebnisse als Tabelle weiter.\n\n## ▶ So startet ihr\n1. Kopie anlegen (*Duplicate*).\n2. **Playground** öffnen und den Inhalt von `daten/lernpfad/dois.txt` einfügen.\n3. Nach etwa 15 Sekunden erscheinen Tabelle und Liste.\n\nAnleitung mit Übungen: `anleitungen/lernpfad/L8_wiederholen_mit_loop.md`",
+            "description": "# 🔁 L8 Wiederholen mit Loop\n\nEine Liste von DOIs wird **Eintrag für Eintrag** bei **Crossref** nachgeschlagen. Keine KI.\n\n1. **Split Text** macht aus der eingefügten Liste eine Tabelle: eine Zeile pro DOI.\n2. **Loop** gibt die Zeilen einzeln an die Schleife (oben):\n   - **Parser** holt die DOI als Text,\n   - **Prompt Template** baut daraus die Adresse,\n   - **API Request** fragt Crossref,\n   - **Data Operations** liest Titel, Jahr, Zeitschrift, Zitationen und Rückzug aus.\n   Die gestrichelte Linie führt zurück in die Loop: Dann kommt die nächste DOI dran.\n3. Wenn alle DOIs durch sind, gibt **Done** alle Ergebnisse auf einmal weiter: an einen **Chat Output** als Tabelle und über einen zweiten **Parser** als Liste.\n\n## ▶ So startet ihr\n1. Kopie anlegen (*Duplicate*).\n2. **Playground** öffnen und den Inhalt von `daten/lernpfad/dois.txt` einfügen.\n3. Nach etwa 15 Sekunden erscheinen Tabelle und Liste.\n\nAnleitung mit Übungen: `anleitungen/lernpfad/L8_wiederholen_mit_loop.md`",
             "display_name": "",
             "documentation": "",
             "template": {
@@ -80,7 +80,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Get chat inputs from the Playground.",
-            "display_name": "DOI-Liste (Chat)",
+            "display_name": "Chat Input",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -376,7 +376,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Split text into chunks based on specified criteria.",
-            "display_name": "Eine DOI pro Zeile",
+            "display_name": "Split Text",
             "documentation": "https://docs.langflow.org/split-text",
             "edited": false,
             "field_order": [
@@ -648,7 +648,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Iterates through Data or Message objects, processing items individually and aggregating results from loop inputs.",
-            "display_name": "Jede DOI einzeln",
+            "display_name": "Loop",
             "documentation": "https://docs.langflow.org/loop",
             "edited": false,
             "field_order": [
@@ -780,7 +780,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Extracts text using a template.",
-            "display_name": "DOI als Text",
+            "display_name": "Parser",
             "documentation": "https://docs.langflow.org/parser",
             "edited": false,
             "field_order": [
@@ -1092,7 +1092,7 @@
               "Message"
             ],
             "name": "",
-            "display_name": "Adresse bauen",
+            "display_name": "Prompt Template",
             "priority": null,
             "documentation": "https://docs.langflow.org/components-prompts",
             "minimized": false,
@@ -1174,7 +1174,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Make HTTP requests using URL or cURL commands.",
-            "display_name": "Crossref fragen",
+            "display_name": "API Request",
             "documentation": "https://docs.langflow.org/api-request",
             "edited": false,
             "field_order": [
@@ -2759,7 +2759,7 @@
             "base_classes": [
               "Message"
             ],
-            "display_name": "Felder auslesen",
+            "display_name": "Data Operations",
             "documentation": "https://docs.langflow.org/components-processing#operations",
             "minimized": false,
             "custom_fields": {},
@@ -2928,7 +2928,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Ergebnistabelle",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -3213,6 +3213,32 @@
         }
       },
       {
+        "id": "note-10",
+        "type": "noteNode",
+        "position": {
+          "x": 1220,
+          "y": 600
+        },
+        "width": 380,
+        "height": 148,
+        "measured": {
+          "width": 380,
+          "height": 148
+        },
+        "data": {
+          "id": "note-10",
+          "type": "note",
+          "node": {
+            "description": "**Nach der Schleife**: oben die Tabelle, darunter die Liste",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
+        }
+      },
+      {
         "id": "ParserComponent-liste",
         "type": "genericNode",
         "position": {
@@ -3230,7 +3256,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Extracts text using a template.",
-            "display_name": "Als Liste",
+            "display_name": "Parser",
             "documentation": "https://docs.langflow.org/parser",
             "edited": false,
             "field_order": [
@@ -3426,7 +3452,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Ergebnisliste",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [

@@ -25,7 +25,7 @@ Daten kommen selten so an, wie ihr sie braucht. Ein Webdienst schickt viel mehr 
 
 | Typ | Was es ist | Typisches Beispiel |
 | --- | --- | --- |
-| **Message** | Text | der Inhalt einer CSV-Datei aus *Read File*, ein Prompt, die Antwort eines Modells |
+| **Message** | Text | der Inhalt einer CSV-Datei aus **Read File**, ein Prompt, die Antwort eines Modells |
 | **JSON** | ein Datensatz aus benannten Feldern, die wieder Felder oder Listen enthalten können | die Antwort eines Webdienstes |
 | **Table** | Zeilen und Spalten wie in Excel | eine Trefferliste, eine Liste der Neuerwerbungen |
 
@@ -37,34 +37,34 @@ Der Flow hat zwei Teile.
 
 | Schritt | Baustein | Was passiert |
 | --- | --- | --- |
-| 1 | **Suchparameter** (Dynamic Create Data) | baut die Suchparameter für OpenAlex: Suchbegriffe, Zahl der Treffer, gewünschte Felder |
-| 2 | **OpenAlex fragen** (API Request) | schickt die Anfrage und bekommt JSON zurück |
-| 3a | **Treffer herausgreifen** (Data Operations, *Path Selection*) | nimmt aus der Antwort nur die Liste der Treffer |
-| 3b | **Felder auswählen und umbenennen** (Data Operations, *JQ Expression*) | baut jeden Treffer um: deutsche Feldnamen, verschachtelte Felder aufgelöst |
-| 4 | **Als Tabelle** (Type Convert) | macht aus der Liste eine Tabelle |
+| 1 | **Dynamic Create Data** | baut die Suchparameter für OpenAlex: Suchbegriffe, Zahl der Treffer, gewünschte Felder |
+| 2 | **API Request** | schickt die Anfrage und bekommt JSON zurück |
+| 3a | **Data Operations** mit *Path Selection* | nimmt aus der Antwort nur die Liste der Treffer |
+| 3b | **Data Operations** mit *JQ Expression* | baut jeden Treffer um: Felder ausgewählt und deutsch benannt, verschachtelte Felder aufgelöst |
+| 4 | **Type Convert** (je einer hinter 3a und 3b) | macht aus der Liste eine Tabelle |
 
-Die beiden Chat Outputs *Treffer, wie OpenAlex sie liefert* und *Treffer, aufgeräumt* zeigen den Unterschied zwischen 3a und 3b.
+Die beiden **Chat Output** rechts zeigen den Unterschied zwischen 3a und 3b. Beide haben den Sender Name *OpenAlex*; welcher welcher ist, sagen die Notizen darüber: *Treffer, wie OpenAlex sie liefert* (oben, nach 3a) und *Treffer, aufgeräumt* (unten, nach 3b).
 
 **Unten: Eine Liste wird aufgeräumt.**
 
 | Schritt | Baustein | Was passiert |
 | --- | --- | --- |
-| 1 | **Neuerwerbungen** (Read File) | liest die CSV-Datei als Text |
-| 2 | **CSV als Tabelle** (Type Convert) | macht aus dem Text eine Tabelle |
-| 3 | **Fach vereinheitlichen** (*Replace Value*) | ersetzt `informatik` durch `Informatik` |
-| 4 | **Doppelte entfernen** (*Drop Duplicates*) | entfernt Zeilen mit derselben ISBN |
-| 5 | **Fachreferat ergänzen** (*Merge*) | holt zu jedem Fach Fachreferat und Standort aus `fachreferate.csv` |
-| 6 | **Nach Fach sortieren** (*Sort*) | sortiert die Tabelle |
-| 7a | **Spalten auswählen** (*Select Columns*) | behält nur die Spalten, die jemand lesen will |
-| 7b | **Nur bestellte** (*Filter*) und **Als Liste** (Parser) | behält die bestellten Titel und schreibt sie als Liste |
+| 1 | **Read File** mit der Notiz *Neuerwerbungen* | liest die CSV-Datei als Text |
+| 2 | **Type Convert** | macht aus dem Text eine Tabelle |
+| 3 | **Data Operations** mit *Replace Value* | vereinheitlicht das Fach: ersetzt `informatik` durch `Informatik` |
+| 4 | **Data Operations** mit *Drop Duplicates* | entfernt Zeilen mit derselben ISBN |
+| 5 | **Data Operations** mit *Merge* | holt zu jedem Fach Fachreferat und Standort aus `fachreferate.csv` (eigener **Read File** mit der Notiz *Fachreferate* und **Type Convert** darunter) |
+| 6 | **Data Operations** mit *Sort* | sortiert die Tabelle nach Fach |
+| 7a | **Data Operations** mit *Select Columns* | behält nur die Spalten, die jemand lesen will; Ergebnis im **Chat Output** mit der Notiz *Neuerwerbungen, aufgeräumt* |
+| 7b | **Data Operations** mit *Filter* und **Parser** | behält die bestellten Titel und schreibt sie als Liste; Ergebnis im **Chat Output** mit der Notiz *Bestellt: Liste für die Fachreferate* |
 
 ## 2. Vorbereiten
 
 1. In der Übersicht beim Flow **L3 Tabellen und JSON** auf die drei Punkte klicken → *Duplicate*. Arbeitet in der Kopie.
-2. Im Baustein **Neuerwerbungen (Read File)** `daten/lernpfad/neuerwerbungen.csv` hochladen, im Baustein **Fachreferate (Read File)** `daten/lernpfad/fachreferate.csv`.
+2. Im **Read File** mit der Notiz *Neuerwerbungen* `daten/lernpfad/neuerwerbungen.csv` hochladen, im **Read File** mit der Notiz *Fachreferate* `daten/lernpfad/fachreferate.csv`.
 3. **Playground** öffnen, irgendetwas abschicken. Nach wenigen Sekunden erscheinen vier Nachrichten.
 
-Der Flow hat keinen Chat Input; der Playground führt also alles aus. Für die Übungen nutzt ihr meist **▶** am Baustein und schaut euch die Ausgabe direkt am Baustein an (Symbol unten rechts am Ausgang). Bei Tabellen erscheint dort eine Tabellenansicht.
+Der Flow hat keinen **Chat Input**; der Playground führt also alles aus. Für die Übungen nutzt ihr meist **▶** am Baustein und schaut euch die Ausgabe direkt am Baustein an (Symbol unten rechts am Ausgang). Bei Tabellen erscheint dort eine Tabellenansicht.
 
 Lest die Neuerwerbungen einmal in Ruhe durch. In der Datei stecken mit Absicht vier Fehler, wie sie in echten Listen vorkommen: *Künstliche Intelligenz verstehen* steht zweimal da, bei *Geschichte des Buchdrucks* fehlt das Jahr, *Datenbanken kompakt* hat das Fach `informatik` in Kleinbuchstaben, und um den Titel *Bibliotheken im Nationalsozialismus* stehen Leerzeichen.
 
@@ -72,12 +72,12 @@ Lest die Neuerwerbungen einmal in Ruhe durch. In der Datei stecken mit Absicht v
 
 ### 3.1 Dynamic Create Data: Suchparameter bauen
 
-In [L1](L1_daten_importieren.md) standen die Suchparameter für OpenAlex in der Adresse, mit `%20` statt Leerzeichen. Das ist fehleranfällig. *Dynamic Create Data* baut stattdessen einen JSON-Datensatz aus Feldern, die ihr festlegt. Den schließt ihr an den Eingang **Query Parameters** von *API Request* an, und der Baustein setzt die Parameter selbst richtig in die Adresse ein, Leerzeichen eingeschlossen.
+In [L1](L1_daten_importieren.md) standen die Suchparameter für OpenAlex in der Adresse, mit `%20` statt Leerzeichen. Das ist fehleranfällig. **Dynamic Create Data** baut stattdessen einen JSON-Datensatz aus Feldern, die ihr festlegt. Den schließt ihr an den Eingang **Query Parameters** von **API Request** an, und der Baustein setzt die Parameter selbst richtig in die Adresse ein, Leerzeichen eingeschlossen.
 
 | Einstellung | Wo | Was sie bewirkt |
 | --- | --- | --- |
 | **Input Configuration** | am Baustein | Die Felder, eines pro Zeile: *Field Name* und *Field Type* (*Text*, *Number*, *Boolean* …). Für jedes Feld erscheint ein Eingang. Hier: `search`, `per-page` und `select`. |
-| *ein Eingang pro Feld* | am Baustein | Der Wert. Eintippen oder von einem anderen Baustein verbinden, z. B. die Suchbegriffe aus einem Chat Input. |
+| *ein Eingang pro Feld* | am Baustein | Der Wert. Eintippen oder von einem anderen Baustein verbinden, z. B. die Suchbegriffe aus einem **Chat Input**. |
 
 Der Ausgang **JSON** ist der Datensatz, der Ausgang **Message** derselbe Inhalt als Text.
 
@@ -85,7 +85,7 @@ Die Feldnamen müssen genau so heißen, wie der Webdienst es erwartet. Welche da
 
 ### 3.2 Data Operations mit JSON
 
-*Data Operations* ist ein Werkzeugkasten. Ihr wählt zuerst den **Input Type**, dann eine **Operation**; erst danach erscheinen die passenden Felder. Mit *JSON* gibt es diese Operationen:
+**Data Operations** ist ein Werkzeugkasten. Ihr wählt zuerst den **Input Type**, dann eine **Operation**; erst danach erscheinen die passenden Felder. Mit *JSON* gibt es diese Operationen:
 
 | Operation | Was sie tut | Felder |
 | --- | --- | --- |
@@ -98,7 +98,7 @@ Die Feldnamen müssen genau so heißen, wie der Webdienst es erwartet. Welche da
 | **Combine** | führt mehrere Datensätze zu einem zusammen; gibt es ein Feld in beiden, wird daraus eine Liste beider Werte | mehrere Linien an den Eingang *JSON* |
 | **Literal Eval** | verwandelt Text, der wie JSON aussieht, in echtes JSON | keine. Nützlich, wenn ein Sprachmodell JSON als Text liefert ([L6](L6_strukturierte_antworten.md)). |
 
-Die Antwort von *API Request* sieht im Kern so aus:
+Die Antwort von **API Request** sieht im Kern so aus:
 
 ```json
 {
@@ -117,7 +117,7 @@ Die Antwort von *API Request* sieht im Kern so aus:
 
 Die Treffer stecken also in `result`, darin in `results`. Ein Punkt trennt die Ebenen: Der Weg zu den Treffern heißt `.result.results`.
 
-**Path Selection.** Im Feld **JSON to Map** fügt ihr ein Beispiel der Daten ein, etwa die Ausgabe von *OpenAlex fragen*, die ihr nach ▶ kopiert. Langflow liest daraus alle Wege und bietet sie im Feld **Select Path** zur Auswahl an. Im Flow ist `.result.results` gewählt. Heraus kommt `{"result": [ … ]}`: die Liste der Treffer, unverändert, unter dem Namen `result`.
+**Path Selection.** Im Feld **JSON to Map** fügt ihr ein Beispiel der Daten ein, etwa die Ausgabe von **API Request**, die ihr nach ▶ kopiert. Langflow liest daraus alle Wege und bietet sie im Feld **Select Path** zur Auswahl an. Im Flow ist `.result.results` gewählt. Heraus kommt `{"result": [ … ]}`: die Liste der Treffer, unverändert, unter dem Namen `result`.
 
 **JQ Expression.** jq ist eine kleine Sprache für JSON. Der Ausdruck im Flow lautet:
 
@@ -129,7 +129,7 @@ Gelesen von links nach rechts: Nimm `.result.results`, gib die Liste weiter (`|`
 
 ### 3.3 Type Convert: zwischen Message, JSON und Table wechseln
 
-*Type Convert* wandelt die Eingabe in den Typ um, den ihr unter **Output Type** wählt.
+**Type Convert** wandelt die Eingabe in den Typ um, den ihr unter **Output Type** wählt.
 
 | Einstellung | Wo | Was sie bewirkt |
 | --- | --- | --- |
@@ -179,13 +179,13 @@ Leere Zellen erscheinen in der Tabelle als `nan` (*not a number*, so nennt die T
 
 ### 3.5 Parser: eine Tabelle als Text
 
-*Parser* setzt die Werte jeder Zeile in eine Vorlage ein und gibt eine Zeile Text pro Tabellenzeile aus. Im Flow:
+**Parser** setzt die Werte jeder Zeile in eine Vorlage ein und gibt eine Zeile Text pro Tabellenzeile aus. Im Flow:
 
 ```text
 - {titel} ({autor}), Fachreferat: {fachreferat}
 ```
 
-Namen in geschweiften Klammern müssen genau den Spaltennamen entsprechen. Wie ihr mit Parser Listen, Zitate, HTML und mehr erzeugt, ist Thema von [L4](L4_ergebnisse_ausgeben.md).
+Namen in geschweiften Klammern müssen genau den Spaltennamen entsprechen. Wie ihr mit **Parser** Listen, Zitate, HTML und mehr erzeugt, ist Thema von [L4](L4_ergebnisse_ausgeben.md).
 
 ## 4. Übungen
 
@@ -193,29 +193,29 @@ Namen in geschweiften Klammern müssen genau den Spaltennamen entsprechen. Wie i
 
 ### 🟢 1. Ohne Auto Parse
 
-Schaltet im Baustein **CSV als Tabelle** unter *Parameters* **Auto Parse** aus und drückt ▶. Wie sieht die Tabelle aus? Schaltet es danach wieder ein.
+Schaltet im **Type Convert** hinter dem **Read File** *Neuerwerbungen* unter *Parameters* **Auto Parse** aus und drückt ▶. Wie sieht die Tabelle aus? Schaltet es danach wieder ein.
 
 <details>
 <summary>Lösung</summary>
 
-Die Tabelle hat eine einzige Zeile und eine einzige Spalte `text`, in der der ganze Inhalt der Datei steht. Ohne *Auto Parse* weiß Type Convert nicht, dass der Text eine CSV-Tabelle ist, und packt ihn als Ganzes in eine Zelle. Die Bausteine danach finden dann keine Spalte `fach` und brechen ab.
+Die Tabelle hat eine einzige Zeile und eine einzige Spalte `text`, in der der ganze Inhalt der Datei steht. Ohne *Auto Parse* weiß **Type Convert** nicht, dass der Text eine CSV-Tabelle ist, und packt ihn als Ganzes in eine Zelle. Die Bausteine danach finden dann keine Spalte `fach` und brechen ab.
 
 </details>
 
 ### 🟢 2. Andere Suchparameter
 
-Tragt im Baustein **Suchparameter** bei `search` `citizen science libraries` ein und bei `per-page` `10`. Drückt ▶ an **Treffer, aufgeräumt**.
+Tragt im Baustein **Dynamic Create Data** bei `search` `citizen science libraries` ein und bei `per-page` `10`. Drückt ▶ am unteren **Chat Output** *OpenAlex* (Notiz *Treffer, aufgeräumt*).
 
 <details>
 <summary>Lösung</summary>
 
-Ihr bekommt zehn Treffer zu Citizen Science. Die Leerzeichen in den Suchbegriffen sind kein Problem: *API Request* setzt die Parameter selbst korrekt in die Adresse ein (als `search=citizen+science+libraries`). Vergleicht das mit Übung 8 in [L1](L1_daten_importieren.md), wo ihr die Leerzeichen von Hand ersetzen musstet.
+Ihr bekommt zehn Treffer zu Citizen Science. Die Leerzeichen in den Suchbegriffen sind kein Problem: **API Request** setzt die Parameter selbst korrekt in die Adresse ein (als `search=citizen+science+libraries`). Vergleicht das mit Übung 8 in [L1](L1_daten_importieren.md), wo ihr die Leerzeichen von Hand ersetzen musstet.
 
 </details>
 
 ### 🟢 3. Filtern
 
-Ändert im Baustein **Nur bestellte** die Bedingung und drückt jeweils ▶ an **Bestellt: Liste für die Fachreferate**:
+Ändert im **Data Operations** mit *Filter* die Bedingung und drückt jeweils ▶ am **Chat Output** mit der Notiz *Bestellt: Liste für die Fachreferate*:
 
 1. *Column Name* `jahr`, *Filter Operator* *greater than*, *Filter Value* `2023`
 2. *Column Name* `fach`, *Filter Operator* *equals*, *Filter Value* `informatik`
@@ -227,14 +227,14 @@ Was fällt bei 1 an *Geschichte des Buchdrucks* auf? Warum ist die Liste bei 2 l
 <summary>Lösung</summary>
 
 1. Sechs Titel ab 2024. *Geschichte des Buchdrucks* fehlt: Ohne Jahr ist der Wert leer, und ein leerer Wert ist weder größer noch kleiner als 2023. Wer alle sehen will, die *nicht* älter sind, verliert so Titel ohne Jahr, ohne es zu merken.
-2. Der Filter unterscheidet Groß- und Kleinschreibung. `informatik` gibt es nach *Fach vereinheitlichen* nicht mehr. Mit `Informatik` erscheinen die drei Informatik-Titel.
+2. Der Filter unterscheidet Groß- und Kleinschreibung. `informatik` gibt es nach *Replace Value* (Schritt 3) nicht mehr. Mit `Informatik` erscheinen die drei Informatik-Titel.
 3. *contains* sucht einen Teil des Textes. `best` passt zu `bestellt`, also dieselben drei Titel wie vorher. Vorsicht: `in` würde auch auf `in Bearbeitung` und auf alles andere passen, das `in` enthält.
 
 </details>
 
 ### 🟢 4. Doppelte entfernen
 
-Leert im Baustein **Doppelte entfernen** das Feld *Column Name* und drückt ▶. Tragt danach `titel` ein und dann wieder `isbn`.
+Leert im **Data Operations** mit *Drop Duplicates* das Feld *Column Name* und drückt ▶. Tragt danach `titel` ein und dann wieder `isbn`.
 
 <details>
 <summary>Lösung</summary>
@@ -245,7 +245,7 @@ Mit leerem Feld bricht der Baustein mit einer Fehlermeldung ab (*KeyError … In
 
 ### 🟢 5. Merge Type
 
-Stellt im Baustein **Fachreferat ergänzen** den **Merge Type** nacheinander auf *inner*, *right* und *outer* und drückt jeweils ▶ an **Neuerwerbungen, aufgeräumt**. Was passiert mit *Wissenschaftliches Schreiben*?
+Stellt im **Data Operations** mit *Merge* den **Merge Type** nacheinander auf *inner*, *right* und *outer* und drückt jeweils ▶ am **Chat Output** mit der Notiz *Neuerwerbungen, aufgeräumt*. Was passiert mit *Wissenschaftliches Schreiben*?
 
 <details>
 <summary>Lösung</summary>
@@ -262,7 +262,7 @@ Für „ergänze Angaben, aber verliere nichts“ ist *left* richtig. *inner* is
 
 ### 🟡 6. Die Reihenfolge zählt
 
-Löscht den Baustein **Fach vereinheitlichen** und verbindet **CSV als Tabelle** direkt mit **Doppelte entfernen**. Drückt ▶ an **Neuerwerbungen, aufgeräumt**. Wo steht jetzt *Datenbanken kompakt*, und was fehlt? (Danach mit Strg+Z rückgängig machen.)
+Löscht den **Data Operations** mit *Replace Value* und verbindet den **Type Convert** hinter dem **Read File** *Neuerwerbungen* direkt mit dem **Data Operations** mit *Drop Duplicates*. Drückt ▶ am **Chat Output** mit der Notiz *Neuerwerbungen, aufgeräumt*. Wo steht jetzt *Datenbanken kompakt*, und was fehlt? (Danach mit Strg+Z rückgängig machen.)
 
 <details>
 <summary>Lösung</summary>
@@ -275,7 +275,7 @@ Löscht den Baustein **Fach vereinheitlichen** und verbindet **CSV als Tabelle**
 
 Wie viele Treffer hat OpenAlex insgesamt zu eurer Suche? Die Zahl steht in `.result.meta.count`.
 
-1. Drückt ▶ an **OpenAlex fragen** und kopiert die Ausgabe.
+1. Drückt ▶ an **API Request** und kopiert die Ausgabe.
 2. Setzt einen neuen **Data Operations** auf die Arbeitsfläche, *Input Type* *JSON*, Operation *Path Selection*, und verbindet *API Response* mit seinem Eingang *JSON*.
 3. Fügt die kopierte Ausgabe in **JSON to Map** ein und wählt in **Select Path** `.result.meta.count`.
 
@@ -288,12 +288,12 @@ Heraus kommt eine einzelne Zahl, z. B. `{"result": 1928193}`; sie hängt von eur
 
 ### 🟡 8. Spalten umbenennen, ohne etwas kaputtzumachen
 
-Die Spalte `fachreferat` soll in der Tabelle `Ansprechperson` heißen. Setzt zwischen **Nach Fach sortieren** und **Spalten auswählen** einen **Data Operations** mit *Input Type* *Table* und Operation *Rename Column* (*Column Name* `fachreferat`, *New Column Name* `Ansprechperson`). Drückt ▶ an **Neuerwerbungen, aufgeräumt**. Was meldet Langflow, und wie behebt ihr es?
+Die Spalte `fachreferat` soll in der Tabelle `Ansprechperson` heißen. Setzt zwischen die **Data Operations** mit *Sort* und *Select Columns* einen weiteren **Data Operations** mit *Input Type* *Table* und Operation *Rename Column* (*Column Name* `fachreferat`, *New Column Name* `Ansprechperson`). Drückt ▶ am **Chat Output** mit der Notiz *Neuerwerbungen, aufgeräumt*. Was meldet Langflow, und wie behebt ihr es?
 
 <details>
 <summary>Lösung</summary>
 
-*Spalten auswählen* bricht ab: *['fachreferat'] not in index*. Die Spalte heißt nach dem Umbenennen nicht mehr `fachreferat`, aber *Columns to Select* fragt noch nach dem alten Namen. Ersetzt dort `fachreferat` durch `Ansprechperson`. Der untere Zweig (*Nur bestellte* und *Als Liste*) läuft weiter, weil er schon vor dem Umbenennen abzweigt.
+Der **Data Operations** mit *Select Columns* bricht ab: *['fachreferat'] not in index*. Die Spalte heißt nach dem Umbenennen nicht mehr `fachreferat`, aber *Columns to Select* fragt noch nach dem alten Namen. Ersetzt dort `fachreferat` durch `Ansprechperson`. Der untere Zweig (*Filter* und **Parser**) läuft weiter, weil er schon vor dem Umbenennen abzweigt.
 
 Merkt euch: Jeder Baustein, der eine Spalte beim Namen nennt, hängt von allen Umbenennungen davor ab. Benennt deshalb möglichst spät um, kurz vor der Ausgabe.
 
@@ -304,30 +304,30 @@ Merkt euch: Jeder Baustein, der eine Spalte beim Namen nennt, hängt von allen U
 Die Erwerbung schickt drei weitere Titel in `daten/lernpfad/neuerwerbungen_nachtrag.csv`. Hängt sie an die Liste an:
 
 1. Einen neuen **Read File** mit dieser Datei und einen **Type Convert** (*Output Type* *Table*, *Auto Parse* an) auf die Arbeitsfläche setzen und verbinden.
-2. Einen **Data Operations** mit *Input Type* *Table* und Operation *Concatenate* einfügen. Beide Tabellen (aus **CSV als Tabelle** und aus dem neuen Type Convert) mit seinem Eingang *Table* verbinden.
-3. Seinen Ausgang an **Fach vereinheitlichen** anschließen, statt der alten Verbindung von **CSV als Tabelle**.
+2. Einen **Data Operations** mit *Input Type* *Table* und Operation *Concatenate* einfügen. Beide Tabellen (aus dem **Type Convert** hinter dem **Read File** *Neuerwerbungen* und aus dem neuen **Type Convert**) mit seinem Eingang *Table* verbinden.
+3. Seinen Ausgang an den **Data Operations** mit *Replace Value* anschließen, statt der alten Verbindung vom **Type Convert**.
 
-Wie viele Zeilen hat **Neuerwerbungen, aufgeräumt** jetzt?
+Wie viele Zeilen zeigt der **Chat Output** mit der Notiz *Neuerwerbungen, aufgeräumt* jetzt?
 
 <details>
 <summary>Lösung</summary>
 
-Concatenate hängt die 3 Zeilen unter die 15 alten: 18 Zeilen. Nach *Doppelte entfernen* bleiben 17. Concatenate braucht Tabellen mit denselben Spalten; der Nachtrag hat dieselbe Kopfzeile wie die Liste. Für Tabellen mit *verschiedenen* Spalten, die über einen gemeinsamen Wert zusammengehören, nehmt ihr Merge.
+Concatenate hängt die 3 Zeilen unter die 15 alten: 18 Zeilen. Nach *Drop Duplicates* bleiben 17. Concatenate braucht Tabellen mit denselben Spalten; der Nachtrag hat dieselbe Kopfzeile wie die Liste. Für Tabellen mit *verschiedenen* Spalten, die über einen gemeinsamen Wert zusammengehören, nehmt ihr Merge.
 
 </details>
 
 ### 🔴 10. Das Jahr reparieren
 
-In der Liste der bestellten Titel soll auch das Jahr stehen. Ändert die Vorlage von **Als Liste** zu `- {titel} ({autor}, {jahr})` und drückt ▶. Ihr seht `2024.0` und bei *Geschichte des Buchdrucks* `nan`. Repariert das so, dass `2024` und `o. J.` erscheinen.
+In der Liste der bestellten Titel soll auch das Jahr stehen. Ändert die Vorlage im **Parser** zu `- {titel} ({autor}, {jahr})` und drückt ▶. Ihr seht `2024.0` und bei *Geschichte des Buchdrucks* `nan`. Repariert das so, dass `2024` und `o. J.` erscheinen.
 
-Tipp: Data Operations mit *Table* kann das nicht, JQ schon. Ihr braucht dafür einen Umweg über JSON.
+Tipp: **Data Operations** mit *Table* kann das nicht, JQ schon. Ihr braucht dafür einen Umweg über JSON.
 
 <details>
 <summary>Lösung</summary>
 
 Warum es passiert: Weil ein Jahr fehlt, speichert die Tabelle die ganze Spalte als Kommazahl, und das fehlende Jahr als *nan*.
 
-Die Reparatur zwischen **Nur bestellte** und **Als Liste**:
+Die Reparatur zwischen dem **Data Operations** mit *Filter* und dem **Parser**:
 
 1. **Type Convert** mit *Output Type* *JSON*: aus der Tabelle wird `{"results": [ … ]}`.
 2. **Data Operations** mit *Input Type* *JSON*, Operation *JQ Expression*:
@@ -337,7 +337,7 @@ Die Reparatur zwischen **Nur bestellte** und **Als Liste**:
    ```
 
    `|=` ändert ein Feld an Ort und Stelle. `isnan` erkennt den fehlenden Wert, `floor` schneidet die Nachkommastellen ab, `tostring` macht Text daraus.
-3. **Type Convert** mit *Output Type* *Table*, dann weiter an **Als Liste**.
+3. **Type Convert** mit *Output Type* *Table*, dann weiter an den **Parser**.
 
 Ergebnis: *Geschichte des Buchdrucks (Lange, Clara, o. J.)*. Oft ist es einfacher, den Fehler in der Quelle zu beheben, hier also das Jahr in der CSV-Datei nachzutragen. Wenn die Daten aber jeden Tag neu aus einem System kommen, gehört die Reparatur in den Flow.
 
@@ -351,7 +351,7 @@ In [L1](L1_daten_importieren.md) (Übung 8) habt ihr den hbz-Verbundkatalog übe
 <summary>Lösung</summary>
 
 1. **Dynamic Create Data** mit den Feldern `q`, `size` und `format`, Werte z. B. `Umberto Eco Abschlussarbeit`, `3`, `json`.
-2. **API Request** mit der URL `https://lobid.org/resources/search`, den Ausgang *JSON* von Dynamic Create Data an *Query Parameters*.
+2. **API Request** mit der URL `https://lobid.org/resources/search`, den Ausgang *JSON* von **Dynamic Create Data** an *Query Parameters*.
 3. **Data Operations**, *JSON*, *JQ Expression*:
 
    ```text
@@ -369,17 +369,17 @@ Ergebnis: eine Tabelle mit Ausgaben von *Wie man eine wissenschaftliche Abschlu�
 
 | Ihr wollt … | Baustein und Einstellung | Hinweis |
 | --- | --- | --- |
-| einen einzelnen Wert aus JSON | Data Operations, *Path Selection* | Am bequemsten: Beispiel einfügen, Weg auswählen |
-| einige Felder der obersten Ebene behalten oder loswerden | Data Operations, *Select Keys* / *Remove Keys* | Wirkt nur auf die oberste Ebene, nicht auf die Treffer in einer Liste |
-| jeden Eintrag einer Liste umbauen, verschachtelte Felder auflösen, Werte reparieren | Data Operations, *JQ Expression* | Mächtig, aber eine eigene kleine Sprache; ausprobieren mit ▶ |
-| aus CSV-Text eine Tabelle | Type Convert, *Table*, *Auto Parse* an | Ohne Auto Parse: eine einzige Zelle |
-| aus JSON eine Tabelle | Type Convert, *Table* | Das JSON muss eine Liste enthalten |
-| Zeilen auswählen, sortieren, Spalten wählen | Data Operations, *Table* | Achtet auf Groß- und Kleinschreibung |
-| zwei Tabellen über eine gemeinsame Spalte verbinden | Data Operations, *Merge* | *left*, wenn keine Zeile verloren gehen soll |
-| zwei Tabellen mit gleichen Spalten untereinander | Data Operations, *Concatenate* | Spaltennamen müssen gleich sein |
-| Parameter für einen Webdienst | Dynamic Create Data → *Query Parameters* | Statt die Adresse von Hand zu bauen |
-| eine Tabelle als Text mit eigener Form | Parser | mehr in [L4](L4_ergebnisse_ausgeben.md) |
-| eine Tabelle als Text, ohne Vorlage | Type Convert, *Message* | ergibt eine Markdown-Tabelle |
+| einen einzelnen Wert aus JSON | **Data Operations**, *Path Selection* | Am bequemsten: Beispiel einfügen, Weg auswählen |
+| einige Felder der obersten Ebene behalten oder loswerden | **Data Operations**, *Select Keys* / *Remove Keys* | Wirkt nur auf die oberste Ebene, nicht auf die Treffer in einer Liste |
+| jeden Eintrag einer Liste umbauen, verschachtelte Felder auflösen, Werte reparieren | **Data Operations**, *JQ Expression* | Mächtig, aber eine eigene kleine Sprache; ausprobieren mit ▶ |
+| aus CSV-Text eine Tabelle | **Type Convert**, *Table*, *Auto Parse* an | Ohne Auto Parse: eine einzige Zelle |
+| aus JSON eine Tabelle | **Type Convert**, *Table* | Das JSON muss eine Liste enthalten |
+| Zeilen auswählen, sortieren, Spalten wählen | **Data Operations**, *Table* | Achtet auf Groß- und Kleinschreibung |
+| zwei Tabellen über eine gemeinsame Spalte verbinden | **Data Operations**, *Merge* | *left*, wenn keine Zeile verloren gehen soll |
+| zwei Tabellen mit gleichen Spalten untereinander | **Data Operations**, *Concatenate* | Spaltennamen müssen gleich sein |
+| Parameter für einen Webdienst | **Dynamic Create Data** → *Query Parameters* | Statt die Adresse von Hand zu bauen |
+| eine Tabelle als Text mit eigener Form | **Parser** | mehr in [L4](L4_ergebnisse_ausgeben.md) |
+| eine Tabelle als Text, ohne Vorlage | **Type Convert**, *Message* | ergibt eine Markdown-Tabelle |
 
 Und wann braucht ihr dafür eine KI? Fast nie. Alles in diesem Modul läuft ohne Sprachmodell: schneller, kostenlos, und jedes Mal mit demselben Ergebnis. Eine KI lohnt sich erst, wenn die Daten keine feste Form haben, z. B. freier Text ([L6](L6_strukturierte_antworten.md)).
 
@@ -387,8 +387,8 @@ Und wann braucht ihr dafür eine KI? Fast nie. Alles in diesem Modul läuft ohne
 
 | Meldung oder Problem | Ursache und Lösung |
 | --- | --- |
-| *No files to process* | In einem der beiden *Read File* fehlt die Datei. |
-| Die Tabelle hat nur eine Spalte `text` | Bei *Type Convert* ist *Auto Parse* aus. |
+| *No files to process* | In einem der beiden **Read File** fehlt die Datei. |
+| Die Tabelle hat nur eine Spalte `text` | Bei **Type Convert** ist *Auto Parse* aus. |
 | *KeyError … Index([''])* | Bei einer Tabellen-Operation ist *Column Name* leer, z. B. bei *Drop Duplicates*. |
 | *KeyError* mit einem Spaltennamen, z. B. *KeyError: fach* | Die Spalte gibt es in der Tabelle nicht. Oft ist *Auto Parse* aus, und die Tabelle hat nur die Spalte `text`. |
 | *['…'] not in index* | Eine Spalte mit diesem Namen gibt es nicht (mehr). Tippfehler? Wurde sie vorher umbenannt oder entfernt? |

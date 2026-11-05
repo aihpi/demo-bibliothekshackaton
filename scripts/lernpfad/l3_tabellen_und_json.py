@@ -33,16 +33,17 @@ def bauen(lf) -> Flow:
     f.notiz(
         "# 🧮 L3 Tabellen und JSON\n\n"
         "Daten kommen selten so an, wie ihr sie braucht. Hier werden sie in Form gebracht, ohne KI.\n\n"
-        "**Oben: ein Webdienst.** *Dynamic Create Data* baut die Suchparameter, *API Request* fragt OpenAlex, "
-        "*Data Operations* greift die Treffer heraus (Path Selection) oder baut sie um (JQ), *Type Convert* "
-        "macht eine Tabelle daraus.\n\n"
-        "**Unten: eine Liste.** Die Neuerwerbungen (CSV) werden zur Tabelle, dann aufgeräumt: Fach "
-        "vereinheitlichen, Doppelte entfernen, Fachreferat ergänzen (Merge), sortieren, Spalten auswählen, "
-        "filtern. *Parser* macht aus der Tabelle eine Liste.\n\n"
+        "**Oben: ein Webdienst.** **Dynamic Create Data** baut die Suchparameter, **API Request** fragt "
+        "OpenAlex, **Data Operations** greift die Treffer heraus (*Path Selection*) oder baut sie um (*JQ "
+        "Expression*), **Type Convert** macht eine Tabelle daraus.\n\n"
+        "**Unten: eine Liste.** **Type Convert** macht aus den Neuerwerbungen (CSV) eine Tabelle. Mehrere "
+        "**Data Operations** räumen sie auf: Fach vereinheitlichen (*Replace Value*), Doppelte entfernen "
+        "(*Drop Duplicates*), Fachreferat ergänzen (*Merge*), sortieren (*Sort*), Spalten auswählen "
+        "(*Select Columns*), filtern (*Filter*). **Parser** macht aus der Tabelle eine Liste.\n\n"
         "## ▶ So startet ihr\n"
         "1. Kopie anlegen (*Duplicate*).\n"
-        "2. In **Neuerwerbungen** `daten/lernpfad/neuerwerbungen.csv` hochladen, in **Fachreferate** "
-        "`daten/lernpfad/fachreferate.csv`.\n"
+        "2. In den **Read File** mit der Notiz *Neuerwerbungen* `daten/lernpfad/neuerwerbungen.csv` "
+        "hochladen, in den mit der Notiz *Fachreferate* `daten/lernpfad/fachreferate.csv`.\n"
         "3. **Playground** öffnen und irgendetwas abschicken.\n"
         "4. Oder jeden Baustein mit **▶** einzeln ausführen und rechts am Ausgang nachsehen.\n\n"
         "Anleitung mit Übungen: `anleitungen/lernpfad/L3_tabellen_und_json.md`",
@@ -62,7 +63,6 @@ def bauen(lf) -> Flow:
             "dynamic_per-page": "5",
             "dynamic_select": "display_name,publication_year,doi,cited_by_count,open_access",
         },
-        titel="Suchparameter (Dynamic Create Data)",
         auswahl={"form_fields": [{"field_name": n, "field_type": "Text"} for n in ("search", "per-page", "select")]},
     )
     api = f.baustein(
@@ -71,7 +71,6 @@ def bauen(lf) -> Flow:
         0,
         "openalex",
         {"url_input": "https://api.openalex.org/works"},
-        titel="OpenAlex fragen (API Request)",
     )
     pfad = f.baustein(
         "Operations",
@@ -79,7 +78,6 @@ def bauen(lf) -> Flow:
         -160,
         "pfad",
         {"selected_key": ".result.results"},
-        titel="Treffer herausgreifen (Path Selection)",
         auswahl=_operation("JSON", "Path Selection"),
     )
     roh = f.baustein(
@@ -88,19 +86,17 @@ def bauen(lf) -> Flow:
         -160,
         "roh",
         {"output_type": "Table"},
-        titel="Als Tabelle (Type Convert)",
         auswahl={"output_type": "Table"},
     )
-    aus_roh = f.baustein(
-        "ChatOutput", 2180, -120, "roh", {"sender_name": "OpenAlex"}, titel="Treffer, wie OpenAlex sie liefert"
-    )
+    aus_roh = f.baustein("ChatOutput", 2180, -120, "roh", {"sender_name": "OpenAlex"})
+    # Beide Chat Outputs heißen OpenAlex; die Notizen sagen, welcher welcher ist
+    f.notiz("**Treffer, wie OpenAlex sie liefert**", 2180, -280, breite=320, farbe="amber")
     jq = f.baustein(
         "Operations",
         1300,
         320,
         "jq",
         {"query": JQ_TREFFER},
-        titel="Felder auswählen und umbenennen (JQ)",
         auswahl=_operation("JSON", "JQ Expression"),
     )
     sauber = f.baustein(
@@ -109,10 +105,10 @@ def bauen(lf) -> Flow:
         320,
         "sauber",
         {"output_type": "Table"},
-        titel="Als Tabelle (Type Convert)",
         auswahl={"output_type": "Table"},
     )
-    aus_sauber = f.baustein("ChatOutput", 2180, 360, "sauber", {"sender_name": "OpenAlex"}, titel="Treffer, aufgeräumt")
+    aus_sauber = f.baustein("ChatOutput", 2180, 360, "sauber", {"sender_name": "OpenAlex"})
+    f.notiz("**Treffer, aufgeräumt**", 2180, 200, breite=320, farbe="amber")
     f.verbinden(parameter, "form_data", api, "query_params")
     f.verbinden(api, "data", pfad, "data")
     f.verbinden(pfad, "data_output", roh, "input_data")
@@ -123,14 +119,14 @@ def bauen(lf) -> Flow:
 
     # Unten: CSV-Liste aufräumen und mit einer zweiten Tabelle verbinden
     y = 1000
-    neu = f.baustein("File", 420, y, "neuerwerbungen", titel="Neuerwerbungen (Read File)")
+    neu = f.baustein("File", 420, y, "neuerwerbungen")
+    f.notiz("**Neuerwerbungen**\n`neuerwerbungen.csv` hochladen", 420, y - 170, breite=320, farbe="amber")
     neu_tabelle = f.baustein(
         "TypeConverterComponent",
         860,
         y,
         "neuerwerbungen",
         {"output_type": "Table", "auto_parse": True},
-        titel="CSV als Tabelle (Type Convert)",
         auswahl={"output_type": "Table"},
     )
     fach = f.baustein(
@@ -139,7 +135,6 @@ def bauen(lf) -> Flow:
         y,
         "fach",
         {"column_name": "fach", "replace_value": "informatik", "replacement_value": "Informatik"},
-        titel="Fach vereinheitlichen (Replace Value)",
         auswahl=_operation("Table", "Replace Value"),
     )
     doppelt = f.baustein(
@@ -148,17 +143,17 @@ def bauen(lf) -> Flow:
         y,
         "doppelt",
         {"column_name": "isbn"},
-        titel="Doppelte entfernen (Drop Duplicates)",
         auswahl=_operation("Table", "Drop Duplicates"),
     )
-    referate = f.baustein("File", 1300, y + 560, "fachreferate", titel="Fachreferate (Read File)")
+    referate = f.baustein("File", 1300, y + 560, "fachreferate")
+    # links daneben, weil über dem Read File der Baustein für Replace Value steht
+    f.notiz("**Fachreferate**\n`fachreferate.csv` hochladen", 860, y + 600, breite=320, farbe="amber")
     referate_tabelle = f.baustein(
         "TypeConverterComponent",
         1740,
         y + 560,
         "fachreferate",
         {"output_type": "Table", "auto_parse": True},
-        titel="CSV als Tabelle (Type Convert)",
         auswahl={"output_type": "Table"},
     )
     verbinden = f.baustein(
@@ -167,7 +162,6 @@ def bauen(lf) -> Flow:
         y,
         "merge",
         {"merge_on_column": "fach", "merge_how": "left"},
-        titel="Fachreferat ergänzen (Merge)",
         auswahl=_operation("Table", "Merge"),
     )
     sortiert = f.baustein(
@@ -176,7 +170,6 @@ def bauen(lf) -> Flow:
         y,
         "sortieren",
         {"column_name": "fach", "ascending": True},
-        titel="Nach Fach sortieren (Sort)",
         auswahl=_operation("Table", "Sort"),
     )
     spalten = f.baustein(
@@ -185,37 +178,33 @@ def bauen(lf) -> Flow:
         y - 200,
         "spalten",
         {"columns_to_select": ["titel", "autor", "jahr", "fach", "fachreferat", "standort", "status"]},
-        titel="Spalten auswählen (Select Columns)",
         auswahl=_operation("Table", "Select Columns"),
     )
-    aus_liste = f.baustein(
-        "ChatOutput", 3500, y - 160, "liste", {"sender_name": "Erwerbung"}, titel="Neuerwerbungen, aufgeräumt"
-    )
+    aus_liste = f.baustein("ChatOutput", 3500, y - 160, "liste", {"sender_name": "Erwerbung"})
+    f.notiz("**Neuerwerbungen, aufgeräumt**", 3500, y - 310, breite=320, farbe="amber")
     bestellt = f.baustein(
         "Operations",
         3060,
-        y + 360,
+        y + 600,
         "bestellt",
         {"column_name": "status", "filter_operator": "equals", "filter_value": "bestellt"},
-        titel="Nur bestellte (Filter)",
         auswahl=_operation("Table", "Filter"),
     )
     liste = f.baustein(
         "ParserComponent",
         3500,
-        y + 360,
+        y + 600,
         "bestellt",
         {"pattern": "- {titel} ({autor}), Fachreferat: {fachreferat}"},
-        titel="Als Liste (Parser)",
     )
     aus_bestellt = f.baustein(
         "ChatOutput",
         3940,
-        y + 400,
+        y + 640,
         "bestellt",
         {"sender_name": "Erwerbung"},
-        titel="Bestellt: Liste für die Fachreferate",
     )
+    f.notiz("**Bestellt: Liste für die Fachreferate**", 3940, y + 470, breite=320, farbe="amber")
     f.verbinden(neu, "message", neu_tabelle, "input_data")
     f.verbinden(neu_tabelle, "dataframe_output", fach, "df")
     f.verbinden(fach, "dataframe_output", doppelt, "df")

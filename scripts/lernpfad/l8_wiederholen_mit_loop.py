@@ -47,7 +47,8 @@ def bauen(lf) -> Flow:
         "   - **API Request** fragt Crossref,\n"
         "   - **Data Operations** liest Titel, Jahr, Zeitschrift, Zitationen und Rückzug aus.\n"
         "   Die gestrichelte Linie führt zurück in die Loop: Dann kommt die nächste DOI dran.\n"
-        "3. Wenn alle DOIs durch sind, gibt **Done** alle Ergebnisse als Tabelle weiter.\n\n"
+        "3. Wenn alle DOIs durch sind, gibt **Done** alle Ergebnisse auf einmal weiter: an einen **Chat Output** "
+        "als Tabelle und über einen zweiten **Parser** als Liste.\n\n"
         "## ▶ So startet ihr\n"
         "1. Kopie anlegen (*Duplicate*).\n"
         "2. **Playground** öffnen und den Inhalt von `daten/lernpfad/dois.txt` einfügen.\n"
@@ -66,25 +67,23 @@ def bauen(lf) -> Flow:
         breite=1720,
         farbe="amber",
     )
-    eingabe = f.baustein("ChatInput", 420, 120, "dois", titel="DOI-Liste (Chat)")
+    eingabe = f.baustein("ChatInput", 420, 120, "dois")
     zerlegen = f.baustein(
         "SplitText",
         820,
         60,
         "dois",
         {"separator": "\n", "chunk_size": 1, "chunk_overlap": 0, "clean_output": True},
-        titel="Eine DOI pro Zeile",
     )
-    schleife = f.baustein("LoopComponent", 1220, 120, "dois", titel="Jede DOI einzeln")
-    doi = f.baustein("ParserComponent", 1660, -560, "doi", {"pattern": "{text}"}, titel="DOI als Text")
-    adresse = f.baustein("Prompt Template", 2080, -600, "adresse", {"template": CROSSREF}, titel="Adresse bauen")
+    schleife = f.baustein("LoopComponent", 1220, 120, "dois")
+    doi = f.baustein("ParserComponent", 1660, -560, "doi", {"pattern": "{text}"})
+    adresse = f.baustein("Prompt Template", 2080, -600, "adresse", {"template": CROSSREF})
     crossref = f.baustein(
         "APIRequest",
         2500,
         -620,
         "crossref",
         {"headers": [{"key": "User-Agent", "value": USER_AGENT}]},
-        titel="Crossref fragen",
     )
     datensatz = f.baustein(
         "Operations",
@@ -92,19 +91,18 @@ def bauen(lf) -> Flow:
         -560,
         "datensatz",
         {"query": JQ_DATENSATZ},
-        titel="Felder auslesen",
         auswahl={"input_type": "JSON", "operation": [{"name": "JQ Expression", "icon": "terminal"}]},
     )
-    tabelle = f.baustein("ChatOutput", 1660, 420, "tabelle", titel="Ergebnistabelle")
+    tabelle = f.baustein("ChatOutput", 1660, 420, "tabelle")
+    f.notiz("**Nach der Schleife**: oben die Tabelle, darunter die Liste", 1220, 600, breite=380, farbe="amber")
     liste = f.baustein(
         "ParserComponent",
         1660,
         780,
         "liste",
         {"pattern": "- {doi}: {titel} ({jahr}), {zeitschrift}. {status}"},
-        titel="Als Liste",
     )
-    ausgabe = f.baustein("ChatOutput", 2080, 820, "liste", titel="Ergebnisliste")
+    ausgabe = f.baustein("ChatOutput", 2080, 820, "liste")
     f.verbinden(eingabe, "message", zerlegen, "data_inputs")
     f.verbinden(zerlegen, "dataframe", schleife, "data")
     f.verbinden(schleife, "item", doi, "input_data")

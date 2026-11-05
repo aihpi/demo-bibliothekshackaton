@@ -54,7 +54,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Get chat inputs from the Playground.",
-            "display_name": "Frage (Chat)",
+            "display_name": "Chat Input",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -350,7 +350,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Returns the current date and time in the selected timezone.",
-            "display_name": "Heutiges Datum",
+            "display_name": "Current Date",
             "documentation": "https://docs.langflow.org/current-date",
             "edited": false,
             "field_order": [
@@ -464,7 +464,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Stores or retrieves stored chat messages from Langflow tables or an external memory.",
-            "display_name": "Bisheriges Gespräch",
+            "display_name": "Message History",
             "documentation": "https://docs.langflow.org/message-history",
             "edited": false,
             "field_order": [
@@ -1068,7 +1068,7 @@
               "Message"
             ],
             "name": "",
-            "display_name": "Prompt: Auskunft",
+            "display_name": "Prompt Template",
             "priority": null,
             "documentation": "https://docs.langflow.org/components-prompts",
             "minimized": false,
@@ -1446,7 +1446,7 @@
               "LanguageModel",
               "Message"
             ],
-            "display_name": "KI-Modell (Auskunft)",
+            "display_name": "KI-Modell",
             "documentation": "",
             "minimized": false,
             "custom_fields": {},
@@ -1564,7 +1564,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Antwort (KI-Modell)",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -1867,7 +1867,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Runs a language model given a specified provider.",
-            "display_name": "Language Model (Leichte Sprache)",
+            "display_name": "Language Model",
             "documentation": "https://docs.langflow.org/components-models",
             "edited": false,
             "field_order": [
@@ -2304,7 +2304,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Antwort (Leichte Sprache)",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [

@@ -42,6 +42,7 @@ def bauen(lf) -> Flow:
         "4. **Parser** + **Prompt Template** – eine HTML-Seite\n"
         "5. **Parser** (Stringify) – alles als Text\n"
         "6. **Write File** – eine Excel-Datei\n\n"
+        "Die gelben Notizen zwischen den Bausteinen sagen, was in welcher Zeile entsteht.\n\n"
         "## ▶ So startet ihr\n"
         "1. Kopie anlegen (*Duplicate*).\n"
         "2. In **Read File** die Datei `daten/lernpfad/neuerwerbungen.csv` hochladen.\n"
@@ -53,14 +54,13 @@ def bauen(lf) -> Flow:
         breite=480,
     )
 
-    datei = f.baustein("File", 0, 0, "datei", titel="Neuerwerbungen lesen (Read File)")
+    datei = f.baustein("File", 0, 0, "datei")
     luecken = f.baustein(
         "Operations",
         420,
         0,
         "luecken",
         {"search_pattern": ",,", "replacement_text": ",o. J.,"},
-        titel="Leere Felder füllen",
         auswahl={"input_type": "Text", "operation": [{"name": "Text Replace"}]},
     )
     tabelle = f.baustein(
@@ -69,7 +69,6 @@ def bauen(lf) -> Flow:
         0,
         "tabelle",
         {"auto_parse": True},
-        titel="Als Tabelle",
         auswahl={"output_type": "Table"},
     )
     f.verbinden(datei, "message", luecken, "text_input")
@@ -77,7 +76,7 @@ def bauen(lf) -> Flow:
 
     x_parser, x_ausgabe = 1300, 2180
     y = -420
-    aus_tabelle = f.baustein("ChatOutput", x_ausgabe, y, "tabelle", {"sender_name": "Tabelle"}, titel="Die Tabelle")
+    aus_tabelle = f.baustein("ChatOutput", x_ausgabe, y, "tabelle", {"sender_name": "Tabelle"})
     f.verbinden(tabelle, "dataframe_output", aus_tabelle, "input_value")
 
     y += 400
@@ -87,11 +86,11 @@ def bauen(lf) -> Flow:
         y,
         "zitate",
         {"pattern": "{autor} ({jahr}). {titel}. {verlag}."},
-        titel="Zitierliste",
     )
-    aus_zitate = f.baustein("ChatOutput", x_ausgabe, y, "zitate", {"sender_name": "Zitierliste"}, titel="Zitierliste")
+    aus_zitate = f.baustein("ChatOutput", x_ausgabe, y, "zitate", {"sender_name": "Zitierliste"})
     f.verbinden(tabelle, "dataframe_output", zitate, "input_data")
     f.verbinden(zitate, "parsed_text", aus_zitate, "input_value")
+    f.notiz("**Zitierliste**", 1740, y + 20, breite=320, farbe="amber")
 
     y += 400
     liste = f.baustein(
@@ -100,13 +99,11 @@ def bauen(lf) -> Flow:
         y,
         "liste",
         {"pattern": "- **{titel}** von {autor} ({fach}, {status})"},
-        titel="Markdown-Liste",
     )
-    aus_liste = f.baustein(
-        "ChatOutput", x_ausgabe, y, "liste", {"sender_name": "Markdown-Liste"}, titel="Markdown-Liste"
-    )
+    aus_liste = f.baustein("ChatOutput", x_ausgabe, y, "liste", {"sender_name": "Markdown-Liste"})
     f.verbinden(tabelle, "dataframe_output", liste, "input_data")
     f.verbinden(liste, "parsed_text", aus_liste, "input_value")
+    f.notiz("**Markdown-Liste**", 1740, y + 20, breite=320, farbe="amber")
 
     y += 400
     zeilen = f.baustein(
@@ -115,13 +112,14 @@ def bauen(lf) -> Flow:
         y,
         "html",
         {"pattern": "    <tr><td>{titel}</td><td>{autor}</td><td>{jahr}</td><td>{status}</td></tr>"},
-        titel="HTML-Tabellenzeilen",
     )
-    seite = f.baustein("Prompt Template", 1740, y, "seite", {"template": HTML_SEITE}, titel="HTML-Seite (ohne KI)")
-    aus_seite = f.baustein("ChatOutput", x_ausgabe, y, "html", {"sender_name": "HTML"}, titel="HTML für die Webseite")
+    seite = f.baustein("Prompt Template", 1740, y, "seite", {"template": HTML_SEITE})
+    aus_seite = f.baustein("ChatOutput", x_ausgabe, y, "html", {"sender_name": "HTML"})
     f.verbinden(tabelle, "dataframe_output", zeilen, "input_data")
     f.verbinden(zeilen, "parsed_text", seite, "zeilen")
     f.verbinden(seite, "prompt", aus_seite, "input_value")
+    # Über dem Prompt Template, weil die Mitte dieser Zeile belegt ist
+    f.notiz("**HTML-Seite**", 1740, y - 140, breite=320, farbe="amber")
 
     y += 460
     text = f.baustein(
@@ -130,12 +128,12 @@ def bauen(lf) -> Flow:
         y,
         "text",
         {"mode": "Stringify"},
-        titel="Alles als Text (Stringify)",
         auswahl={"mode": "Stringify"},
     )
-    aus_text = f.baustein("ChatOutput", x_ausgabe, y, "text", {"sender_name": "Text"}, titel="Alles als Text")
+    aus_text = f.baustein("ChatOutput", x_ausgabe, y, "text", {"sender_name": "Text"})
     f.verbinden(tabelle, "dataframe_output", text, "input_data")
     f.verbinden(text, "parsed_text", aus_text, "input_value")
+    f.notiz("**Alles als Text**", 1740, y + 20, breite=320, farbe="amber")
 
     y += 400
     speichern = f.baustein(
@@ -144,9 +142,8 @@ def bauen(lf) -> Flow:
         y,
         "excel",
         {"file_name": "neuerwerbungen_aufbereitet", "local_format": "excel"},
-        titel="Als Excel speichern (Write File)",
     )
-    aus_datei = f.baustein("ChatOutput", x_ausgabe, y, "datei", {"sender_name": "Write File"}, titel="Gespeichert")
+    aus_datei = f.baustein("ChatOutput", x_ausgabe, y, "datei", {"sender_name": "Write File"})
     f.verbinden(tabelle, "dataframe_output", speichern, "input")
     f.verbinden(speichern, "message", aus_datei, "input_value")
     return f

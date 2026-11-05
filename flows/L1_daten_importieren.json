@@ -54,7 +54,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Loads and returns the content from uploaded files.",
-            "display_name": "Datei lesen (Read File)",
+            "display_name": "Read File",
             "documentation": "https://docs.langflow.org/read-file",
             "edited": false,
             "field_order": [
@@ -801,7 +801,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Aus einer Datei",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -1104,7 +1104,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Fetch content from one or more web pages, following links recursively.",
-            "display_name": "Webseite holen (URL)",
+            "display_name": "URL",
             "documentation": "https://docs.langflow.org/url",
             "edited": false,
             "field_order": [
@@ -1533,7 +1533,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Von einer Webseite",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -1835,7 +1835,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Make HTTP requests using URL or cURL commands.",
-            "display_name": "Webdienst fragen (API Request)",
+            "display_name": "API Request",
             "documentation": "https://docs.langflow.org/api-request",
             "edited": false,
             "field_order": [
@@ -2257,7 +2257,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Von einem Webdienst",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -2559,7 +2559,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Search the web, news, or RSS feeds.",
-            "display_name": "Im Web suchen (Web Search)",
+            "display_name": "Web Search",
             "documentation": "https://docs.langflow.org/web-search",
             "edited": false,
             "field_order": [
@@ -2909,7 +2909,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Aus der Websuche",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -3213,7 +3213,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Generate mock data for testing and development.",
-            "display_name": "Testdaten erzeugen (Mock Data)",
+            "display_name": "Mock Data",
             "documentation": "",
             "edited": false,
             "field_order": [],
@@ -3330,7 +3330,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Ausgedachte Testdaten",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [

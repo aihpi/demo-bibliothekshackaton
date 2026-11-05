@@ -27,7 +27,7 @@
           "id": "note-0",
           "type": "note",
           "node": {
-            "description": "# 🧱 L6 Strukturierte Antworten\n\nEin Sprachmodell antwortet mit Text. Für Tabellen, Filter und Dateien braucht ihr aber **Daten**. Hier entstehen sie auf vier Wegen:\n\n**A** Prompt verlangt CSV → **KI-Modell** → **Type Convert** macht eine Tabelle daraus\n**B** **Structured Output** füllt feste Felder (Output Schema)\n**C** **Batch Run** fragt das Modell einmal pro Tabellenzeile\n**D** **Smart Transform** formt eine Tabelle nach einer Anweisung in eigenen Worten um\n\nA und B lesen dieselben E-Mails, C und D dieselbe Liste: Vergleicht die Ergebnisse!\n\n## ▶ So startet ihr\n1. Kopie anlegen (*Duplicate*).\n2. In **E-Mails (Read File)** `daten/lernpfad/anschaffungsvorschlaege.txt` hochladen, in **Liste (Read File)** `daten/lernpfad/neuerwerbungen.csv`.\n3. **Playground** öffnen und irgendetwas abschicken.\n\n⚠️ B, C und D brauchen ein großes Modell: Stellt die **Quelle** in beiden KI-Modellen auf *Cluster*.\n\nAnleitung mit Übungen: `anleitungen/lernpfad/L6_strukturierte_antworten.md`",
+            "description": "# 🧱 L6 Strukturierte Antworten\n\nEin Sprachmodell antwortet mit Text. Für Tabellen, Filter und Dateien braucht ihr aber **Daten**. Hier entstehen sie auf vier Wegen:\n\n- **A** Prompt verlangt CSV → **KI-Modell** → **Type Convert** macht eine Tabelle daraus\n- **B** **Structured Output** füllt feste Felder (Output Schema)\n- **C** **Batch Run** fragt das Modell einmal pro Tabellenzeile\n- **D** **Smart Transform** formt eine Tabelle nach einer Anweisung in eigenen Worten um\n\nA und B lesen dieselben E-Mails, C und D dieselbe Liste: Vergleicht die Ergebnisse!\n\n## ▶ So startet ihr\n1. Kopie anlegen (*Duplicate*).\n2. Im oberen **Read File** (*E-Mails*) `daten/lernpfad/anschaffungsvorschlaege.txt` hochladen, im unteren **Read File** (*Liste*) `daten/lernpfad/neuerwerbungen.csv`.\n3. **Playground** öffnen und irgendetwas abschicken.\n\n⚠️ B, C und D brauchen ein großes Modell: Stellt die **Quelle** in beiden KI-Modellen auf *Cluster*.\n\nAnleitung mit Übungen: `anleitungen/lernpfad/L6_strukturierte_antworten.md`",
             "display_name": "",
             "documentation": "",
             "template": {
@@ -54,7 +54,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Loads and returns the content from uploaded files.",
-            "display_name": "E-Mails (Read File)",
+            "display_name": "Read File",
             "documentation": "https://docs.langflow.org/read-file",
             "edited": false,
             "field_order": [
@@ -784,6 +784,58 @@
         }
       },
       {
+        "id": "note-2",
+        "type": "noteNode",
+        "position": {
+          "x": 420,
+          "y": -150
+        },
+        "width": 320,
+        "height": 114,
+        "measured": {
+          "width": 320,
+          "height": 114
+        },
+        "data": {
+          "id": "note-2",
+          "type": "note",
+          "node": {
+            "description": "**E-Mails** für Weg A und B",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
+        }
+      },
+      {
+        "id": "note-3",
+        "type": "noteNode",
+        "position": {
+          "x": 860,
+          "y": -600
+        },
+        "width": 700,
+        "height": 114,
+        "measured": {
+          "width": 700,
+          "height": 114
+        },
+        "data": {
+          "id": "note-3",
+          "type": "note",
+          "node": {
+            "description": "**Weg A:** Prompt verlangt CSV, Type Convert macht eine Tabelle daraus",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
+        }
+      },
+      {
         "id": "PromptTemplate-csv",
         "type": "genericNode",
         "position": {
@@ -917,7 +969,7 @@
               "Message"
             ],
             "name": "",
-            "display_name": "A: Prompt verlangt CSV",
+            "display_name": "Prompt Template",
             "priority": null,
             "documentation": "https://docs.langflow.org/components-prompts",
             "minimized": false,
@@ -1291,7 +1343,7 @@
               "LanguageModel",
               "Message"
             ],
-            "display_name": "A: KI-Modell",
+            "display_name": "KI-Modell",
             "documentation": "",
             "minimized": false,
             "custom_fields": {},
@@ -1409,7 +1461,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "A: Antwort des Modells",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -1713,7 +1765,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Convert between different types (Message, JSON, Table)",
-            "display_name": "A: Text → Tabelle (Type Convert)",
+            "display_name": "Type Convert",
             "documentation": "https://docs.langflow.org/type-convert",
             "edited": false,
             "field_order": [
@@ -1907,7 +1959,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "A: Tabelle",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -2501,7 +2553,7 @@
               "LanguageModel",
               "Message"
             ],
-            "display_name": "KI-Modell (für B, C, D)",
+            "display_name": "KI-Modell",
             "documentation": "",
             "minimized": false,
             "custom_fields": {},
@@ -2602,6 +2654,32 @@
         }
       },
       {
+        "id": "note-10",
+        "type": "noteNode",
+        "position": {
+          "x": 860,
+          "y": 360
+        },
+        "width": 320,
+        "height": 114,
+        "measured": {
+          "width": 320,
+          "height": 114
+        },
+        "data": {
+          "id": "note-10",
+          "type": "note",
+          "node": {
+            "description": "**Modell für Weg B, C und D**",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
+        }
+      },
+      {
         "id": "StructuredOutput-vorschlaege",
         "type": "genericNode",
         "position": {
@@ -2620,7 +2698,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Uses an LLM to generate structured data. Ideal for extraction and consistency.",
-            "display_name": "B: Structured Output",
+            "display_name": "Structured Output",
             "documentation": "https://docs.langflow.org/structured-output",
             "edited": false,
             "field_order": [
@@ -2985,7 +3063,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "B: Tabelle",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -3287,7 +3365,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Loads and returns the content from uploaded files.",
-            "display_name": "Liste (Read File)",
+            "display_name": "Read File",
             "documentation": "https://docs.langflow.org/read-file",
             "edited": false,
             "field_order": [
@@ -4017,6 +4095,32 @@
         }
       },
       {
+        "id": "note-14",
+        "type": "noteNode",
+        "position": {
+          "x": 420,
+          "y": 850
+        },
+        "width": 320,
+        "height": 114,
+        "measured": {
+          "width": 320,
+          "height": 114
+        },
+        "data": {
+          "id": "note-14",
+          "type": "note",
+          "node": {
+            "description": "**Liste** für Weg C und D",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
+        }
+      },
+      {
         "id": "TypeConverterComponent-liste",
         "type": "genericNode",
         "position": {
@@ -4036,7 +4140,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Convert between different types (Message, JSON, Table)",
-            "display_name": "Liste als Tabelle (Type Convert)",
+            "display_name": "Type Convert",
             "documentation": "https://docs.langflow.org/type-convert",
             "edited": false,
             "field_order": [
@@ -4230,7 +4334,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Runs an LLM on each row of a DataFrame column. If no column is specified, all columns are used.",
-            "display_name": "C: Batch Run",
+            "display_name": "Batch Run",
             "documentation": "https://docs.langflow.org/batch-run",
             "edited": false,
             "field_order": [
@@ -4572,7 +4676,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "C: Tabelle",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -4876,7 +4980,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Uses an LLM to generate a function for filtering or transforming structured data and messages.",
-            "display_name": "D: Smart Transform",
+            "display_name": "Smart Transform",
             "documentation": "https://docs.langflow.org/smart-transform",
             "edited": false,
             "field_order": [
@@ -5156,7 +5260,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "D: Tabelle",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
