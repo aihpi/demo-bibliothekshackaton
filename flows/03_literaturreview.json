@@ -18,16 +18,16 @@
           "y": -240
         },
         "width": 440,
-        "height": 1338,
+        "height": 1372,
         "measured": {
           "width": 440,
-          "height": 1338
+          "height": 1372
         },
         "data": {
           "id": "note-0",
           "type": "note",
           "node": {
-            "description": "# 🔬 Text- und Data-Mining: Literaturüberblick\n\n**Problem:** Für einen Überblick (Systematic Review) muss man Literatur vieler Verlage sammeln, lesen und vergleichen.\n\n**So arbeitet der Flow:**\n1. Ihr stellt im Playground eine **Forschungsfrage** (gern auf Deutsch).\n2. Die **erste KI** macht daraus englische Suchbegriffe.\n3. **Literatursuche (OpenAlex)** findet Publikationen aller Verlage.\n4. **Volltexte holen** lädt freie PDFs (Open Access), sonst das Abstract.\n5. Die **zweite KI** vergleicht die Texte und benennt **Forschungslücken**.\n\n**Beispielfrage:** *Wie verändern Sprachmodelle die Auskunft in wissenschaftlichen Bibliotheken?*\n\n## 💡 Ideen zum Weiterbauen\n- Filter ändern: Jahre, nur Open Access, Sortierung nach Zitationen\n- Jede Publikation einzeln zusammenfassen lassen (**Batch Run**)\n- Eine PRISMA-artige Tabelle der Ein-/Ausschlüsse erzeugen\n\n⚠️ Kleine lokale Modelle vertragen wenig Text: dann **Höchstens Dokumente** und **Zeichen pro Dokument** verringern.",
+            "description": "# 🔬 Text- und Data-Mining: Literaturüberblick\n\n**Problem:** Für einen Überblick (Systematic Review) muss man Literatur vieler Verlage sammeln, lesen und vergleichen.\n\n**So arbeitet der Flow:**\n1. Ihr stellt im Playground eine **Forschungsfrage** (gern auf Deutsch).\n2. Ein **Prompt Template** und das erste **KI-Modell** machen daraus englische Suchbegriffe.\n3. **Literatursuche (OpenAlex)** findet Publikationen aller Verlage.\n4. **Volltexte holen** lädt freie PDFs (Open Access), sonst das Abstract.\n5. Das zweite **Prompt Template** und **KI-Modell** vergleichen die Texte und benennen **Forschungslücken**.\n\n**Beispielfrage:** *Wie verändern Sprachmodelle die Auskunft in wissenschaftlichen Bibliotheken?*\n\n## 💡 Ideen zum Weiterbauen\n- Filter ändern: Jahre, nur Open Access, Sortierung nach Zitationen\n- Jede Publikation einzeln zusammenfassen lassen (**Batch Run**)\n- Eine PRISMA-artige Tabelle der Ein-/Ausschlüsse erzeugen\n\n⚠️ Kleine lokale Modelle vertragen wenig Text: dann **Höchstens Dokumente** und **Zeichen pro Dokument** verringern.",
             "display_name": "",
             "documentation": "",
             "template": {
@@ -54,7 +54,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Get chat inputs from the Playground.",
-            "display_name": "Forschungsfrage (Chat)",
+            "display_name": "Chat Input",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -333,6 +333,58 @@
         }
       },
       {
+        "id": "note-2",
+        "type": "noteNode",
+        "position": {
+          "x": 860,
+          "y": -380
+        },
+        "width": 720,
+        "height": 114,
+        "measured": {
+          "width": 720,
+          "height": 114
+        },
+        "data": {
+          "id": "note-2",
+          "type": "note",
+          "node": {
+            "description": "**Schritt 1:** Suchbegriffe finden",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
+        }
+      },
+      {
+        "id": "note-3",
+        "type": "noteNode",
+        "position": {
+          "x": 2460,
+          "y": -160
+        },
+        "width": 740,
+        "height": 114,
+        "measured": {
+          "width": 740,
+          "height": 114
+        },
+        "data": {
+          "id": "note-3",
+          "type": "note",
+          "node": {
+            "description": "**Schritt 2:** Literaturüberblick schreiben",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
+        }
+      },
+      {
         "id": "PromptTemplate-suchbegriffe",
         "type": "genericNode",
         "position": {
@@ -466,7 +518,7 @@
               "Message"
             ],
             "name": "",
-            "display_name": "Prompt: Suchbegriffe",
+            "display_name": "Prompt Template",
             "priority": null,
             "documentation": "https://docs.langflow.org/components-prompts",
             "minimized": false,
@@ -840,7 +892,7 @@
               "LanguageModel",
               "Message"
             ],
-            "display_name": "KI-Modell (Suchbegriffe)",
+            "display_name": "KI-Modell",
             "documentation": "",
             "minimized": false,
             "custom_fields": {},
@@ -1630,7 +1682,7 @@
               "Message"
             ],
             "name": "",
-            "display_name": "Prompt: Literaturüberblick",
+            "display_name": "Prompt Template",
             "priority": null,
             "documentation": "https://docs.langflow.org/components-prompts",
             "minimized": false,
@@ -2006,7 +2058,7 @@
               "LanguageModel",
               "Message"
             ],
-            "display_name": "KI-Modell (Überblick)",
+            "display_name": "KI-Modell",
             "documentation": "",
             "minimized": false,
             "custom_fields": {},
@@ -2124,7 +2176,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Literaturüberblick",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -2353,7 +2405,7 @@
                 "trace_as_metadata": true,
                 "track_in_telemetry": false,
                 "type": "str",
-                "value": "AI"
+                "value": "Literaturüberblick"
               },
               "session_id": {
                 "_input_type": "MessageTextInput",

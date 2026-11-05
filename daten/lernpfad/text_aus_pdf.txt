@@ -1,0 +1,27 @@
+Bibliotheksforum 12 (2025)                                    Seite 14
+
+Offene  Metadaten in der  Erwerbung
+Anna Berger  und Deniz Yilmaz
+
+Viele wissenschaftliche Biblio-
+theken  erwerben heute einen großen Teil ihrer Literatur
+elektronisch. Die Metadaten dazu kommen von Ver-
+lagen, Aggregatoren   und Verbünden, und ihre Qualität
+schwankt stark.
+
+Eine Auswertung von 2.400 Datensätzen zeigt, dass jeder
+fünfte Datensatz keine DOI enthält. Wo eine DOI vorhanden ist,
+lässt sich der Datensatz über Crossref ergänzen, etwa bei
+10.1371/journal.pone.0127502 oder 10.7717/peerj.4375.
+
+
+Bibliotheksforum 12 (2025)                                    Seite 15
+
+Für die Praxis empfehlen wir, fehlende Angaben automa-
+tisch über offene Schnittstellen nachzu-
+tragen und nur die Fälle von Hand zu prüfen, die dabei
+auffallen. Ein Beispiel dafür ist die Prüfung von
+Literaturangaben gegen Crossref (vgl. 10.1038/s41598-023-41032-5).
+
+Kontakt: anna.berger@musterbibliothek.example,
+deniz.yilmaz@musterbibliothek.example

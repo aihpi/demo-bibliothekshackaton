@@ -26,6 +26,7 @@ The hackathon itself runs in German: the example flows, the components and the g
   | `04 Recherche-Agent` | An AI agent that decides for itself whether to search for articles, query the catalogue or check references |
   | `05 Schulungsplanung` | Plans training dates from a training list and holidays, builds the HTML table for the learning platform without AI and drafts the promotional email. Use case of a university library |
 
+- **A learning path of nine flows** (`L1` to `L9`), one per process: importing data, cleaning text, tables and JSON, presenting results, prompts and models, structured answers, branching, loops and agents. Each comes with a step-by-step guide and exercises that teach what the standard blocks do and when to use which.
 - **Library components** (category *Bibliothek* in Langflow):
 
   | Component | Source |
@@ -101,6 +102,7 @@ The detailed guides are in [`anleitungen/`](anleitungen/) (German):
 1. [**Guide for participants**](anleitungen/01_teilnehmende.md): installing, starting, the first flow, building your own flows, common problems.
 2. [**Challenges**](anleitungen/02_challenges.md): the hackathon tasks, each in three levels.
 3. [**Guide for organisers**](anleitungen/03_orga.md): preparation, credentials, schedule, troubleshooting, maintenance.
+4. [**Learning path**](anleitungen/lernpfad/README.md): nine flows with guides and exercises for learning Langflow's standard blocks, from importing data to agents.
 
 The [component guide](COMPONENTS.md) explains every component in Langflow's sidebar, with its inputs and outputs, in the order participants find them.
 
@@ -126,11 +128,14 @@ The flows in `flows/` are not edited by hand. [`scripts/flows_bauen.py`](scripts
 ```bash
 docker compose up -d
 uv run --with httpx scripts/flows_bauen.py --testen   # build, run every flow once, export
+uv run --with httpx scripts/lernpfad_bauen.py --testen   # the same for the learning path L1 to L9
 ```
+
+Each learning-path flow is a module in [`scripts/lernpfad/`](scripts/lernpfad/), with its guide in [`anleitungen/lernpfad/`](anleitungen/lernpfad/) and its sample data in [`daten/lernpfad/`](daten/lernpfad/).
 
 The components are in [`komponenten/bibliothek/`](komponenten/bibliothek/). Langflow reads them at startup; after changing them, run `docker compose restart langflow` and rebuild the flows. The sample thesis is generated with `uv run --with reportlab scripts/beispieldaten_erzeugen.py`.
 
-The tests cover the hosted instance (the account script and the manifests under `k8s/`): `uv run pytest`.
+The tests cover the hosted instance (the account script and the manifests under `k8s/`) and check that the learning-path modules, flows, guides and sample data fit together: `uv run pytest`.
 
 ## References
 

@@ -160,7 +160,7 @@ Erwartete Laufzeiten: mit dem Cluster je Flow 10–60 Sekunden; mit `qwen3.5:4b`
 Beim Probelauf auf Folgendes achten:
 
 - Flow 01 findet in der Testliste: 4 × bestätigt, 3 × Abweichung, 2 × nicht gefunden, 1 × zurückgezogen.
-- Flow 01b liefert je nach Modell ein anderes Ergebnis. In den Probeläufen mit `qwen3.5:4b` hat es die Abweichungen bei [2], [7] und [9] übersehen und [1] bestätigt, obwohl die Suche das Original gar nicht gefunden hat. Das ist so gewollt: Der Flow zeigt, was passiert, wenn die KI statt Programmcode entscheidet. Scheitert *Crossref fragen* mit „SSRF Protection“, fehlt `api.crossref.org` in `LANGFLOW_SSRF_ALLOWED_HOSTS` (`docker-compose.yml`).
+- Flow 01b liefert je nach Modell ein anderes Ergebnis. In den Probeläufen mit `qwen3.5:4b` hat es die Abweichungen bei [2], [7] und [9] übersehen und [1] bestätigt, obwohl die Suche das Original gar nicht gefunden hat. Das ist so gewollt: Der Flow zeigt, was passiert, wenn die KI statt Programmcode entscheidet. Scheitert der **API Request** in der Schleife mit „SSRF Protection“, fehlt `api.crossref.org` in `LANGFLOW_SSRF_ALLOWED_HOSTS` (`docker-compose.yml`).
 - Flow 02 findet 17 von 17 Quellen.
 - Flow 04 benutzt Werkzeuge. Antwortet der Agent, ohne zu suchen, beherrscht das Modell keine Werkzeugaufrufe.
 - Die Aufträge 2a bis 3b aus den Folien gibt es nicht als fertige Flows. Einmal selbst durchbauen, besonders diese Schritte: das KI-Modell an den Eingang *Language Model* von *Agent* und *Smart Router* anschließen, Tool Mode bei *Literatursuche* und *Katalogsuche*, die *Route Message* der Route Sonstiges. Flow 04 zeigt, wie der Agent verbunden wird.

@@ -18,16 +18,16 @@
           "y": -360
         },
         "width": 520,
-        "height": 1440,
+        "height": 1542,
         "measured": {
           "width": 520,
-          "height": 1440
+          "height": 1542
         },
         "data": {
           "id": "note-0",
           "type": "note",
           "node": {
-            "description": "# 📅 Schulungsplanung\n\n**Use Case** einer Hochschulbibliothek, deren Studierende überwiegend im Fernstudium sind, beschrieben in `daten/schulungsplanung/`.\n\n**So arbeitet der Flow:**\n1. **Read File:** die Schulungsliste (Schulung, Turnus, Schulungspersonal) und die Urlaubstage hochladen, als Excel oder CSV, dazu den Kalender des Jahres aus `daten/schulungsplanung/`.\n2. Im Playground den **Zeitraum** angeben, z. B. *Plane November und Dezember 2026*.\n3. Die **KI** plant die Termine als CSV-Tabelle: Turnus einhalten, Wochentage und Uhrzeiten abwechseln, Urlaub auslassen. **Type Convert** macht daraus eine echte Tabelle.\n4. **Parser** macht aus jeder Zeile eine Tabellenzeile im Format der Lernplattform, ohne KI.\n5. Die **KI** schreibt aus den Terminen die Werbe-Mail.\n\n**Vor dem ersten Lauf:** Im Baustein *Prompt: Werbe-Mail* die Vorlage der Bibliothek einfügen.\n\n⚠️ Die KI plant, der Flow prüft nicht nach. Kontrolliert Wochentage, Turnus und Urlaub im Ergebnis. Kleine lokale Modelle verrechnen sich dabei deutlich; nehmt für diesen Flow den Cluster.\n\n## 💡 Ideen zum Weiterbauen\n- Den Plan prüfen lassen, z. B. einen zweiten KI-Schritt, der Urlaub und Turnus kontrolliert\n- Zeitfenster anpassen: Im Prompt stehen die Zeiten aus dem bisherigen Plan der Lernplattform\n- Die Links zu Zoom und zur Anmeldung automatisch einsetzen\n- Den Plan als Excel speichern (**Write File**)",
+            "description": "# 📅 Schulungsplanung\n\n**Use Case** einer Hochschulbibliothek, deren Studierende überwiegend im Fernstudium sind, beschrieben in `daten/schulungsplanung/`.\n\n**So arbeitet der Flow:**\n1. **Read File:** die Schulungsliste (Schulung, Turnus, Schulungspersonal) und die Urlaubstage hochladen, als Excel oder CSV, dazu den Kalender des Jahres aus `daten/schulungsplanung/`.\n2. Im Playground den **Zeitraum** angeben, z. B. *Plane November und Dezember 2026*.\n3. Die **KI** plant die Termine als CSV-Tabelle: Turnus einhalten, Wochentage und Uhrzeiten abwechseln, Urlaub auslassen. **Type Convert** macht daraus eine echte Tabelle.\n4. **Parser** macht aus jeder Zeile eine Tabellenzeile im Format der Lernplattform, ohne KI.\n5. Die **KI** schreibt aus den Terminen die Werbe-Mail.\n\nDie gelben Notizen sagen, welche Datei in welchen **Read File** gehört und was in welcher Zeile entsteht.\n\n**Vor dem ersten Lauf:** Im **Prompt Template** der Zeile *3 Werbe-Mail* die Vorlage der Bibliothek einfügen.\n\n⚠️ Die KI plant, der Flow prüft nicht nach. Kontrolliert Wochentage, Turnus und Urlaub im Ergebnis. Kleine lokale Modelle verrechnen sich dabei deutlich; nehmt für diesen Flow den Cluster.\n\n## 💡 Ideen zum Weiterbauen\n- Den Plan prüfen lassen, z. B. einen zweiten KI-Schritt, der Urlaub und Turnus kontrolliert\n- Zeitfenster anpassen: Im Prompt stehen die Zeiten aus dem bisherigen Plan der Lernplattform\n- Die Links zu Zoom und zur Anmeldung automatisch einsetzen\n- Den Plan als Excel speichern (**Write File**)",
             "display_name": "",
             "documentation": "",
             "template": {
@@ -54,7 +54,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Get chat inputs from the Playground.",
-            "display_name": "Zeitraum (Chat)",
+            "display_name": "Chat Input",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -350,7 +350,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Loads and returns the content from uploaded files.",
-            "display_name": "Schulungsliste (Excel/CSV)",
+            "display_name": "Read File",
             "documentation": "https://docs.langflow.org/read-file",
             "edited": false,
             "field_order": [
@@ -1084,7 +1084,7 @@
         "type": "genericNode",
         "position": {
           "x": 480,
-          "y": 440
+          "y": 560
         },
         "data": {
           "id": "File-urlaub",
@@ -1097,7 +1097,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Loads and returns the content from uploaded files.",
-            "display_name": "Urlaubstage (Excel/CSV)",
+            "display_name": "Read File",
             "documentation": "https://docs.langflow.org/read-file",
             "edited": false,
             "field_order": [
@@ -1831,7 +1831,7 @@
         "type": "genericNode",
         "position": {
           "x": 480,
-          "y": 820
+          "y": 1060
         },
         "data": {
           "id": "File-kalender",
@@ -1844,7 +1844,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Loads and returns the content from uploaded files.",
-            "display_name": "Kalender (CSV)",
+            "display_name": "Read File",
             "documentation": "https://docs.langflow.org/read-file",
             "edited": false,
             "field_order": [
@@ -2578,7 +2578,7 @@
         "type": "genericNode",
         "position": {
           "x": 480,
-          "y": 1200
+          "y": 1560
         },
         "data": {
           "id": "CurrentDate-heute",
@@ -2591,7 +2591,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Returns the current date and time in the selected timezone.",
-            "display_name": "Heutiges Datum",
+            "display_name": "Current Date",
             "documentation": "https://docs.langflow.org/current-date",
             "edited": false,
             "field_order": [
@@ -2684,6 +2684,162 @@
           },
           "showNode": true,
           "selected_output": "current_date"
+        }
+      },
+      {
+        "id": "note-6",
+        "type": "noteNode",
+        "position": {
+          "x": 480,
+          "y": -90
+        },
+        "width": 320,
+        "height": 114,
+        "measured": {
+          "width": 320,
+          "height": 114
+        },
+        "data": {
+          "id": "note-6",
+          "type": "note",
+          "node": {
+            "description": "**Schulungsliste** (Excel oder CSV)",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
+        }
+      },
+      {
+        "id": "note-7",
+        "type": "noteNode",
+        "position": {
+          "x": 480,
+          "y": 410
+        },
+        "width": 320,
+        "height": 114,
+        "measured": {
+          "width": 320,
+          "height": 114
+        },
+        "data": {
+          "id": "note-7",
+          "type": "note",
+          "node": {
+            "description": "**Urlaubstage** (Excel oder CSV)",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
+        }
+      },
+      {
+        "id": "note-8",
+        "type": "noteNode",
+        "position": {
+          "x": 480,
+          "y": 910
+        },
+        "width": 320,
+        "height": 114,
+        "measured": {
+          "width": 320,
+          "height": 114
+        },
+        "data": {
+          "id": "note-8",
+          "type": "note",
+          "node": {
+            "description": "**Kalender** (CSV)",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
+        }
+      },
+      {
+        "id": "note-9",
+        "type": "noteNode",
+        "position": {
+          "x": 920,
+          "y": -160
+        },
+        "width": 380,
+        "height": 114,
+        "measured": {
+          "width": 380,
+          "height": 114
+        },
+        "data": {
+          "id": "note-9",
+          "type": "note",
+          "node": {
+            "description": "**1 Planen:** Termine als Tabelle",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
+        }
+      },
+      {
+        "id": "note-10",
+        "type": "noteNode",
+        "position": {
+          "x": 1800,
+          "y": -170
+        },
+        "width": 760,
+        "height": 114,
+        "measured": {
+          "width": 760,
+          "height": 114
+        },
+        "data": {
+          "id": "note-10",
+          "type": "note",
+          "node": {
+            "description": "**2 Lernplattform:** HTML-Tabelle",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
+        }
+      },
+      {
+        "id": "note-11",
+        "type": "noteNode",
+        "position": {
+          "x": 1800,
+          "y": 440
+        },
+        "width": 380,
+        "height": 114,
+        "measured": {
+          "width": 380,
+          "height": 114
+        },
+        "data": {
+          "id": "note-11",
+          "type": "note",
+          "node": {
+            "description": "**3 Werbe-Mail**",
+            "display_name": "",
+            "documentation": "",
+            "template": {
+              "backgroundColor": "amber"
+            }
+          }
         }
       },
       {
@@ -2912,7 +3068,7 @@
               "Message"
             ],
             "name": "",
-            "display_name": "Prompt: Planung",
+            "display_name": "Prompt Template",
             "priority": null,
             "documentation": "https://docs.langflow.org/components-prompts",
             "minimized": false,
@@ -3290,7 +3446,7 @@
               "LanguageModel",
               "Message"
             ],
-            "display_name": "KI-Modell (Planung)",
+            "display_name": "KI-Modell",
             "documentation": "",
             "minimized": false,
             "custom_fields": {},
@@ -3410,7 +3566,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Convert between different types (Message, JSON, Table)",
-            "display_name": "Plan als Tabelle",
+            "display_name": "Type Convert",
             "documentation": "https://docs.langflow.org/type-convert",
             "edited": false,
             "field_order": [
@@ -3604,7 +3760,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Schulungsplan",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -3833,7 +3989,7 @@
                 "trace_as_metadata": true,
                 "track_in_telemetry": false,
                 "type": "str",
-                "value": "AI"
+                "value": "Schulungsplan"
               },
               "session_id": {
                 "_input_type": "MessageTextInput",
@@ -3906,7 +4062,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Extracts text using a template.",
-            "display_name": "Tabellenzeilen für die Lernplattform",
+            "display_name": "Parser",
             "documentation": "https://docs.langflow.org/parser",
             "edited": false,
             "field_order": [
@@ -4218,7 +4374,7 @@
               "Message"
             ],
             "name": "",
-            "display_name": "HTML für die Lernplattform",
+            "display_name": "Prompt Template",
             "priority": null,
             "documentation": "https://docs.langflow.org/components-prompts",
             "minimized": false,
@@ -4300,7 +4456,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Quellcode Lernplattform",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -4529,7 +4685,7 @@
                 "trace_as_metadata": true,
                 "track_in_telemetry": false,
                 "type": "str",
-                "value": "AI"
+                "value": "Quellcode Lernplattform"
               },
               "session_id": {
                 "_input_type": "MessageTextInput",
@@ -4589,7 +4745,7 @@
         "type": "genericNode",
         "position": {
           "x": 1800,
-          "y": 480
+          "y": 600
         },
         "data": {
           "id": "ParserComponent-termine",
@@ -4602,7 +4758,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Extracts text using a template.",
-            "display_name": "Terminliste",
+            "display_name": "Parser",
             "documentation": "https://docs.langflow.org/parser",
             "edited": false,
             "field_order": [
@@ -4785,7 +4941,7 @@
         "type": "genericNode",
         "position": {
           "x": 2240,
-          "y": 440
+          "y": 560
         },
         "data": {
           "id": "PromptTemplate-mail",
@@ -4914,7 +5070,7 @@
               "Message"
             ],
             "name": "",
-            "display_name": "Prompt: Werbe-Mail",
+            "display_name": "Prompt Template",
             "priority": null,
             "documentation": "https://docs.langflow.org/components-prompts",
             "minimized": false,
@@ -4983,7 +5139,7 @@
         "type": "genericNode",
         "position": {
           "x": 2680,
-          "y": 400
+          "y": 520
         },
         "data": {
           "id": "KIModell-mail",
@@ -5288,7 +5444,7 @@
               "LanguageModel",
               "Message"
             ],
-            "display_name": "KI-Modell (Mail)",
+            "display_name": "KI-Modell",
             "documentation": "",
             "minimized": false,
             "custom_fields": {},
@@ -5393,7 +5549,7 @@
         "type": "genericNode",
         "position": {
           "x": 3120,
-          "y": 480
+          "y": 600
         },
         "data": {
           "id": "ChatOutput-mail",
@@ -5406,7 +5562,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Werbe-Mail",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -5635,7 +5791,7 @@
                 "trace_as_metadata": true,
                 "track_in_telemetry": false,
                 "type": "str",
-                "value": "AI"
+                "value": "Werbe-Mail"
               },
               "session_id": {
                 "_input_type": "MessageTextInput",

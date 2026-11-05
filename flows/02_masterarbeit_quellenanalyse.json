@@ -54,7 +54,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Loads and returns the content from uploaded files.",
-            "display_name": "Abschlussarbeit (PDF)",
+            "display_name": "Read File",
             "documentation": "https://docs.langflow.org/read-file",
             "edited": false,
             "field_order": [
@@ -1113,7 +1113,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Get chat inputs from the Playground.",
-            "display_name": "Auftrag (Chat)",
+            "display_name": "Chat Input",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -1548,7 +1548,7 @@
               "Message"
             ],
             "name": "",
-            "display_name": "Prompt: Quellenanalyse",
+            "display_name": "Prompt Template",
             "priority": null,
             "documentation": "https://docs.langflow.org/components-prompts",
             "minimized": false,
@@ -2041,7 +2041,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Quellenanalyse",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -2270,7 +2270,7 @@
                 "trace_as_metadata": true,
                 "track_in_telemetry": false,
                 "type": "str",
-                "value": "AI"
+                "value": "Quellenanalyse"
               },
               "session_id": {
                 "_input_type": "MessageTextInput",

@@ -54,7 +54,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Get chat inputs from the Playground.",
-            "display_name": "Literaturverzeichnis (Chat)",
+            "display_name": "Chat Input",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -677,7 +677,7 @@
               "Message"
             ],
             "name": "",
-            "display_name": "Prompt: Prüfbericht",
+            "display_name": "Prompt Template",
             "priority": null,
             "documentation": "https://docs.langflow.org/components-prompts",
             "minimized": false,
@@ -1169,7 +1169,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Prüfbericht",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -1398,7 +1398,7 @@
                 "trace_as_metadata": true,
                 "track_in_telemetry": false,
                 "type": "str",
-                "value": "AI"
+                "value": "Prüfbericht"
               },
               "session_id": {
                 "_input_type": "MessageTextInput",
@@ -1471,7 +1471,7 @@
             "conditional_paths": [],
             "custom_fields": {},
             "description": "Display a chat message in the Playground.",
-            "display_name": "Ergebnistabelle",
+            "display_name": "Chat Output",
             "documentation": "https://docs.langflow.org/chat-input-and-output",
             "edited": false,
             "field_order": [
@@ -1700,7 +1700,7 @@
                 "trace_as_metadata": true,
                 "track_in_telemetry": false,
                 "type": "str",
-                "value": "AI"
+                "value": "Ergebnistabelle"
               },
               "session_id": {
                 "_input_type": "MessageTextInput",

@@ -6,6 +6,8 @@ This guide describes every component (building block) that participants can use 
 
 It covers Langflow 1.12.3 as it is set up in this kit. The blocks in the *Bibliothek* category were built for the hackathon, all others come with Langflow.
 
+This guide is for looking things up. How to use the blocks and when to pick which is shown by the [learning path](anleitungen/lernpfad/README.md) (in German), nine flows with exercises.
+
 ## Contents
 
 1. [How to read this guide](#1-how-to-read-this-guide)
@@ -51,7 +53,7 @@ Several standard components need an AI model: Agent, Batch Run, Guardrails, LLM 
 
 Instead, place a **KI-Modell** block (category *Bibliothek*) and connect its **Language Model** output to the component's *Language Model* input. The model then comes from the cluster or from Ollama on your laptop, exactly as set in `.env`. Flow 04 does this for its Agent.
 
-The standard **Language Model** block itself works the same way as KI-Modell but needs a provider; use KI-Modell instead.
+The standard **Language Model** block itself works the same way as KI-Modell but needs a provider. Either use KI-Modell directly, or connect the *Language Model* output of a KI-Modell to its *Language Model* field. The block's own *System Message* then applies, but *Temperature* and *Max Tokens* come from KI-Modell; set them there. Learning path L5 shows both side by side.
 
 ## 3. Components
 
@@ -81,7 +83,7 @@ Shows a result in the **Playground**. A flow can have several Chat Outputs; each
 | In | Inputs | Message, JSON or Table | What to show. Tables are shown as tables. |
 | Out | Output Message | Message | The same content again, in case you want to pass it on |
 
-**Hidden settings:** *Sender Name* (the name shown above the message, "AI" by default), *Data Template* (how JSON is turned into text).
+**Hidden settings:** *Sender Name* (the name shown above the message, "AI" by default), *Store Messages* (save the message in the chat history; switch it off if it should not show up in *Message History*). The *Data Template* field has no effect in Langflow 1.12.3.
 
 **Examples:** all example flows. Flow 01 uses two, one for the report and one for the table.
 
@@ -106,6 +108,8 @@ Fetches data from a web service (an API) by calling its address. This is how you
 | In | URL | text or Message | The address, for example `https://api.crossref.org/works` |
 | In | Method | choice | *GET* to fetch data (almost always), *POST*, *PUT*, *PATCH* or *DELETE* to send data |
 | Out | API Response | JSON | The answer of the service. The actual content is in the field `result`. |
+
+**If the answer is not JSON:** when a service answers with text or HTML, e.g. on an error 404 or 429, `result` holds no record. A following *Data Operations* then stops with *Object of type bytes is not JSON serializable*. The `status_code` in the answer shows what happened.
 
 **Hidden settings:** *Query Parameters* (the search parameters, as a JSON input you can connect), *Headers*, *Body* (for POST), *Timeout* (seconds, 30 by default).
 
@@ -144,7 +148,7 @@ Downloads the content of one or more web pages, and optionally of the pages they
 
 **Hidden settings:** *Output Format* (*Text*, *Markdown* or *HTML*), *Prevent Outside* (stay on the same website, on by default), *Headers*, *Timeout*.
 
-**Note:** the same address check as for *API Request* applies. Some websites, such as Wikipedia, refuse requests without a sender name. Then enter one under *Headers* in the row *User-Agent*, e.g. `Bibliothekshackathon (Langflow)`.
+**Note:** the same address check as for *API Request* applies. Some websites, such as Wikipedia, refuse requests without a sender name. Then enter one under *Headers* in the row *User-Agent*, with a name and a web address, e.g. `Bibliothekshackathon/1.0 (https://github.com/aihpi/demo-bibliothekshackaton)`. A name alone is not enough for Wikipedia.
 
 #### 3.2.5 Web Search
 
@@ -306,7 +310,7 @@ Sorts an input into one of several categories that you define, using the AI mode
 | In | Routes | table | The categories, one per row, e.g. *Ausleihe*, *Recherche*, *Sonstiges*. Each can have its own output text. |
 | Out | *one output per category* | Message | The input, on the path of the category it was sorted into |
 
-**Hidden settings:** *Include Else Output* (an extra output for inputs that fit no category), *Additional Instructions* (more rules for sorting).
+**Hidden settings:** *Include Else Output* (an extra output for inputs that fit no category; without it such inputs produce no output at all), *Additional Instructions* (more rules for sorting).
 
 **Tip:** for an enquiry service: route loan questions to one flow and research questions to another.
 
@@ -321,7 +325,7 @@ Filters or reshapes data according to an instruction in plain language, e.g. "ke
 | In | Instructions | text or Message | What to do, in your own words |
 | Out | Output | JSON, Table or Message | The transformed data |
 
-**Note:** the result depends on the model. Check it, especially with small local models.
+**Note:** the result depends on the model. Check it, especially with small local models. Filtering, sorting, selecting columns and simple per-row calculations work; counting and grouping fail every time in Langflow 1.12.3.
 
 #### 3.4.6 Structured Output
 
@@ -334,7 +338,9 @@ Makes the AI model answer in a fixed structure with named fields, e.g. author, y
 | In | Output Schema | table | The fields, one per row: name, description, type (text, number, …) and whether several values are allowed |
 | Out | Structured Output | JSON or Table | The extracted fields |
 
-**Hidden settings:** *Format Instructions* (the instructions to the model on how to fill the fields).
+**Hidden settings:** *Format Instructions* (the instructions to the model on how to fill the fields), *Schema Name* (a name for what is extracted, e.g. `Anschaffungsvorschlag`).
+
+**Tip:** always set a *Schema Name* and describe each field precisely. Without a name the model often extracts little or the wrong thing. Learning path L6 compares Structured Output with other approaches.
 
 **Tip:** e.g. extract author, year, title and journal from each reference in a list, and get a clean table.
 
@@ -351,7 +357,7 @@ Gives an Agent its own folder in which it may read, create and change files. Onl
 
 **Hidden settings:** *Read Only* (the agent may read but not change files).
 
-**Note:** the folder is inside Langflow's storage in Docker, not in the project folder on your laptop.
+**Note:** the folder is inside Langflow's storage in Docker, not in the project folder on your laptop, and outside the volume: after `docker compose down` it is empty.
 
 #### 3.5.2 Knowledge
 
@@ -403,11 +409,11 @@ Saves content as a file, e.g. a report as text or a table as Excel.
 | --- | --- | --- | --- |
 | In | File Content | Message, JSON or Table | What to save |
 | In | File Name | text | Name without extension, e.g. `pruefbericht` |
-| In | File Format | choice | *csv*, *excel*, *json*, *markdown*, *txt* or *html* |
+| In | File Format | choice | For a table *csv*, *excel*, *json* or *markdown*, for text (Message) *txt*, *html*, *json* or *markdown*. Other combinations stop with *Invalid file format*. |
 | In | Append | switch | Add to an existing file instead of replacing it (text formats only) |
 | Out | File Path | Message | Where the file was saved |
 
-**Note:** the file is saved inside Langflow's storage in Docker, not in the project folder. To copy it to the project folder, run `docker compose cp langflow:<file path> .` in a terminal in the project folder, using the path from the output. Often it is easier to show the result in a Chat Output and copy it from there.
+**Note:** the file is saved inside Langflow's storage in Docker, not in the project folder. It does show up in the left sidebar under **My Files**, where you can download it, on the hosted instance too. Every run adds a new entry there (`name (1)`, `name (2)` …). To copy it to the project folder, run `docker compose cp langflow:<file path> .` in a terminal in the project folder, using the path from the output. Often it is easier to show the result in a Chat Output and copy it from there.
 
 ### 3.6 Processing
 
@@ -430,6 +436,8 @@ The operations:
 - **Table:** *Filter* (keep rows that match a condition), *Sort*, *Head* and *Tail* (first or last rows), *Select Columns*, *Drop Column*, *Rename Column*, *Add Column*, *Replace Value*, *Drop Duplicates*, *Merge* and *Concatenate* (combine two tables)
 
 **Tip:** with *Table → Filter* you can e.g. keep only open-access publications from the result of *Literatursuche*.
+
+**Note:** *Drop Duplicates* needs the name of the column to compare; left empty it stops with an error. *Filter*, *Sort* and *Merge* treat upper and lower case as different.
 
 #### 3.6.2 Dynamic Create Data
 
@@ -517,6 +525,8 @@ Compares a text with a value and sends the flow on one of two paths: *True* or *
 
 **Tip:** e.g. only write a detailed report if the check result contains "Abweichung".
 
+**Note:** *regex* checks from the start of the text. A pattern that may occur anywhere starts with `.*`, e.g. `.*Fernleihe.*`.
+
 #### 3.7.3 Listen
 
 Receives data that a *Notify* block in the same flow has stored under a name, without a connecting line. Marked *Beta* in Langflow.
@@ -540,6 +550,8 @@ Goes through a table or list **item by item**. For each item, the blocks connect
 
 **Tip:** use a loop when each item needs several steps, e.g. an API request per reference. For one AI call per row, *Batch Run* is simpler.
 
+**Note:** if a single round fails, e.g. because a web service returns an error, the whole loop stops and nothing reaches *Done*. Without the line back to *Item* the loop does not run at all, and there is no error message.
+
 #### 3.7.5 Notify
 
 Stores data under a name so that a *Listen* block can pick it up elsewhere in the same flow. Marked *Beta* in Langflow.
@@ -562,6 +574,8 @@ Runs another flow from the same project as a single step. This lets you build sm
 | Out | *the outputs of that flow* | | Appear once a flow is chosen |
 
 **Tip:** e.g. give flow 01 to an Agent as a tool, so it can check references as part of a larger task.
+
+**Note:** when you pick the flow in *Flow Name*, the block remembers its internal ID. After export and import on another computer that ID does not exist and the block reports *Flow … not found*. Just pick the flow again.
 
 ### 3.8 Utilities
 

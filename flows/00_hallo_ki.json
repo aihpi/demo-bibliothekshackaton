@@ -466,7 +466,7 @@
               "Message"
             ],
             "name": "",
-            "display_name": "Prompt: Anweisung",
+            "display_name": "Prompt Template",
             "priority": null,
             "documentation": "https://docs.langflow.org/components-prompts",
             "minimized": false,

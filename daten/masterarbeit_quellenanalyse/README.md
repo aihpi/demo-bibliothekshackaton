@@ -9,4 +9,4 @@
 
 ## So nutzt ihr sie
 
-Im Baustein *Abschlussarbeit (PDF)* des Flows die Datei hochladen und im Playground einen Auftrag geben, z. B. *Analysiere die Quellen dieser Arbeit.* Flow 02 findet 17 von 17 Quellen.
+Im Baustein **Read File** des Flows die Datei hochladen und im Playground einen Auftrag geben, z. B. *Analysiere die Quellen dieser Arbeit.* Flow 02 findet 17 von 17 Quellen.

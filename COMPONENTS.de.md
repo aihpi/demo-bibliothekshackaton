@@ -6,6 +6,8 @@ Diese Anleitung beschreibt jeden Baustein (Komponente), den ihr während des Hac
 
 Sie gilt für Langflow 1.12.3, so wie es in diesem Projekt eingerichtet ist. Die Bausteine der Kategorie *Bibliothek* wurden für den Hackathon gebaut, alle anderen gehören zu Langflow.
 
+Diese Anleitung ist zum Nachschlagen gedacht. Wie ihr die Bausteine einsetzt und wann ihr welchen nehmt, zeigt der [Lernpfad](anleitungen/lernpfad/README.md) mit Übungen.
+
 ## Inhalt
 
 1. [So lest ihr diese Anleitung](#1-so-lest-ihr-diese-anleitung)
@@ -51,7 +53,7 @@ Mehrere Standard-Bausteine brauchen ein KI-Modell: Agent, Batch Run, Guardrails,
 
 Setzt stattdessen einen Baustein **KI-Modell** (Kategorie *Bibliothek*) auf die Arbeitsfläche und verbindet seinen Ausgang **Language Model** mit dem Eingang *Language Model* des Bausteins. Das Modell kommt dann vom Cluster oder von Ollama auf eurem Laptop, genau wie in der `.env` eingestellt. Flow 04 macht das für seinen Agenten.
 
-Der Standard-Baustein **Language Model** selbst funktioniert wie KI-Modell, braucht aber einen Anbieter; nehmt stattdessen KI-Modell.
+Der Standard-Baustein **Language Model** selbst funktioniert wie KI-Modell, braucht aber einen Anbieter. Entweder nehmt ihr gleich KI-Modell, oder ihr verbindet den Ausgang *Language Model* eines KI-Modells mit seinem Feld *Language Model*. Dann gilt die *System Message* des Bausteins, *Temperature* und *Max Tokens* kommen aber aus dem KI-Modell; stellt sie dort ein. Der [Lernpfad L5](anleitungen/lernpfad/L5_prompts_und_modelle.md) zeigt beides nebeneinander.
 
 ## 3. Bausteine
 
@@ -81,7 +83,7 @@ Zeigt ein Ergebnis im **Playground** an. Ein Flow kann mehrere Chat Outputs habe
 | Ein | Inputs | Message, JSON oder Table | Was angezeigt werden soll. Tabellen erscheinen als Tabellen. |
 | Aus | Output Message | Message | Derselbe Inhalt noch einmal, falls ihr ihn weitergeben wollt |
 
-**Versteckte Einstellungen:** *Sender Name* (der Name über der Nachricht, standardmäßig „AI“), *Data Template* (wie JSON in Text umgewandelt wird).
+**Versteckte Einstellungen:** *Sender Name* (der Name über der Nachricht, standardmäßig „AI“), *Store Messages* (die Nachricht im Chatverlauf speichern; aus, wenn sie nicht in *Message History* auftauchen soll). Das Feld *Data Template* hat in Langflow 1.12.3 keine Wirkung.
 
 **Beispiele:** alle Beispiel-Flows. Flow 01 nutzt zwei, einen für den Bericht und einen für die Tabelle.
 
@@ -106,6 +108,8 @@ Holt Daten von einem Webdienst (einer API), indem er dessen Adresse aufruft. So 
 | Ein | URL | Text oder Message | Die Adresse, z. B. `https://api.crossref.org/works` |
 | Ein | Method | Auswahl | *GET* zum Abrufen von Daten (fast immer), *POST*, *PUT*, *PATCH* oder *DELETE* zum Senden |
 | Aus | API Response | JSON | Die Antwort des Dienstes. Der eigentliche Inhalt steht im Feld `result`. |
+
+**Wenn die Antwort kein JSON ist:** Antwortet ein Dienst mit Text oder HTML, z. B. bei einem Fehler 404 oder 429, steht in `result` kein Datensatz. Ein nachfolgendes *Data Operations* bricht dann mit *Object of type bytes is not JSON serializable* ab. Der `status_code` in der Antwort zeigt, was passiert ist.
 
 **Versteckte Einstellungen:** *Query Parameters* (die Suchparameter, als JSON-Eingang zum Verbinden), *Headers*, *Body* (für POST), *Timeout* (Sekunden, standardmäßig 30).
 
@@ -144,7 +148,7 @@ Lädt den Inhalt einer oder mehrerer Webseiten herunter, auf Wunsch auch den der
 
 **Versteckte Einstellungen:** *Output Format* (*Text*, *Markdown* oder *HTML*), *Prevent Outside* (auf derselben Website bleiben, standardmäßig an), *Headers*, *Timeout*.
 
-**Hinweis:** Es gilt dieselbe Adressprüfung wie bei *API Request*. Manche Webseiten, z. B. Wikipedia, lehnen Anfragen ohne Absenderkennung ab. Dann unter *Headers* in der Zeile *User-Agent* eine eintragen, z. B. `Bibliothekshackathon (Langflow)`.
+**Hinweis:** Es gilt dieselbe Adressprüfung wie bei *API Request*. Manche Webseiten, z. B. Wikipedia, lehnen Anfragen ohne Absenderkennung ab. Dann unter *Headers* in der Zeile *User-Agent* eine eintragen, mit Name und Webadresse, z. B. `Bibliothekshackathon/1.0 (https://github.com/aihpi/demo-bibliothekshackaton)`. Ein Name allein reicht Wikipedia nicht.
 
 #### 3.2.5 Web Search
 
@@ -306,7 +310,7 @@ Ordnet eine Eingabe mit dem KI-Modell einer von mehreren Kategorien zu, die ihr 
 | Ein | Routes | Tabelle | Die Kategorien, eine pro Zeile, z. B. *Ausleihe*, *Recherche*, *Sonstiges*. Jede kann einen eigenen Ausgabetext haben. |
 | Aus | *ein Ausgang pro Kategorie* | Message | Die Eingabe, auf dem Weg der Kategorie, der sie zugeordnet wurde |
 
-**Versteckte Einstellungen:** *Include Else Output* (ein zusätzlicher Ausgang für Eingaben, die in keine Kategorie passen), *Additional Instructions* (weitere Regeln für die Zuordnung).
+**Versteckte Einstellungen:** *Include Else Output* (ein zusätzlicher Ausgang für Eingaben, die in keine Kategorie passen; ohne ihn kommt bei solchen Eingaben gar nichts heraus), *Additional Instructions* (weitere Regeln für die Zuordnung).
 
 **Tipp:** für eine Auskunft: Fragen zur Ausleihe in einen Flow, Recherchefragen in einen anderen.
 
@@ -321,7 +325,7 @@ Filtert oder formt Daten nach einer Anweisung in normaler Sprache um, z. B. „n
 | Ein | Instructions | Text oder Message | Was geschehen soll, in euren eigenen Worten |
 | Aus | Output | JSON, Table oder Message | Die umgeformten Daten |
 
-**Hinweis:** Das Ergebnis hängt vom Modell ab. Prüft es, besonders bei kleinen lokalen Modellen.
+**Hinweis:** Das Ergebnis hängt vom Modell ab. Prüft es, besonders bei kleinen lokalen Modellen. Filtern, Sortieren, Spalten auswählen und einfache Rechnungen pro Zeile gelingen; Zählen und Gruppieren scheitert in Langflow 1.12.3 jedes Mal.
 
 #### 3.4.6 Structured Output
 
@@ -334,7 +338,9 @@ Lässt das KI-Modell in einer festen Struktur mit benannten Feldern antworten, z
 | Ein | Output Schema | Tabelle | Die Felder, eines pro Zeile: Name, Beschreibung, Typ (Text, Zahl, …) und ob mehrere Werte erlaubt sind |
 | Aus | Structured Output | JSON oder Table | Die herausgezogenen Felder |
 
-**Versteckte Einstellungen:** *Format Instructions* (die Anweisung an das Modell, wie es die Felder füllen soll).
+**Versteckte Einstellungen:** *Format Instructions* (die Anweisung an das Modell, wie es die Felder füllen soll), *Schema Name* (ein Name für das, was herausgezogen wird, z. B. `Anschaffungsvorschlag`).
+
+**Tipp:** Gebt immer einen *Schema Name* an und beschreibt jedes Feld genau. Ohne Namen zieht das Modell oft nur wenig oder das Falsche heraus. Der [Lernpfad L6](anleitungen/lernpfad/L6_strukturierte_antworten.md) vergleicht Structured Output mit anderen Wegen.
 
 **Tipp:** z. B. aus jeder Angabe eines Literaturverzeichnisses Autor:in, Jahr, Titel und Zeitschrift herausziehen und eine saubere Tabelle bekommen.
 
@@ -351,7 +357,7 @@ Gibt einem Agenten einen eigenen Ordner, in dem er Dateien lesen, anlegen und ä
 
 **Versteckte Einstellungen:** *Read Only* (der Agent darf Dateien lesen, aber nicht ändern).
 
-**Hinweis:** Der Ordner liegt im Speicher von Langflow in Docker, nicht im Projektordner auf eurem Laptop.
+**Hinweis:** Der Ordner liegt im Speicher von Langflow in Docker, nicht im Projektordner auf eurem Laptop, und außerhalb des Volumes: Nach `docker compose down` ist er leer.
 
 #### 3.5.2 Knowledge
 
@@ -403,11 +409,11 @@ Speichert Inhalte als Datei, z. B. einen Bericht als Text oder eine Tabelle als 
 | --- | --- | --- | --- |
 | Ein | File Content | Message, JSON oder Table | Was gespeichert wird |
 | Ein | File Name | Text | Name ohne Endung, z. B. `pruefbericht` |
-| Ein | File Format | Auswahl | *csv*, *excel*, *json*, *markdown*, *txt* oder *html* |
+| Ein | File Format | Auswahl | Bei einer Tabelle *csv*, *excel*, *json* oder *markdown*, bei Text (Message) *txt*, *html*, *json* oder *markdown*. Andere Kombinationen brechen mit *Invalid file format* ab. |
 | Ein | Append | Schalter | An eine vorhandene Datei anhängen, statt sie zu ersetzen (nur Textformate) |
 | Aus | File Path | Message | Wo die Datei gespeichert wurde |
 
-**Hinweis:** Die Datei landet im Speicher von Langflow in Docker, nicht im Projektordner. Um sie in den Projektordner zu kopieren, im Terminal im Projektordner `docker compose cp langflow:<Dateipfad> .` ausführen, mit dem Pfad aus dem Ausgang. Oft ist es einfacher, das Ergebnis in einem Chat Output anzuzeigen und von dort zu kopieren.
+**Hinweis:** Die Datei landet im Speicher von Langflow in Docker, nicht im Projektordner. Sie erscheint aber in der linken Leiste unter **My Files** und lässt sich dort herunterladen, auch auf der gemeinsamen Instanz. Jeder Lauf legt dort einen neuen Eintrag an (`name (1)`, `name (2)` …). Um sie in den Projektordner zu kopieren, im Terminal im Projektordner `docker compose cp langflow:<Dateipfad> .` ausführen, mit dem Pfad aus dem Ausgang. Oft ist es einfacher, das Ergebnis in einem Chat Output anzuzeigen und von dort zu kopieren.
 
 ### 3.6 Processing
 
@@ -430,6 +436,8 @@ Die Operationen:
 - **Table:** *Filter* (Zeilen behalten, die eine Bedingung erfüllen), *Sort* (sortieren), *Head* und *Tail* (erste oder letzte Zeilen), *Select Columns* (Spalten auswählen), *Drop Column* (Spalte entfernen), *Rename Column* (Spalte umbenennen), *Add Column* (Spalte hinzufügen), *Replace Value* (Wert ersetzen), *Drop Duplicates* (Doppelte entfernen), *Merge* und *Concatenate* (zwei Tabellen zusammenführen)
 
 **Tipp:** Mit *Table → Filter* könnt ihr z. B. aus dem Ergebnis der *Literatursuche* nur die Open-Access-Publikationen behalten.
+
+**Hinweis:** *Drop Duplicates* braucht den Namen der Spalte, nach der verglichen wird; leer bricht es ab. *Filter*, *Sort* und *Merge* unterscheiden Groß- und Kleinschreibung. Der [Lernpfad L2](anleitungen/lernpfad/L2_texte_aufbereiten.md) zeigt die Text-Operationen, [L3](anleitungen/lernpfad/L3_tabellen_und_json.md) die für JSON und Tabellen.
 
 #### 3.6.2 Dynamic Create Data
 
@@ -515,6 +523,8 @@ Vergleicht einen Text mit einem Wert und schickt den Flow auf einen von zwei Weg
 
 **Versteckte Einstellungen:** *Case Sensitive* (Groß-/Kleinschreibung beachten, standardmäßig an), *Case True* und *Case False* (einen anderen Text statt der Eingabe weitergeben).
 
+**Hinweis:** *regex* prüft vom Anfang des Textes an. Ein Muster, das irgendwo im Text vorkommen darf, beginnt mit `.*`, z. B. `.*Fernleihe.*`.
+
 **Tipp:** z. B. nur dann einen ausführlichen Bericht schreiben, wenn das Prüfergebnis „Abweichung“ enthält.
 
 #### 3.7.3 Listen
@@ -540,6 +550,8 @@ Geht eine Tabelle oder Liste **Eintrag für Eintrag** durch. Für jeden Eintrag 
 
 **Tipp:** Eine Schleife lohnt sich, wenn jeder Eintrag mehrere Schritte braucht, z. B. eine API-Abfrage pro Literaturangabe. Für einen KI-Aufruf pro Zeile ist *Batch Run* einfacher.
 
+**Hinweis:** Scheitert eine einzige Runde, z. B. weil ein Webdienst einen Fehler meldet, bricht die ganze Schleife ab, und bei *Done* kommt nichts an. Fehlt die Rücklinie zu *Item*, läuft die Schleife gar nicht, ohne Fehlermeldung. Der [Lernpfad L8](anleitungen/lernpfad/L8_wiederholen_mit_loop.md) zeigt eine Schleife Schritt für Schritt.
+
 #### 3.7.5 Notify
 
 Legt Daten unter einem Namen ab, damit ein Baustein *Listen* sie an anderer Stelle im selben Flow abholen kann. In Langflow als *Beta* gekennzeichnet.
@@ -561,7 +573,9 @@ Führt einen anderen Flow aus demselben Projekt als einzelnen Schritt aus. So k�
 | Ein | *die Eingänge dieses Flows* | | Erscheinen, sobald ein Flow gewählt ist |
 | Aus | *die Ausgänge dieses Flows* | | Erscheinen, sobald ein Flow gewählt ist |
 
-**Tipp:** z. B. Flow 01 einem Agenten als Werkzeug geben, damit er Literaturangaben als Teil einer größeren Aufgabe prüfen kann.
+**Tipp:** z. B. Flow 01 einem Agenten als Werkzeug geben, damit er Literaturangaben als Teil einer größeren Aufgabe prüfen kann (siehe [Lernpfad L9](anleitungen/lernpfad/L9_agenten.md)).
+
+**Hinweis:** Wählt ihr den Flow im Feld *Flow Name* aus, merkt sich der Baustein dessen interne Nummer. Nach Export und Import auf einem anderen Rechner gibt es diese Nummer nicht, und der Baustein meldet *Flow … not found*. Dann den Flow einfach noch einmal auswählen.
 
 ### 3.8 Utilities
 
